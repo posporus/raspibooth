@@ -17,13 +17,13 @@ image_filetypes = {
 }
 
 video_filetypes = {
-    ".avi": "video/x-msvideo",  # AVI format
-    ".mp4": "video/mp4",  # MPEG-4 format
-    ".mov": "video/quicktime",  # QuickTime format
-    ".mkv": "video/x-matroska",  # Matroska format
-    ".flv": "video/x-flv",  # Flash Video format
-    ".wmv": "video/x-ms-wmv",  # Windows Media Video format
-    ".h264": "video/H264",  # H264 Video format
+    ".avi": "video/x-msvideo",
+    ".mp4": "video/mp4",
+    ".mov": "video/quicktime",
+    ".mkv": "video/x-matroska",
+    ".flv": "video/x-flv",
+    ".wmv": "video/x-ms-wmv",
+    ".h264": "video/H264",
 }
 
 
@@ -34,41 +34,25 @@ class TestMockCamera(unittest.TestCase):
 
     def test_take_picture(self):
         for extension, mime in image_filetypes.items():
-            camera_picture_test_helper(self, extension, mime)
+            with self.subTest(extension=extension):
+                self.camera_action_test_helper('picture', extension, mime)
 
     def test_take_picture(self):
-        '''TODO:This test fails if a format is not supported.'''
+        '''TODO:this fails if a codec is not installed'''
         for extension, mime in video_filetypes.items():
-            camera_video_test_helper(self, extension, mime)
+            with self.subTest(extension=extension):
+                self.camera_action_test_helper('video', extension, mime)
 
-
-def camera_picture_test_helper(self: unittest.TestCase, extension: str, mime: str):
-    with tempfile.TemporaryDirectory() as tempdir:
-        try:
-            file_path = os.path.join(tempdir, f"testvideo{extension}")
-
-            self.camera.take_picture(file_path)
-
+    def camera_action_test_helper(self, action: str, extension: str, mime: str):
+        with tempfile.TemporaryDirectory() as tempdir:
+            file_path = os.path.join(tempdir, f"test{action}{extension}")
+            if action == 'picture':
+                self.camera.take_picture(file_path)
+            elif action == 'video':
+                self.camera.take_video(file_path, 24, 100)
+            else:
+                raise ValueError(f"Invalid action: {action}")
             self.assertTrue(os.path.exists(file_path))
-
             self.assertEqual(filetype.guess(file_path).mime, mime)
-
-        finally:
-            if os.path.exists(file_path):
-                os.remove(file_path)
-
-
-def camera_video_test_helper(self: unittest.TestCase, extension: str, mime: str):
-    with tempfile.TemporaryDirectory() as tempdir:
-        try:
-            file_path = os.path.join(tempdir, f"testvideo{extension}")
-
-            self.camera.take_video(file_path, 24, 100)
-
-            self.assertTrue(os.path.exists(file_path))
-
-            self.assertEqual(filetype.guess(file_path).mime, mime)
-
-        finally:
             if os.path.exists(file_path):
                 os.remove(file_path)
