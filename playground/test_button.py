@@ -1,4 +1,4 @@
-from src.load_config import config
+from utility.load_config import config
 import RPi.GPIO as GPIO
 import threading
 
