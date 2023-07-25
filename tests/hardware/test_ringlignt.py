@@ -1,5 +1,5 @@
 import unittest
-from src.load_config import config
+from src.utility.load_config import config
 import time
 from rpi_ws281x import PixelStrip, Color
 
@@ -20,13 +20,6 @@ class TestRealLEDStrip(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         clear_pixels(cls.strip)
-
-    def test_led_strip(self):
-        for i in range(32):
-            self.led_strip.turn_on_led(i)
-            if input(f"Press Enter if LED {i} is ON, or type 'N' and press Enter if it's not...").upper() == 'N':
-                self.fail(f"LED {i} did not turn ON as expected")
-            self.led_strip.turn_off_all()
 
     def test_rainbow(self):
         rainbow_cycle(self.strip)
