@@ -1,6 +1,6 @@
 import time
 from rpi_ws281x import PixelStrip, Color
-from src.load_config import config
+from utility.load_config import config
 
 
 # LED strip configuration
