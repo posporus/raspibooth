@@ -4,3 +4,10 @@ GPIO:
 RINGLIGHT:
   LED_PIN: 18
   LED_COUNT: 32
+
+CAMERA:
+  #FPS: 25 #Not configurable in current version.
+  WIDTH: 480
+  HEIGHT: 640
+  ROTATION: 90
+  DURATION: 1500
