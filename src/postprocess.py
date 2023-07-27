@@ -7,7 +7,7 @@ import tempfile
 import os
 
 
-def postprocess(input_videos: list, output_folder):
+def postprocess(input_videos: list, output_folder,cleanup = True):
     """
     takes the input videos and adds them together. then it engrypts it with a generated password and
     saves the file into the upload folder. in the end it cleans up all files and returns
@@ -15,12 +15,12 @@ def postprocess(input_videos: list, output_folder):
     """
 
     # add videos together
-    with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as tmp:
+    with tempfile.TemporaryDirectory() as tmp_dir:
         # concatenated_file = Path(tmp).joinpath(random_filename)
-        tmp_path = Path(tmp.name)
+        tmp_path = Path(tmp_dir).joinpath('output.mp4')
 
         try:
-            concatenate_videos(input_videos, tmp.name)
+            concatenate_videos(input_videos, str(tmp_path))
         except:
             os.remove(tmp_path)
             raise Exception("Error concatenating videos.")
@@ -39,10 +39,10 @@ def postprocess(input_videos: list, output_folder):
             raise Exception("Error encrypting file.")
 
         # cleaning
-        if output_filepath.exists():
+        if output_filepath.exists() and cleanup == True:
             os.remove(tmp_path)
             if os.path.exists(tmp_path):
-                raise Exception(f"Unable to delete temporary file: {tmp.name}")
+                raise Exception(f"Unable to delete temporary file: {tmp_path}")
 
             for file_path in input_videos:
                 os.remove(file_path)
