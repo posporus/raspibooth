@@ -1,6 +1,7 @@
 from rpi_ws281x import PixelStrip, Color
 from threading import Thread
 import time
+from src.abstract.led_strip import LedStrip
 
 
 def theaterChase(ringlight, color):
@@ -79,7 +80,7 @@ def fx_blackout(ringlight:'Ringlight',_i):
     ringlight.strip.show()
 
 
-class Ringlight():
+class Ringlight(LedStrip):
     state = "postprocessing"
 
     def __init__(self, pin: int, led_count: int) -> None:

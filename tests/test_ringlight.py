@@ -1,4 +1,4 @@
-from src.ringlight.ringlight import Ringlight
+from ringlight import Ringlight
 import unittest
 import time
 class TestRinglight(unittest.TestCase):
