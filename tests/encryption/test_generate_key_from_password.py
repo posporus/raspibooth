@@ -21,3 +21,17 @@ class TestKeyFromPassword(unittest.TestCase):
 
         # Assert that the key is the correct byte length (32 bytes)
         self.assertEqual(len(key), 32)
+
+    def test_generate_key_from_password_salt_string(self):
+        # Define a test password and salt
+        password = "test_password"
+        salt = bytes("ahcdefgahc",'utf-8')
+
+        # Call the function to generate a key
+        key = generate_key_from_password(password, salt)
+
+        # Assert that the key is the correct type
+        self.assertIsInstance(key, bytes)
+
+        # Assert that the key is the correct byte length (32 bytes)
+        self.assertEqual(len(key), 32)

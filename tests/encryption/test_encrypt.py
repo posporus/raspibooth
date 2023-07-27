@@ -2,7 +2,7 @@ import unittest
 import os
 import tempfile
 from src.encryption.generate_key_from_password import generate_key_from_password
-from src.encryption.generate_password import generate_password
+from src.utility.random_string import random_string
 from src.encryption.encrypt_file import encrypt_file
 
 
@@ -15,7 +15,7 @@ class TestEncryptionProcess(unittest.TestCase):
         password_length = 16
 
         # Generate a random password
-        password = generate_password(password_length)
+        password = random_string(password_length)
 
         # Generate a random salt
         salt = os.urandom(16)

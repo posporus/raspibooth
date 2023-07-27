@@ -1,6 +1,7 @@
 import ffmpeg
 
-def concatenate_videos(input_files, output_file):
+def concatenate_videos(input_files:list, output_file:str):
+
     """
     Concatenate multiple videos into one using ffmpeg.
 

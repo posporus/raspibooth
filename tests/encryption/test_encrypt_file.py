@@ -2,8 +2,6 @@ from src.encryption.encrypt_file import encrypt_file
 import unittest
 import os
 import tempfile
-import base64
-
 
 
 # Define the test class

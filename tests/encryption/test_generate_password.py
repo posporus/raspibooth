@@ -1,5 +1,5 @@
 import unittest
-from src.encryption.generate_password import generate_password, characters
+from src.utility.random_string import random_string, characters
 
 
 # Define the test class
@@ -8,7 +8,7 @@ class TestPasswordGeneration(unittest.TestCase):
         # Test with various password lengths
         for password_length in [1, 2, 8, 9, 10, 11, 12, 14, 16, 24, 32]:
             # Call the function to generate a password
-            password = generate_password(password_length)
+            password = random_string(password_length)
 
             # Assert that the password is the correct type
             self.assertIsInstance(password, str)
