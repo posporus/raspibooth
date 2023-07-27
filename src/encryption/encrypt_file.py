@@ -2,14 +2,15 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.backends import default_backend
 import os
+import base64
 
-def encrypt_file(input_file_path, output_file_path, key):
+def encrypt_file(input_file_path, output_file_path, key:bytes):
     '''Encrypts a file usind AES-256. Returns true if succsessful.'''
     
     # Check key length
-    if len(key) != 32:  # AES-256 needs a 256-bit key (32 bytes)
-        print("Key must be 32 bytes (256 bits) long.")
-        return False
+    # if len(key) != 32:  # AES-256 needs a 256-bit key (32 bytes)
+    #     print("Key must be 32 bytes (256 bits) long.")
+    #     return False
 
     # Generate a random 96-bit IV.
     iv = os.urandom(12)

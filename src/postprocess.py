@@ -18,6 +18,7 @@ def postprocess(input_videos: list, output_folder,cleanup = True):
     with tempfile.TemporaryDirectory() as tmp_dir:
         # concatenated_file = Path(tmp).joinpath(random_filename)
         tmp_path = Path(tmp_dir).joinpath('output.mp4')
+        #print('DIR:', str(tmp_path))
 
         try:
             concatenate_videos(input_videos, str(tmp_path))
@@ -48,5 +49,6 @@ def postprocess(input_videos: list, output_folder,cleanup = True):
                 os.remove(file_path)
                 if os.path.exists(file_path):
                     raise Exception(f"Unable to delete input video: {file_path}")
-
+                
+        print('encrypt password|salt',encryption_password,random_filename)
         return (random_filename, encryption_password)

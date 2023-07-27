@@ -1,27 +1,39 @@
+from pathlib import Path
 from src.encryption.encrypt_file import encrypt_file
-import unittest
 import os
 import tempfile
+import unittest
+from src.encryption.is_valid_aes256_key import is_valid_aes256_key
+
+from tests.encryption.decrypt_file import decrypt_file
 
 
-# Define the test class
-class TestEncryption(unittest.TestCase):
+class TestDecryption(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.testfile_path = 'tests/fixtures/testfile.bin'
-        cls.key = os.urandom(32)
+        #cls.key = Fernet.generate_key()
+        cls.key  = os.urandom(32)
         
+        #print('KEY:',cls.key.decode())
 
     def test_encrypt_file(self):
-        with tempfile.NamedTemporaryFile(suffix=".bin", delete=False) as tmp:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_file = Path(tmp_dir).joinpath('encrypted_file')
             # Call the encryption method
-            result = encrypt_file(self.testfile_path, tmp.name, self.key)
-
-            # Assert that the method returned True
-            self.assertTrue(result)
+            print('tmp_file', tmp_file)
+            encrypt_file(self.testfile_path, tmp_file, self.key)
 
             # Assert that the output file exists
-            self.assertTrue(os.path.exists(tmp.name))
+            self.assertTrue(os.path.exists(tmp_file))
+
+            # Call the decryption method
+            decrypted_file_path = tempfile.mktemp()
+            decrypt_file(tmp_file, decrypted_file_path,self.key)
+
+            # Assert that the decrypted file exists
+            self.assertTrue(os.path.exists(decrypted_file_path))
 
             # Clean up the output file after the test
-            os.remove(tmp.name)
+            os.remove(tmp_file)
+            os.remove(decrypted_file_path)

@@ -1,7 +1,10 @@
 from src.postprocess import postprocess
+from tests.encryption.decrypt_file import decrypt_file
+from src.encryption.generate_key_from_password import generate_key_from_password
 import os, tempfile, unittest
-
 import shutil
+from pathlib import Path
+
 
 class TestPostprocess(unittest.TestCase):
     def setUp(self):
@@ -25,6 +28,13 @@ class TestPostprocess(unittest.TestCase):
         # Clean up the temporary directory
         self.test_dir.cleanup()
 
+    def test_postprocess_password_is_string(self):
+        output_folder = self.test_dir.name
+
+        # Run the postprocess function
+        filename, password = postprocess(self.input_files_temp, output_folder)
+        self.assertIsInstance(password,str)
+
     def test_postprocess(self):
         output_folder = self.test_dir.name
 
@@ -38,3 +48,11 @@ class TestPostprocess(unittest.TestCase):
         # Assert that the input and temporary files have been deleted
         for file_path in self.input_files_temp:
             self.assertFalse(os.path.exists(file_path))
+
+        # Decrypt the file to test if the encryption was successful
+        # decrypted_output_file = os.path.join(self.test_dir.name, 'decrypted_output.mp4')
+        # key = generate_key_from_password(password,filename)
+        # decrypt_file(password, Path(output_file), Path(decrypted_output_file))
+
+        # Assert that the decrypted file exists
+        #self.assertTrue(os.path.exists(decrypted_output_file))
