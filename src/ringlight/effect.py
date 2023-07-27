@@ -1,6 +1,8 @@
 from typing import Any
 from rpi_ws281x import PixelStrip
 from collections import Callable
+from threading import Thread
+from threading import Event
 
 
 class Effect(object):
@@ -10,17 +12,23 @@ class Effect(object):
     strip: PixelStrip
     loop: int = 1
     brightness = 255
+    #thread: Thread
+    stop_event:Event
+
+    
 
     def __init__(self, func: Callable) -> None:
         self.func = func
+        self.stop_event = Event()
 
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
+    def __call__(self, *args: Any) -> Any:
+        print('thread!',args)
+
         self.strip.setBrightness(self.brightness)
         self.args = args
-        self.kwds = kwds
         self.running = True
-        self.func(self, *self.args, **self.kwds)
-
+        #self.thread = Thread(target=self.func,args=(self, *self.args))
+        self.func(self, *self.args)
     def stop(self):
         self.running = False
 
@@ -35,4 +43,4 @@ class Effect(object):
             return True
 
         if self.running:
-            self.func(self, *self.args, **self.kwds)
+            self.func(self, *self.args)

@@ -1,10 +1,9 @@
-from ringlight.effect import Effect
+from src.ringlight.effect import Effect
 from rpi_ws281x import Color
 import time
-from ringlight.strip import strip
 
 
-Effect.strip = strip
+#Effect.strip = strip
 
 
 def wheel(pos):
@@ -26,8 +25,7 @@ def solid(self: Effect, color: Color, wait_ms=0):
     self.strip.show()
     if wait_ms:
         time.sleep(wait_ms / 1000.0)
-
-    self.done()
+        self.done()
 
 
 @Effect
@@ -38,8 +36,7 @@ def blackout(self: Effect, wait_ms=0):
     self.strip.show()
     if wait_ms:
         time.sleep(wait_ms / 1000.0)
-
-    self.done()
+        self.done()
 
 
 @Effect
