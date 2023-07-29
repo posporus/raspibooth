@@ -7,5 +7,3 @@ __pycache__
 .env.test.local
 .env.production.local
 .env.local
-
-#fresh.gen.ts
