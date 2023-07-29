@@ -10,3 +10,6 @@ So why settle for ordinary snapshots when you can capture memories in motion? Br
 -ChatGPT 🤣
 
 ![Project Diagram](./docs/images/schema.png)
+
+
+"in some cases, using a unique, non-sensitive attribute like a file ID could be an acceptable compromise."
