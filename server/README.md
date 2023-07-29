@@ -1,0 +1,1 @@
+A Deno-based solution for storing and retrieving end-to-end encrypted data. This project provides a simple API for uploading encrypted data, storing it securely, and retrieving it via a unique URL. It also includes a browser client for decrypting and accessing the data.
