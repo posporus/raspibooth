@@ -13,3 +13,7 @@ So why settle for ordinary snapshots when you can capture memories in motion? Br
 
 
 "in some cases, using a unique, non-sensitive attribute like a file ID could be an acceptable compromise."
+
+## Generating Test Content
+[more in the docs](./docs/generating_test_content.md)
+
