@@ -21,23 +21,29 @@ def generate_testfile():
     output_file_path = output_file_dir.joinpath(fileId)
     password = random_string(10)
     salt = bytes(fileId, "utf-8")
-    key = generate_key_from_password(password,salt)
+    key = generate_key_from_password(password, salt)
 
-    encrypt_file(input_file_path,output_file_path,key)
+    encrypt_file(input_file_path, output_file_path, key)
     test_data = {
-        'fileId':fileId,
-        'password':password,
+        'fileId': fileId,
+        'password': password,
         'salt': salt.decode("utf-8"),
-        'key': base64.b64encode(key).decode()
+        'key': base64.b64encode(key).decode(),
+        'original_test_data_file_path': str(input_file_path)
     }
     return test_data
+
+
 
 def generate_encrypted_test_videos(num_testfiles:int, wipe:bool):
     if wipe:
         shutil.rmtree(output_file_dir)  # Be careful with this, it deletes everything in the directory!
         os.makedirs(output_file_dir)
-
-    test_data_list = []
+        test_data_list = []
+    else:
+        # If not wiping, load the existing data
+        with open(output_file_dir.joinpath('test_data.json'), 'r') as json_file:
+            test_data_list = json.load(json_file)
 
     for i in range(num_testfiles):
         test_data = generate_testfile()
@@ -45,6 +51,7 @@ def generate_encrypted_test_videos(num_testfiles:int, wipe:bool):
 
     with open(output_file_dir.joinpath('test_data.json'), 'w') as json_file:
         json.dump(test_data_list, json_file)
+
 
 def main():
     parser = argparse.ArgumentParser(description='Generate encrypted test files.')
