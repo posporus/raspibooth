@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 
 
-class Printer(ABC):
+class LedStrip(ABC):
     @abstractmethod
-    def print(self, url, password):
+    def set_state(self):
         pass
+    
 
