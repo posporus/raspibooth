@@ -24,7 +24,7 @@ def generate_testfile():
     salt = bytes(fileId, "utf-8")
     key = generate_key_from_password(password, salt)
 
-    iv = encrypt_file(input_file_path, output_file_path, key)
+    iv, tag = encrypt_file(input_file_path, output_file_path, key)
     test_data = {
         "fileId": fileId,
         "password": password,
@@ -32,6 +32,7 @@ def generate_testfile():
         "key": base64.b64encode(key).decode(),
         "original_test_data_file_path": str(input_file_path),
         "iv": base64.b64encode(iv).decode(),
+        "tag": base64.b64encode(tag).decode(),
     }
     return test_data
 
