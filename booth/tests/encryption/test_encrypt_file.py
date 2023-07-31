@@ -1,39 +1,59 @@
-# from pathlib import Path
-# from src.encryption.encrypt_file import encrypt_file
-# import os
-# import tempfile
-# import unittest
-# from src.encryption.is_valid_aes256_key import is_valid_aes256_key
+import os
+import unittest
+import tempfile
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
+from pathlib import Path
+from src.encryption.encrypt_file import encrypt_file
 
-# from tests.encryption.decrypt_file import decrypt_file
+def decrypt(ciphertext:bytes, iv:bytes, key:bytes, tag:bytes):
+    '''Decrypts data using AES-256. Returns the original data if successful.'''
 
+    # Construct a Cipher object, with the key, iv, and additionally the
+    # GCM tag used for authenticating the message.
+    cipher = Cipher(algorithms.AES(key), modes.GCM(iv, tag), backend=default_backend())
 
-# class TestDecryption(unittest.TestCase):
-#     @classmethod
-#     def setUpClass(cls):
-#         cls.testfile_path = 'booth/tests/fixtures/test_output.mp4'
-#         #cls.key = Fernet.generate_key()
-#         cls.key  = os.urandom(32)
-        
-#         #print('KEY:',cls.key.decode())
+    # Create a decryptor object
+    decryptor = cipher.decryptor()
 
-#     def test_encrypt_file(self):
-#         with tempfile.TemporaryDirectory() as tmp_dir:
-#             tmp_file = Path(tmp_dir).joinpath('encrypted_file')
-#             # Call the encryption method
-#             print('tmp_file', tmp_file)
-#             encrypt_file(self.testfile_path, tmp_file, self.key)
+    # Decrypt the data
+    return decryptor.update(ciphertext) + decryptor.finalize()
 
-#             # Assert that the output file exists
-#             self.assertTrue(os.path.exists(tmp_file))
+class TestEncryption(unittest.TestCase):
+    def test_encrypt_file(self):
+        # Generate a random key
+        key = os.urandom(32)
 
-#             # Call the decryption method
-#             decrypted_file_path = tempfile.mktemp()
-#             decrypt_file(tmp_file, decrypted_file_path,self.key)
+        # Create a temporary file and write some data to it
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+            f.write(b'This is some test data')
+            input_file_path = Path(f.name)
 
-#             # Assert that the decrypted file exists
-#             self.assertTrue(os.path.exists(decrypted_file_path))
+        # Create a temporary file for the encrypted data
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+            output_file_path = Path(f.name)
 
-#             # Clean up the output file after the test
-#             os.remove(tmp_file)
-#             os.remove(decrypted_file_path)
+        # Encrypt the file
+        encrypt_file(input_file_path, output_file_path, key)
+
+        # Read the encrypted file
+        with open(output_file_path, 'rb') as f:
+            iv = f.read(12)
+            tag = f.read(16)
+            ciphertext = f.read()
+
+        # Decrypt the data
+        decrypted_data = decrypt(ciphertext, iv, key, tag)
+
+        # Verify that the decrypted data matches the original data
+        with open(input_file_path, 'rb') as f:
+            original_data = f.read()
+
+        self.assertEqual(decrypted_data, original_data, "The original and decrypted data do not match.")
+
+        # Clean up the temporary files
+        os.remove(input_file_path)
+        os.remove(output_file_path)
+
+if __name__ == '__main__':
+    unittest.main()
