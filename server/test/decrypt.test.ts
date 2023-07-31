@@ -35,7 +35,6 @@ function base64ToUint8Array (base64String: string) {
   if (!(/^[A-Za-z0-9\+\/\=]*$/.test(base64String))) {
     throw new Error("Invalid base64 string: " + base64String)
   }
-  console.log(base64String)
   const binaryString = atob(base64String)
   const length = binaryString.length
   const bytes = new Uint8Array(length)

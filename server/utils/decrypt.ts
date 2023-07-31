@@ -1,4 +1,4 @@
-export async function decrypt(encryptedData: ArrayBuffer, key: CryptoKey, iv: ArrayBuffer, tag: ArrayBuffer): Promise<ArrayBuffer> {
+export async function decrypt(encryptedData: ArrayBuffer, key: CryptoKey, iv: ArrayBuffer, tag: ArrayBuffer): Promise<Uint8Array> {
     // Combine the ciphertext and tag into one ArrayBuffer
     const ciphertextWithTag = new Uint8Array(encryptedData.byteLength + tag.byteLength);
     ciphertextWithTag.set(new Uint8Array(encryptedData), 0);
