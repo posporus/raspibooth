@@ -5,6 +5,8 @@ import { decrypt_buffer } from "../utils/decrypt_buffer.ts"
 import { fetchFile } from '../utils/fetchFile.ts'
 import { useClient } from '../utils/client.ts'
 
+import Canvas from './Canvas.tsx'
+
 interface DecryptorProps {
   fileId: string
 }
@@ -66,6 +68,7 @@ export default function Decryptor (props: DecryptorProps) {
       decrypted: {decryptedData ? decryptedData.toString() : 'No data'}
       <br />
       {error && <p>Error: {error}</p>}
+      {decryptedData ? <Canvas videoData={decryptedData}></Canvas> : null}
     </div>
   )
 }
