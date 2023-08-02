@@ -12,8 +12,6 @@ export default function BoothCanvas (props: BoothCanvasProps) {
         createCollage(videoblob)
     }, [])
 
-    //const [decryptedData, setDecryptedData] = useState<Uint8Array | null>(null)
-
     return (
         <>
             <canvas id={"picture_canvas"} width={500} height={200}></canvas>

@@ -14,7 +14,7 @@ for testing client decryption.
 
 # define one test file, that will be encrypted with different keys.
 input_file_path = Path("../shared_test_files/test_videos/testvideo_480x640_4s.mp4")
-output_file_dir = Path("../shared_test_files/encrypted_test_videos/")
+output_file_dir = Path("shared_test_files/encrypted_test_videos/")
 
 
 def generate_testfile():
@@ -70,10 +70,22 @@ def main():
         default=True,
         help="Do not wipe the output directory before generating new files.",
     )
+    parser.add_argument(
+        "-i",
+        "--input-file",
+        dest="input_file",
+        default="../shared_test_files/test_videos/testvideo_480x640_4s.mp4",
+        help="Path to the input file to be encrypted.",
+    )
 
     args = parser.parse_args()
 
+    # Update the global variable input_file_path with the input argument
+    global input_file_path
+    input_file_path = Path(args.input_file)
+
     generate_encrypted_test_videos(args.num_testfiles, args.wipe)
+
 
 
 if __name__ == "__main__":
