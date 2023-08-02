@@ -2,7 +2,7 @@ import argparse
 import time
 from picamera import PiCamera
 from pathlib import Path
-from booth.src.utility.random_string import random_string
+from src.utility.random_string import random_string
 
 output_dir = Path("shared_test_files/raw_test_videos")
 
