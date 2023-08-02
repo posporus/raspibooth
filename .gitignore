@@ -1,5 +1,4 @@
 tmp
-.vscode
 __pycache__
 # dotenv environment variable files
 .env
@@ -7,5 +6,3 @@ __pycache__
 .env.test.local
 .env.production.local
 .env.local
-
-settings.json
