@@ -1,6 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.114.0/testing/asserts.ts"
 import { generateKeyFromPassword } from "../utils/generateKeyFromPassword.ts"
-const encrypted_videos_dir = "./shared_test_files/encrypted_test_videos/"
+const encrypted_videos_dir = "../shared_test_files/encrypted_test_videos/"
 
 // Read and parse the JSON file
 const test_data = JSON.parse(await Deno.readTextFile(encrypted_videos_dir + "test_data.json"))

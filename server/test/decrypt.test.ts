@@ -2,7 +2,7 @@ import { assertEquals } from "https://deno.land/std@0.114.0/testing/asserts.ts"
 import { decrypt } from "../utils/decrypt.ts"
 
 // Load the test data
-const testData = JSON.parse(await Deno.readTextFile("shared_test_files/encyption_datasets.json"))
+const testData = JSON.parse(await Deno.readTextFile("../shared_test_files/encyption_datasets.json"))
 let i = 0
 for (const data of testData) {
   i++
