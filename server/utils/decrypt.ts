@@ -13,6 +13,7 @@ export async function decrypt (encryptedData: ArrayBuffer, key: CryptoKey, iv: A
         const ciphertextWithTag = new Uint8Array(encryptedData.byteLength + tag.byteLength)
         ciphertextWithTag.set(new Uint8Array(encryptedData), 0)
         ciphertextWithTag.set(new Uint8Array(tag), encryptedData.byteLength)
+        
         console.log('key:', await cryptoKeyToString(key))
         console.log('tag:', uint8ArrayToBase64(new Uint8Array(tag)))
         console.log('iv:', uint8ArrayToBase64(new Uint8Array(iv)))
