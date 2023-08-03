@@ -23,7 +23,7 @@ function createCollage (blob: Blob) {
     const canvas = document.getElementById('picture_canvas') as HTMLCanvasElement
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 
-    const segmentDuration = 1 // Replace with the actual duration of each segment in seconds
+    const segmentDuration = 2.5 // Replace with the actual duration of each segment in seconds
 
     const videos: HTMLVideoElement[] = Array(4).fill(null).map((_, i) => {
         const video = document.createElement('video')

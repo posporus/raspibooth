@@ -1,94 +1,88 @@
-import { useState, useEffect, StateUpdater } from 'preact/hooks'
-import { isClient } from "../utils/isClient.ts"
-import { generateCryptoKeyFromPassword } from "../utils/generateCryptoKeyFromPassword.ts"
-import { decrypt_buffer } from "../utils/decrypt_buffer.ts"
-import { fetchFile } from '../utils/fetchFile.ts'
-import { useClient } from '../utils/client.ts'
+import { useState, useEffect, useMemo, useCallback, StateUpdater } from 'preact/hooks';
+import { isClient } from "../utils/isClient.ts";
+import { generateCryptoKeyFromPassword } from "../utils/generateCryptoKeyFromPassword.ts";
+import { decrypt_buffer } from "../utils/decrypt_buffer.ts";
+import { fetchFile } from '../utils/fetchFile.ts';
+import { useClient } from '../utils/client.ts';
 
-import Canvas from './Canvas.tsx'
+import Canvas from './Canvas.tsx';
 
 interface DecryptorProps {
-  fileId: string
+  fileId: string;
 }
 
-export default function Decryptor (props: DecryptorProps) {
+export default function Decryptor(props: DecryptorProps) {
+  const [decryptedData, setDecryptedData] = useState<Uint8Array | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Use useMemo for the password state
+  const password = useMemo(() => getPasswordFromUrl(), []);
 
-  const [decryptedData, setDecryptedData] = useState<Uint8Array | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [password, setPassword] = useState<string>('')
-  const [encryptedData, setEncryptedData] = useState<Uint8Array | null>(null)
-  const [client] = useClient()
+  const [encryptedData, setEncryptedData] = useState<Uint8Array | null>(null);
+  const [client] = useClient();
 
-  useEffect(() => {
-    if (!client) return
+  // Additional States
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-    setPassword(getPasswordFromUrl())
-    console.log(props.fileId);
-
-    // self.addEventListener('hashchange', function (event) {
-    //   console.log('hashchange detected. updating password.')
-    //   setPassword(getPasswordFromUrl())
-    // });
-
-    (async () => {
-      const data = await fetchFile(props.fileId)
-      console.log(data)
-      setEncryptedData(data)
-    })()
-
-  }, [client])
-
-  useEffect(() => {
-    if (!encryptedData || !password) return
-
-    (async () => {
-
+  // Memoize the decryptProcedure function using useCallback
+  const memoizedDecryptProcedure = useCallback(
+    async (data: Uint8Array, password: string, fileId: string) => {
       try {
-
-        await decryptProcedure(encryptedData, password, props.fileId, setDecryptedData)
+        const cryptoKey = await generateCryptoKeyFromPassword(password, fileId);
+        const decrypted = await decrypt_buffer(data, cryptoKey);
+        setDecryptedData(decrypted);
       } catch (error) {
-        console.error(error)
-        setError(error.message)
+        throw error;
       }
-    })()
+    },
+    []
+  );
 
-  }, [encryptedData])
+  useEffect(() => {
+    if (!client || !props.fileId) return;
 
-    
+    setIsLoading(true);
 
+    (async () => {
+      try {
+        const data = await fetchFile(props.fileId);
+        setEncryptedData(data);
+      } catch (error) {
+        console.error(error);
+        setIsError(true);
+        setError(`Error fetching file ${props.fileId}: ${error.message}`);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, [client, props.fileId]);
 
+  useEffect(() => {
+    if (!encryptedData || !password) return;
 
+    setIsLoading(true);
+    setIsError(false);
 
+    memoizedDecryptProcedure(encryptedData, password, props.fileId)
+      .catch((error) => {
+        console.error(error);
+        setIsError(true);
+        setError(error.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [encryptedData, password, props.fileId, memoizedDecryptProcedure]);
 
   return (
     <div>
       Decryptor {props.fileId}
-      <br />
-      <br />
-      decrypted: {decryptedData ? decryptedData.toString() : 'No data'}
-      <br />
-      {error && <p>Error: {error}</p>}
-      {decryptedData ? <Canvas videoData={decryptedData}></Canvas> : null}
+      {isLoading && <p>Loading...</p>}
+      {isError && <p>Error: {error}</p>}
+      {decryptedData && <Canvas videoData={decryptedData}></Canvas>}
     </div>
-  )
+  );
 }
 
-
-const getPasswordFromUrl = (): string => isClient() ? decodeURIComponent(self.location.hash.substring(1)) : ''
-
-const decryptProcedure = async (encryptedData: Uint8Array, password: string, fileId: string, setDecryptedData: StateUpdater<Uint8Array | null>): Promise<void> => {
-
-  try {
-
-    const cryptoKey = await generateCryptoKeyFromPassword(password, fileId)
-    console.log('key generated.', cryptoKey)
-
-    const decrypted = await decrypt_buffer(encryptedData, cryptoKey)
-
-    setDecryptedData(decrypted)
-  }
-  catch (error) {
-    throw error
-  }
-
-}
+const getPasswordFromUrl = (): string => (isClient() ? decodeURIComponent(self.location.hash.substring(1)) : '');
