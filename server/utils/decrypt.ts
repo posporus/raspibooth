@@ -13,7 +13,7 @@ export async function decrypt (encryptedData: ArrayBuffer, key: CryptoKey, iv: A
         const ciphertextWithTag = new Uint8Array(encryptedData.byteLength + tag.byteLength)
         ciphertextWithTag.set(new Uint8Array(encryptedData), 0)
         ciphertextWithTag.set(new Uint8Array(tag), encryptedData.byteLength)
-        
+
         console.log('key:', await cryptoKeyToString(key))
         console.log('tag:', uint8ArrayToBase64(new Uint8Array(tag)))
         console.log('iv:', uint8ArrayToBase64(new Uint8Array(iv)))
@@ -22,7 +22,7 @@ export async function decrypt (encryptedData: ArrayBuffer, key: CryptoKey, iv: A
             {
                 name: "AES-GCM",
                 iv: new Uint8Array(iv),
-                tagLength: 128, // Length of authentication tag in bits
+                tagLength: tag.byteLength * 8, // Length of authentication tag in bits
             },
             key,
             ciphertextWithTag
