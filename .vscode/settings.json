@@ -6,5 +6,20 @@
     "deno.config": "server/deno.json",
     "python.analysis.extraPaths": [
         "./booth"
-    ]
+    ],
+    "tailwindCSS.emmetCompletions": true,
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "tailwindCSS.includeLanguages": {
+        "html": "html",
+        "javascript": "javascript",
+        "css": "css",
+        "plaintext": "javascript",
+        "typescript": "typescript",
+        "tsx":"html"
+    },
+    "editor.quickSuggestions": {
+        "strings": true
+    }
 }

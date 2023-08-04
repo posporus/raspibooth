@@ -1,7 +1,6 @@
-import { PageProps, Handlers } from "$fresh/server.ts"
+import { PageProps } from "$fresh/server.ts"
 import Decryptor from "../islands/Decryptor.tsx"
-import { base64ToUint8Array } from "../utils/convertions.ts"
-import { fetchFile } from "../utils/fetchFile.ts"
+import Hero from "../components/Hero.tsx"
 
 // export const handler: Handlers<Uint8Array | null> = {
 //   async GET (_, ctx) {
@@ -18,8 +17,9 @@ export default function VideoPage (props: PageProps<Uint8Array | null>) {
   return (
     <main>
       <p>File ID: <b>{fileId}</b></p>
-      
-      <Decryptor fileId={fileId}></Decryptor>
+      <Hero>
+        <Decryptor fileId={fileId}></Decryptor>
+      </Hero>
     </main>
   )
 }
