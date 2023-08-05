@@ -1,7 +1,7 @@
 import json
 
 # Load the JSON file
-with open('shared_test_files/encrypted_test_videos/test_data.json', 'r') as f:
+with open('shared_test_files/test_archives/test_data.json', 'r') as f:
     data = json.load(f)
 
 # Generate URLs for each item in the list

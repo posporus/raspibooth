@@ -9,7 +9,7 @@ export const handler: Handlers<Uint8Array | null> = {
     const { key } = ctx.params;
 
     const data = await file_store.get(key) || DEVMODE
-      ? await Deno.readFile("../shared_test_files/encrypted_test_videos/" + key)
+      ? await Deno.readFile("../shared_test_files/test_archives/" + key)
       : null;
 
     if (data === null) {

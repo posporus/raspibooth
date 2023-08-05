@@ -1,7 +1,10 @@
 import { useEffect } from "preact/hooks"
 import { useClient } from "../utils/client.ts"
 interface BoothCanvasProps {
-    videoData: Uint8Array
+    videos: Uint8Array[]
+    fps: number
+    duration: number
+    timestamp: number
 }
 
 
@@ -9,8 +12,8 @@ export default function BoothCanvas (props: BoothCanvasProps) {
     const [client] = useClient()
     useEffect(() => {
         if (!client) return
-        const videoblob = new Blob([props.videoData], { type: 'video/mp4' })
-        createCollage(videoblob)
+        console.log('canvas', props)
+        createCollage(props)
     }, [])
 
     return (
@@ -20,48 +23,74 @@ export default function BoothCanvas (props: BoothCanvasProps) {
     )
 }
 
-function createCollage (blob: Blob) {
-    const canvas = document.getElementById('picture_canvas') as HTMLCanvasElement
-    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-    const videoDuration = 12
-    
-    const videos: HTMLVideoElement[] = Array(4).fill(null).map((_, i) => {
-        const video = document.createElement('video')
-        video.src = URL.createObjectURL(blob)
-        video.muted = true
-        const segmentDuration = videoDuration/4 // Replace with the actual duration of each segment in seconds
-        video.currentTime = i * segmentDuration
-        video.play()
-        video.ontimeupdate = () => {
-            if (video.currentTime >= (i + 1) * segmentDuration) {
-                video.currentTime = i * segmentDuration
-                //console.log('reset time.',video.currentTime)
-            }
-        }
+function createCollage(canvasData: BoothCanvasProps) {
+    const { videos, fps, duration, timestamp } = canvasData;
 
-        return video
-    })
+    const canvas = document.getElementById('picture_canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-    function draw () {
+    const videoElements: HTMLVideoElement[] = videos.map((bytes) => {
+        const blob = new Blob([bytes], { type: 'video/mp4' });
+        const video = document.createElement('video');
+        video.src = URL.createObjectURL(blob);
+        video.muted = true;
+        video.currentTime = duration / 2;
+        video.loop = true;
+        return video;
+    });
+
+    function getVideoPosition(i: number) {
+        const width = canvas.width / 2;
+        const height = canvas.height / 2;
+        const dx = i <= 1 ? width * i : width * (i - 2);
+        const dy = i <= 1 ? 0 : height;
+        return { dx, dy, width, height };
+    }
+
+    function draw() {
         if (ctx) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            videos.forEach((video, i) => {
-                const width = canvas.width / 2
-                const height = canvas.height / 2
+            videoElements.forEach((video, i) => {
+                const { dx, dy, width, height } = getVideoPosition(i);
+                ctx.drawImage(video, dx, dy, width, height);
+            });
 
-
-                const dx = i <= 1 ? width * i : width * (i - 2)
-                const dy = i <= 1 ? 0 : height
-    
-                ctx.drawImage(video, dx, dy, width, height)
-                //console.log(`video ${i}: ${video.currentTime}`)
-            })
-
-            requestAnimationFrame(draw)
+            requestAnimationFrame(draw);
         }
     }
 
-    draw()
+    canvas.addEventListener('mousemove', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+    
+        videoElements.forEach((video, i) => {
+            const { dx, dy, width, height } = getVideoPosition(i);
+    
+            if (mouseX > dx && mouseX < dx + width && mouseY > dy && mouseY < dy + height) {
+                if (video.paused) {
+                    video.play();
+                }
+            } else {
+                if (!video.paused) {
+                    video.pause();
+                }
+            }
+        });
+    });
+    
+    // Pause all videos and jump to the middle when the mouse leaves the canvas
+    canvas.addEventListener('mouseout', function() {
+        videoElements.forEach(video => {
 
+            video.pause();
+        });
+    });
+    
+    
+    
+    
+
+    draw();
 }

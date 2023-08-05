@@ -10,3 +10,10 @@ Then writing tests that uses puppeteer.
 ---
 consider usind marionette for e2e browser tests.
 https://fresh.deno.dev/docs/integrations#fresh_marionette
+
+
+---
+zipping video files instead of concatanate them.
+- [x] function for convert .h264 to .mp4
+- [ ] funciton for zipping the video files and append metadata.
+- [ ] change postprocess according to use above functions.

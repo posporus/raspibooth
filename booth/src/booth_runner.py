@@ -21,14 +21,19 @@ class BoothRunner():
 
     def run(self):
         
-        self.ringlight.set_state('idle')
-        self.start_button.wait()
-        time.sleep(1)
-        self.ringlight.set_state('loading')
-        time.sleep(1)
-        self.ringlight.set_state('blackout')
+        # self.ringlight.set_state('idle')
+        # self.start_button.wait()
+        # time.sleep(1)
+        # self.ringlight.set_state('loading')
+        # time.sleep(1)
+        # self.ringlight.set_state('blackout')
 
-        self.action_loop()
+        # self.action_loop()
+        pass
+
+        
+        # - run thru action loops
+        # - 
         
 
     def action_loop(self,iterations = 4):
