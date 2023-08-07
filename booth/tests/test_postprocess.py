@@ -1,4 +1,4 @@
-from src.postprocess import postprocess
+from src.postprocessing.postprocess import postprocess
 from tests.encryption.decrypt_file import decrypt_file
 from src.encryption.generate_key_from_password import generate_key_from_password
 import os, tempfile, unittest
