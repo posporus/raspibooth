@@ -1,7 +1,6 @@
 import unittest
 import os
 import base64
-from src.encryption.is_valid_aes256_key import is_valid_aes256_key
 from src.encryption.generate_key_from_password import (
     generate_key_from_password,
 )  # replace with your actual module

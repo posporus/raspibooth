@@ -15,7 +15,7 @@ https://fresh.deno.dev/docs/integrations#fresh_marionette
 ---
 zipping video files instead of concatanate them.
 - [x] function for convert .h264 to .mp4
-- [ ] funciton for zipping the video files and append metadata.
+- [x] funciton for zipping the video files and append metadata.
 - [ ] change postprocess according to use above functions.
 
 
@@ -31,6 +31,15 @@ checking tests for eache python module
     - [ ] test_button_start.py
     - [ ] test_led_strip_ringlight.py
     - [ ] test_printer_simple.py
+- hardware_mocks
+    - [ ] camera_mock.py
+    - [ ] test_camera_mock.py
+    - [ ] button_mock.py
+    - [ ] test_button_mock.py
+    - [ ] printer_mock.py
+    - [ ] test_printer_mock.py
+    - [ ] led_strip_mock.py
+    - [ ] test_led_strip_mock.py
 - postprocessing/
     - [ ] test_convert_files_to_mp4
     - [ ] test_postprocess.py
@@ -40,5 +49,6 @@ checking tests for eache python module
 - utility/
     - [ ] test_load_config.py
     - [ ] test_random_string.py
+- hardware_isolated
+    - [ ] test_isolated_hardware.py
 - [ ] test_booth_runner.py
-- [ ] test_independent_hardware.py

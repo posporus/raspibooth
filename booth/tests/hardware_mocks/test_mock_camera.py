@@ -1,7 +1,7 @@
 import cv2
 import os
 import unittest
-from tests.mocks.mock_camera import MockCamera
+from hardware_mocks.mock_camera import MockCamera
 import tempfile
 from pathlib import Path
 

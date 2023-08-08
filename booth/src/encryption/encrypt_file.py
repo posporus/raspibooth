@@ -1,5 +1,5 @@
 from pathlib import Path
-from src.encryption.encrypt import encrypt
+from .encrypt import encrypt
 import os
 
 def encrypt_file(input_file_path:Path, output_file_path:Path, key:bytes):
