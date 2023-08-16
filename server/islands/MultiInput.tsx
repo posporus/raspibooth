@@ -9,44 +9,55 @@ interface MultiInputProps {
 
 export default function MultiInput(props: MultiInputProps) {
     const { n, d, onCompleted, className } = props;
-    
-    // Create an array of refs, one for each input field
     const inputRefs = useRef(Array.from({ length: n }, () => useRef<HTMLInputElement>(null)));
-    
-    // Create a state variable to hold the values of the input fields
     const [values, setValues] = useState<string[]>(Array(n).fill(''));
     
-    // Focus the first input field when the component is first rendered
     useEffect(() => {
         inputRefs.current[0].current?.focus();
     }, []);
     
-    // Handle the input event on each input field
     const handleInput = (e: Event, index: number) => {
         const target = e.target as HTMLInputElement;
         const newValue = target.value;
-        
-        // Update the value of this input field
         const newValues = [...values];
         newValues[index] = newValue;
         setValues(newValues);
         
-        // Check if this input field is full
         if (newValue.length === d) {
-            // Check if this is the last input field
             if (index === n - 1) {
-                // Trigger the signal with the updated values
                 if (onCompleted) {
                     onCompleted(newValues);
                 }
             } else {
-                // Move focus to the next input field
                 inputRefs.current[index + 1].current?.focus();
             }
         }
     };
     
-    // Render the input fields, separated by ' - '
+    const handlePaste = (e: ClipboardEvent, index: number) => {
+        e.preventDefault();
+        const pastedData = e.clipboardData?.getData('text');
+        if (pastedData) {
+            // Remove characters that are not a-z, A-Z, or 0-9
+            const sanitizedData = pastedData.replace(/[^a-zA-Z0-9]/g, '');
+            
+            const pieces = [];
+            for (let i = 0; i < sanitizedData.length; i += d) {
+                pieces.push(sanitizedData.substring(i, i + d));
+            }
+            const newValues = [...values];
+            for (let i = 0; i < pieces.length && (index + i) < n; i++) {
+                newValues[index + i] = pieces[i];
+            }
+            setValues(newValues);
+    
+            // Trigger the onCompleted callback with the updated values
+            if (onCompleted) {
+                onCompleted(newValues);
+            }
+        }
+    };
+    
     return (
         <>
             <div class="flex space-x-2 font-mono">
@@ -58,6 +69,7 @@ export default function MultiInput(props: MultiInputProps) {
                             value={values[index]}
                             maxLength={d}
                             onInput={(e) => handleInput(e, index)}
+                            onPaste={(e) => handlePaste(e as ClipboardEvent, index)}
                             class="input input-bordered w-1 input-sm grow"
                         />
     
@@ -66,5 +78,5 @@ export default function MultiInput(props: MultiInputProps) {
                 ))}
             </div>
         </>
-    )
+    );
 }

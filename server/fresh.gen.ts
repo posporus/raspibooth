@@ -7,11 +7,12 @@ import * as $1 from "./routes/_404.tsx";
 import * as $2 from "./routes/_app.tsx";
 import * as $3 from "./routes/api/file/[key].ts";
 import * as $4 from "./routes/api/file/index.ts";
-import * as $5 from "./routes/index.tsx";
-import * as $6 from "./routes/stories/Photopaper.tsx";
-import * as $7 from "./routes/stories/PhotopaperWrapper.tsx";
-import * as $8 from "./routes/stories/_/Story.tsx";
-import * as $9 from "./routes/stories/index.tsx";
+import * as $5 from "./routes/api/subscribe/index.ts";
+import * as $6 from "./routes/index.tsx";
+import * as $7 from "./routes/stories/Photopaper.tsx";
+import * as $8 from "./routes/stories/PhotopaperWrapper.tsx";
+import * as $9 from "./routes/stories/_/Story.tsx";
+import * as $10 from "./routes/stories/index.tsx";
 import * as $$0 from "./islands/DataFetcher.tsx";
 import * as $$1 from "./islands/Decryptor.tsx";
 import * as $$2 from "./islands/Loader.tsx";
@@ -28,11 +29,12 @@ const manifest = {
     "./routes/_app.tsx": $2,
     "./routes/api/file/[key].ts": $3,
     "./routes/api/file/index.ts": $4,
-    "./routes/index.tsx": $5,
-    "./routes/stories/Photopaper.tsx": $6,
-    "./routes/stories/PhotopaperWrapper.tsx": $7,
-    "./routes/stories/_/Story.tsx": $8,
-    "./routes/stories/index.tsx": $9,
+    "./routes/api/subscribe/index.ts": $5,
+    "./routes/index.tsx": $6,
+    "./routes/stories/Photopaper.tsx": $7,
+    "./routes/stories/PhotopaperWrapper.tsx": $8,
+    "./routes/stories/_/Story.tsx": $9,
+    "./routes/stories/index.tsx": $10,
   },
   islands: {
     "./islands/DataFetcher.tsx": $$0,

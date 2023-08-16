@@ -1,7 +1,7 @@
 import MultiInput from './MultiInput.tsx'
 
 //TODO: this should be a config
-const fileIdLength = 8, passwordLength = 8
+const fileIdLength = 10, passwordLength = 10
 
 
 
