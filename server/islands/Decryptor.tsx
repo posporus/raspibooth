@@ -4,19 +4,19 @@ import { useState, useEffect, useMemo, useCallback, type StateUpdater } from 'pr
 import { isClient } from "../utils/isClient.ts"
 import { generateCryptoKeyFromPassword } from "../utils/generateCryptoKeyFromPassword.ts"
 import { decrypt_buffer } from "../utils/decrypt_buffer.ts"
-import { fetchFile } from '../utils/fetchFile.ts'
 import { useClient } from '../utils/client.ts'
 import { type LoadingState, loadingState } from '../islands/Loader.tsx'
 
 
-import Canvas from './Canvas.tsx'
+import Photopaper from './Photopaper.tsx'
 import { type CanvasData, getDataFromUnzipped } from '../utils/getDataFromUnzipped.ts'
 interface DecryptorProps {
+  data: Uint8Array
   fileId: string
 }
 
 export default function Decryptor (props: DecryptorProps) {
-  
+  const {data} = props
 
   const [canvasData, setCanvasData] = useState<CanvasData | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -24,12 +24,7 @@ export default function Decryptor (props: DecryptorProps) {
   // Use useMemo for the password state
   const password = useMemo(() => getPasswordFromUrl(), [])
 
-  const [encryptedData, setEncryptedData] = useState<Uint8Array | null>(null)
   const [client] = useClient()
-
-  // Additional States
-  //const [isLoading, setIsLoading] = useState(true)
-  const [isError, setIsError] = useState(false)
 
 
   // Memoize the decryptProcedure function using useCallback
@@ -49,49 +44,23 @@ export default function Decryptor (props: DecryptorProps) {
   )
 
   useEffect(() => {
-    if (!client || !props.fileId) return
-
-    loadingState.value = 'fetching';
-
-    (async () => {
-      try {
-        const data = await fetchFile(props.fileId)
-        setEncryptedData(data)
-      } catch (error) {
-        console.error(error)
-        setIsError(true)
-        setError(`Error fetching file ${props.fileId}: ${error.message}`)
-      } finally {
-        //setIsLoading(false)
-      }
-    })()
-  }, [client, props.fileId])
-
-  useEffect(() => {
-    if (!encryptedData || !password) return
+    if (!data || !password) return
 
     loadingState.value = 'decrypting'
-    //setIsLoading(true)
-    setIsError(false)
 
-    memoizedDecryptProcedure(encryptedData, password, props.fileId)
+    memoizedDecryptProcedure(data, password, props.fileId)
       .catch((error) => {
         console.error(error)
-        setIsError(true)
         setError(error.message)
       })
       .finally(() => {
         loadingState.value = 'building'
       })
-  }, [encryptedData, password, props.fileId, memoizedDecryptProcedure])
+  }, [data, password, props.fileId, memoizedDecryptProcedure])
 
   return (
     <>
-
-
-      {canvasData && <Canvas {...canvasData}></Canvas>}
-
-
+      {canvasData && <Photopaper {...canvasData}></Photopaper>}
     </>
   )
 }

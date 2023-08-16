@@ -9,7 +9,9 @@ export default function App ({ Component }: AppProps) {
         <link href="https://cdn.jsdelivr.net/npm/daisyui@3.5.1/dist/full.css" rel="stylesheet" type="text/css" />
       </Head>
       <div class="">
-
+        {/* <div class="navbar bg-base-100 fixed">
+          <a class="btn btn-ghost normal-case text-xl">raspibooth</a>
+        </div> */}
         <Component />
       </div>
     </>

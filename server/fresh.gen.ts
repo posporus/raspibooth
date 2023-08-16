@@ -8,10 +8,18 @@ import * as $2 from "./routes/_app.tsx";
 import * as $3 from "./routes/api/file/[key].ts";
 import * as $4 from "./routes/api/file/index.ts";
 import * as $5 from "./routes/index.tsx";
-import * as $$0 from "./islands/Canvas.tsx";
+import * as $6 from "./routes/stories/Photopaper.tsx";
+import * as $7 from "./routes/stories/PhotopaperWrapper.tsx";
+import * as $8 from "./routes/stories/_/Story.tsx";
+import * as $9 from "./routes/stories/index.tsx";
+import * as $$0 from "./islands/DataFetcher.tsx";
 import * as $$1 from "./islands/Decryptor.tsx";
 import * as $$2 from "./islands/Loader.tsx";
-import * as $$3 from "./islands/VideoPlayer.tsx";
+import * as $$3 from "./islands/MultiInput.tsx";
+import * as $$4 from "./islands/PasswordForm.tsx";
+import * as $$5 from "./islands/Photopaper.tsx";
+import * as $$6 from "./islands/VideoPlayer.tsx";
+import * as $$7 from "./islands/test_helpers/TestPhotopaper.tsx";
 
 const manifest = {
   routes: {
@@ -21,12 +29,20 @@ const manifest = {
     "./routes/api/file/[key].ts": $3,
     "./routes/api/file/index.ts": $4,
     "./routes/index.tsx": $5,
+    "./routes/stories/Photopaper.tsx": $6,
+    "./routes/stories/PhotopaperWrapper.tsx": $7,
+    "./routes/stories/_/Story.tsx": $8,
+    "./routes/stories/index.tsx": $9,
   },
   islands: {
-    "./islands/Canvas.tsx": $$0,
+    "./islands/DataFetcher.tsx": $$0,
     "./islands/Decryptor.tsx": $$1,
     "./islands/Loader.tsx": $$2,
-    "./islands/VideoPlayer.tsx": $$3,
+    "./islands/MultiInput.tsx": $$3,
+    "./islands/PasswordForm.tsx": $$4,
+    "./islands/Photopaper.tsx": $$5,
+    "./islands/VideoPlayer.tsx": $$6,
+    "./islands/test_helpers/TestPhotopaper.tsx": $$7,
   },
   baseUrl: import.meta.url,
 };

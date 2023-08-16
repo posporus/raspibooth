@@ -10,7 +10,7 @@ interface BoothCanvasProps {
 }
 
 
-export default function BoothCanvas (props: BoothCanvasProps) {
+export default function Photopaper (props: BoothCanvasProps) {
     const [client] = useClient()
     useEffect(() => {
         if (!client) return
