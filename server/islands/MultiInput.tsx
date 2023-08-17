@@ -60,7 +60,7 @@ export default function MultiInput(props: MultiInputProps) {
     
     return (
         <>
-            <div class="flex space-x-2 font-mono">
+            <div class="join flex space-x-1 font-mono">
                 {Array.from({ length: n }, (_, index) => (
                     <>
                         <input
@@ -70,10 +70,10 @@ export default function MultiInput(props: MultiInputProps) {
                             maxLength={d}
                             onInput={(e) => handleInput(e, index)}
                             onPaste={(e) => handlePaste(e as ClipboardEvent, index)}
-                            class="input input-bordered w-1 input-sm grow"
+                            class="input input-bordered w-1 input-sm grow join-item"
                         />
     
-                        {index < n - 1 && <span className="grow-0">-</span>}
+                        {index < n - 1 && <button disabled className="grow-0 join-item">-</button>}
                     </>
                 ))}
             </div>

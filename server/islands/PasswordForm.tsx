@@ -10,16 +10,16 @@ export default function PasswordForm () {
     const tokenSegmentLength = (fileIdLength + passwordLength) / 4
     return (
         <>
-            <div class="hero min-h-screen bg-base-200">
+            <div class="hero min-h-screen bg-base-200 flex items-center justify-center">
                 <div class="hero-content text-center">
-                    <div class="max-w-md grid place-content-center">
+                    <div class="max-w-md flex flex-col items-center">
                         <h1 class="text-5xl font-bold py-10">Welcome to Actionbooth!</h1>
-                        <div class="card max-w-sm shadow-2xl bg-base-100">
+                        <div class="card w-full max-w-sm shadow-2xl bg-base-100">
                             <div class="card-body">
                                 <form class="form-control">
-                                    <h4 class="py-6">
+                                    <label class="label">
                                         Enter your Access Token:
-                                    </h4>
+                                    </label>
                                     <MultiInput n={4} d={tokenSegmentLength} onCompleted={updateUrl} />
                                 </form>
                             </div>
