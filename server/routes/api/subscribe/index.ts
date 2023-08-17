@@ -15,7 +15,7 @@ export const handler: Handlers<string | null> = {
 
         }
         finally {
-            console.log(await subscription_store.get(fileId))
+            console.log(fileId,await subscription_store.get(fileId))
         }
 
     },
