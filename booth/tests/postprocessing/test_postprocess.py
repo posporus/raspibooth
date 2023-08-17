@@ -1,4 +1,4 @@
-from src.postprocessing.postprocess import postprocess
+from src.postprocessing._postprocess import postprocess
 from src.encryption.generate_key_from_password import generate_key_from_password
 import os, tempfile, unittest
 import shutil
