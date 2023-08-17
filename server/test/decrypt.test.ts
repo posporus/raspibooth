@@ -1,39 +1,45 @@
-//import { assertEquals } from "https://deno.land/std@0.196.0/testing/asserts.ts";
-import { decrypt } from "./../utils/decrypt.ts";
+import { assertEquals } from "https://deno.land/std@0.114.0/testing/asserts.ts"
+import { decrypt } from "../utils/decrypt.ts"
 
-Deno.test("decrypt files", async () => {
-  const files = ["urEhmvJ3gl"];
-  for (const file of files) {
-    // if (file.endsWith(".key")) continue; // Skip key files
+// Load the test data
+const testData = JSON.parse(await Deno.readTextFile("../shared_test_files/encyption_datasets.json"))
+let i = 0
+for (const data of testData) {
+  i++
+  Deno.test(`Decrypt test data: ${i}`, async () => {
+    // Decode the key, iv, and original data from Base64
+    const keyData = base64ToUint8Array(data.key)
+    const iv = base64ToUint8Array(data.iv)
+    const originalData = base64ToUint8Array(data.original_data)
+    const encryptedData = base64ToUint8Array(data.encrypted_data)
+    const tag = base64ToUint8Array(data.tag)
 
-    const encryptedData = new Uint8Array(
-      Deno.readFileSync(`./test/fixtures/encrypted_videos/${file}`),
-    );
-    const password = new TextDecoder().decode(
-      Deno.readFileSync(`./test/fixtures/encrypted_videos/${file}.key`),
-    );
-    const encoder = new TextEncoder();
-    const salt = encoder.encode(file)
-    console.log('salt:',salt)
-    const decryptedData = await decrypt(encryptedData, password,salt);
-    console.log(decryptedData);
-    // Check the result of the decryption function.
-    // This depends on what you expect the decrypted data to be.
-    // For example, if you expect the decrypted data to be the same as the original data, you can do:
-    // assertEquals(decryptedData, originalData);
+    // Import the key data as a CryptoKey
+    const key = await crypto.subtle.importKey(
+      "raw",
+      keyData,
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["decrypt"],
+    )
+
+    // Decrypt the data
+    const decryptedData = await decrypt(encryptedData, key, iv, tag)
+
+    // Compare the decrypted data to the original data
+    assertEquals(decryptedData, originalData)
+  })
+}
+
+function base64ToUint8Array (base64String: string) {
+  if (!(/^[A-Za-z0-9\+\/\=]*$/.test(base64String))) {
+    throw new Error("Invalid base64 string: " + base64String)
   }
-});
-
-// async function getTestfilesWithKeys(directoryPath: string) {
-//   const files = [];
-//   for await (const dirEntry of Deno.readDir(directoryPath)) {
-//     if (!dirEntry.isFile) continue;
-//     const filename = dirEntry.name;
-//     if (!filename.endsWith(".key")) continue;
-//     const filePath = join(directoryPath, dirEntry.name);
-//     const key = (await Deno.readFile(filePath+'.key')) || null
-//     files.push({
-//         filePath,key
-//     })
-//   }
-// }
+  const binaryString = atob(base64String)
+  const length = binaryString.length
+  const bytes = new Uint8Array(length)
+  for (let i = 0; i < length; i++) {
+    bytes[i] = binaryString.charCodeAt(i)
+  }
+  return bytes
+}

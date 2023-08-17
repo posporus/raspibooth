@@ -1,38 +1,36 @@
 import unittest
-import os
-import tempfile
-from src.encryption.generate_key_from_password import generate_key_from_password
-from src.utility.random_string import random_string
-from src.encryption.encrypt_file import encrypt_file
+import json
+import base64
+from src.encryption.encrypt import encrypt
 
 
-class TestEncryptionProcess(unittest.TestCase):
-    def test_encryption_process(self):
-        # Define the input file path
-        input_file_path = 'tests/fixtures/testfile.bin'
+def make_test_function(original_data, key, iv, expected_tag, expected_encrypted_data):
+    def test(self):
+        encrypted_data,tag = encrypt(original_data, iv, key)
+        self.assertEqual(encrypted_data, expected_encrypted_data)
+        self.assertEqual(tag, expected_tag)
+    return test
 
-        # Define a test password length
-        password_length = 16
 
-        # Generate a random password
-        password = random_string(password_length)
+class TestEncrypt(unittest.TestCase):
+    pass  # Placeholder for our dynamically created methods
 
-        # Generate a random salt
-        salt = os.urandom(16)
 
-        # Generate a key from the password
-        key = generate_key_from_password(password, salt)
+# Load test data from JSON file
+with open("shared_test_files/encyption_datasets.json", "r") as f:
+    test_data = json.load(f)
 
-        # Create a temporary directory to store the output file
-        with tempfile.TemporaryDirectory() as tempdir:
-            # Define the output file path within the temporary directory
-            output_file_path = os.path.join(tempdir, 'encrypted_testfile.bin')
+for i, data in enumerate(test_data):
+    # Convert base64 encoded strings back to bytes
+    original_data = base64.b64decode(data["original_data"])
+    key = base64.b64decode(data["key"])
+    iv = base64.b64decode(data["iv"])
+    tag = base64.b64decode(data["tag"])
+    expected_encrypted_data = base64.b64decode(data["encrypted_data"])
 
-            # Call the function to encrypt the file
-            success = encrypt_file(input_file_path, output_file_path, key)
+    test_func = make_test_function(original_data, key, iv,tag, expected_encrypted_data)
+    setattr(TestEncrypt, f"test_encrypt_{i}", test_func)
 
-            # Assert that the function returned True
-            self.assertTrue(success)
 
-            # Assert that the output file exists
-            self.assertTrue(os.path.exists(output_file_path))
+if __name__ == "__main__":
+    unittest.main()
