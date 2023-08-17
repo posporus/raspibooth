@@ -1,5 +1,5 @@
 from src.booth_runner import BoothRunner
-from src.camera_picamera import CameraPiCamera
+from src.hardware.camera_picamera import CameraPiCamera
 from src.thermal_printer import ThermalPrinter
 from src.ringlight import Ringlight
 from src.concatenate_videos import concatenate_videos
