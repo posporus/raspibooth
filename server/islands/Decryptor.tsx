@@ -10,13 +10,14 @@ import { type LoadingState, loadingState } from '../islands/Loader.tsx'
 
 import Photopaper from './Photopaper.tsx'
 import { type CanvasData, getDataFromUnzipped } from '../utils/getDataFromUnzipped.ts'
+import { PhotopaperWrapper } from '../components/PhotopaperWrapper.tsx'
 interface DecryptorProps {
   data: Uint8Array
   fileId: string
 }
 
 export default function Decryptor (props: DecryptorProps) {
-  const {data} = props
+  const { data } = props
 
   const [canvasData, setCanvasData] = useState<CanvasData | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -60,7 +61,9 @@ export default function Decryptor (props: DecryptorProps) {
 
   return (
     <>
-      {canvasData && <Photopaper {...canvasData}></Photopaper>}
+      <PhotopaperWrapper>
+        {canvasData && <Photopaper {...canvasData}></Photopaper>}
+      </PhotopaperWrapper>
     </>
   )
 }
