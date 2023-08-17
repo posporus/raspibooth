@@ -2,7 +2,7 @@ import unittest
 import os
 import tempfile
 import zipfile
-from src.zip_files import zip_files  # change this to the new function import
+from src.postprocessing.zip_files import zip_files  # change this to the new function import
 
 class TestZipFiles(unittest.TestCase):
     def setUp(self):

@@ -1,7 +1,7 @@
 import unittest
 import json
 import base64
-from booth.src.encryption.encrypt import encrypt
+from src.encryption.encrypt import encrypt
 
 
 def make_test_function(original_data, key, iv, expected_tag, expected_encrypted_data):

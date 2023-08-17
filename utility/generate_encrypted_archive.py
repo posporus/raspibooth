@@ -1,7 +1,7 @@
 import tempfile, shutil, os, base64, json
-from src.write_metadata_json import write_metadata_json
-from src.convert_files_to_mp4 import convert_files_to_mp4
-from src.zip_files import zip_files
+from src.postprocessing.write_metadata_json import write_metadata_json
+from src.postprocessing.convert_files_to_mp4 import convert_files_to_mp4
+from src.postprocessing.zip_files import zip_files
 from src.encryption.generate_key_from_password import generate_key_from_password
 from src.encryption.encrypt_file import encrypt_file
 from src.utility.random_string import random_string
