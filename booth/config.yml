@@ -1,0 +1,12 @@
+button:
+  pin: 17
+
+ringlight:
+  pin: 18
+  led_count: 32
+
+camera:
+  width: 480
+  height: 640
+  rotation: 90
+  duration: 1500
