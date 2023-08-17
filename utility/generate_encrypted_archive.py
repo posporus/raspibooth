@@ -5,6 +5,7 @@ from src.postprocessing.zip_files import zip_files
 from src.encryption.generate_key_from_password import generate_key_from_password
 from src.encryption.encrypt_file import encrypt_file
 from src.utility.random_string import random_string
+from src.utility.random_string_with_checksum import random_string_with_checksum
 from pathlib import Path
 
 # helper function to copy first n files from a folder to another.
@@ -39,7 +40,7 @@ def generate_encrypted_archive():
         archive_filepath = zip_files(archive_files, temp_dir)
 
         # generate needed data for encryption
-        fileId = random_string(10)
+        fileId = random_string_with_checksum(10)
         password = random_string(10)
         salt = bytes(fileId, "utf-8")
         key = generate_key_from_password(password, salt)
