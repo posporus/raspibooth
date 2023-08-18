@@ -19,23 +19,23 @@ def copy_first_n_files(src_dir, dest_dir, n=4):
         print(file)
     return copied_files
 
-def generate_encrypted_archive():
-    output_dir = Path("shared_test_files/test_archives")
+def generate_encrypted_archive(input_directory:str = "../shared_test_files/test_videos/",output_directory:str = "../shared_test_files/test_archives"):
+    output_dir = Path(output_directory)
     # temporary directory
     with tempfile.TemporaryDirectory() as temp_dir:
         # run thru action loops
         # imitate action loops. copy raw files to this folder.
-        raw_files = copy_first_n_files("shared_test_files/raw_test_videos/", temp_dir)
+        files = copy_first_n_files(input_directory, temp_dir)
 
         # convert raws to mp4 and save
-        converted_files = convert_files_to_mp4(raw_files)
+        # converted_files = convert_files_to_mp4(raw_files)
 
         # save metadata into json
         metadata_file = write_metadata_json(
             3, 30, os.path.join(temp_dir, "metadata.json")
         )
 
-        archive_files = converted_files + [metadata_file]
+        archive_files = files + [metadata_file]
         # zip files
         archive_filepath = zip_files(archive_files, temp_dir)
 
