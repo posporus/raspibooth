@@ -35,8 +35,9 @@ const WrongTokenHero = () => (
   <div class="hero min-h-screen bg-base-200">
     <div class="hero-content text-center">
       <div class="max-w-md">
-        <h1 class="text-5xl font-bold">Wrong Url.</h1>
-        <p class="py-6">There is probably a typo in your Url</p>
+        <h1 class="text-5xl font-bold">Wrong Url</h1>
+        <p class="py-6">There is probably a typo in your url.</p>
+        
         <p></p>
       </div>
     </div>
