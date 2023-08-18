@@ -1,25 +1,45 @@
-import { PageProps, Handlers } from "$fresh/server.ts"
-import Decryptor from "../islands/Decryptor.tsx"
-import { base64ToUint8Array } from "../utils/convertions.ts"
-import { fetchFile } from "../utils/fetchFile.ts"
+import { RouteContext } from "$fresh/server.ts"
+import DataFetcher from "../islands/DataFetcher.tsx"
+import { file_store } from "../store.ts"
+import Loader from "../islands/Loader.tsx"
+import LeaveMail from "../islands/LeaveMail.tsx"
+import { verifyStringWithChecksum } from "../utils/verifyStringWithChecksum.ts"
 
-// export const handler: Handlers<Uint8Array | null> = {
-//   async GET (_, ctx) {
-//     const { fileId } = ctx.params
-//     const data = await fetchFile(fileId)
-
-//     return ctx.render(data)
-//   },
-// }
-
-export default function VideoPage (props: PageProps<Uint8Array | null>) {
-  const { fileId } = props.params
-  const data = props.data
+export default async function VideoPage (_req: Request, ctx: RouteContext) {
+  const { fileId } = ctx.params
+  const verified = verifyStringWithChecksum(fileId, 3)
+  const hasFile = await file_store.has(fileId)
   return (
-    <main>
-      <p>File ID: <b>{fileId}</b></p>
-      
-      <Decryptor fileId={fileId}></Decryptor>
-    </main>
+    <>
+      <main >
+
+        {
+          !verified ? <>
+            <WrongTokenHero/>
+          </> :
+
+            hasFile ?
+              <>
+                <Loader></Loader>
+                <DataFetcher fileId={fileId} />
+              </>
+              : <LeaveMail fileId={fileId} />}
+
+      </main>
+    </>
   )
 }
+
+
+const WrongTokenHero = () => (
+  <div class="hero min-h-screen bg-base-200">
+    <div class="hero-content text-center">
+      <div class="max-w-md">
+        <h1 class="text-5xl font-bold">Wrong Url</h1>
+        <p class="py-6">There is probably a typo in your url.</p>
+        
+        <p></p>
+      </div>
+    </div>
+  </div>
+)

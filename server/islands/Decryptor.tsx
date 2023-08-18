@@ -1,94 +1,71 @@
-import { useState, useEffect, StateUpdater } from 'preact/hooks'
+// @deno-types="https://cdn.skypack.dev/fflate@0.8.0/lib/index.d.ts"
+import * as fflate from 'https://cdn.skypack.dev/fflate@0.8.0?min'
+import { useState, useEffect, useMemo, useCallback, type StateUpdater } from 'preact/hooks'
 import { isClient } from "../utils/isClient.ts"
 import { generateCryptoKeyFromPassword } from "../utils/generateCryptoKeyFromPassword.ts"
 import { decrypt_buffer } from "../utils/decrypt_buffer.ts"
-import { fetchFile } from '../utils/fetchFile.ts'
 import { useClient } from '../utils/client.ts'
+import { type LoadingState, loadingState } from '../islands/Loader.tsx'
 
-import Canvas from './Canvas.tsx'
 
+import Photopaper from './Photopaper.tsx'
+import { type CanvasData, getDataFromUnzipped } from '../utils/getDataFromUnzipped.ts'
+import { PhotopaperWrapper } from '../components/PhotopaperWrapper.tsx'
 interface DecryptorProps {
+  data: Uint8Array
   fileId: string
 }
 
 export default function Decryptor (props: DecryptorProps) {
+  const { data } = props
 
-  const [decryptedData, setDecryptedData] = useState<Uint8Array | null>(null)
+  const [canvasData, setCanvasData] = useState<CanvasData | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [password, setPassword] = useState<string>('')
-  const [encryptedData, setEncryptedData] = useState<Uint8Array | null>(null)
+
+  // Use useMemo for the password state
+  const password = useMemo(() => getPasswordFromUrl(), [])
+
   const [client] = useClient()
 
-  useEffect(() => {
-    if (!client) return
 
-    setPassword(getPasswordFromUrl())
-    console.log(props.fileId);
-
-    // self.addEventListener('hashchange', function (event) {
-    //   console.log('hashchange detected. updating password.')
-    //   setPassword(getPasswordFromUrl())
-    // });
-
-    (async () => {
-      const data = await fetchFile(props.fileId)
-      console.log(data)
-      setEncryptedData(data)
-    })()
-
-  }, [client])
-
-  useEffect(() => {
-    if (!encryptedData || !password) return
-
-    (async () => {
-
+  // Memoize the decryptProcedure function using useCallback
+  const memoizedDecryptProcedure = useCallback(
+    async (data: Uint8Array, password: string, fileId: string) => {
       try {
+        const cryptoKey = await generateCryptoKeyFromPassword(password, fileId)
+        const decrypted = await decrypt_buffer(data, cryptoKey)
+        const unzipped = fflate.unzipSync(decrypted)
 
-        await decryptProcedure(encryptedData, password, props.fileId, setDecryptedData)
+        setCanvasData(getDataFromUnzipped(unzipped))
       } catch (error) {
+        throw error
+      }
+    },
+    []
+  )
+
+  useEffect(() => {
+    if (!data || !password) return
+
+    loadingState.value = 'decrypting'
+
+    memoizedDecryptProcedure(data, password, props.fileId)
+      .catch((error) => {
         console.error(error)
         setError(error.message)
-      }
-    })()
-
-  }, [encryptedData])
-
-    
-
-
-
-
+      })
+      .finally(() => {
+        loadingState.value = 'building'
+      })
+  }, [data, password, props.fileId, memoizedDecryptProcedure])
 
   return (
-    <div>
-      Decryptor {props.fileId}
-      <br />
-      <br />
-      decrypted: {decryptedData ? decryptedData.toString() : 'No data'}
-      <br />
-      {error && <p>Error: {error}</p>}
-      {decryptedData ? <Canvas videoData={decryptedData}></Canvas> : null}
-    </div>
+    <>
+      <PhotopaperWrapper>
+        {canvasData && <Photopaper {...canvasData}></Photopaper>}
+      </PhotopaperWrapper>
+    </>
   )
 }
 
-
-const getPasswordFromUrl = (): string => isClient() ? decodeURIComponent(self.location.hash.substring(1)) : ''
-
-const decryptProcedure = async (encryptedData: Uint8Array, password: string, fileId: string, setDecryptedData: StateUpdater<Uint8Array | null>): Promise<void> => {
-
-  try {
-
-    const cryptoKey = await generateCryptoKeyFromPassword(password, fileId)
-    console.log('key generated.', cryptoKey)
-
-    const decrypted = await decrypt_buffer(encryptedData, cryptoKey)
-
-    setDecryptedData(decrypted)
-  }
-  catch (error) {
-    throw error
-  }
-
-}
+const getPasswordFromUrl = (): string => (isClient() ? decodeURIComponent(self.location.hash.substring(1)) : '')
