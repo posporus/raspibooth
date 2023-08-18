@@ -219,5 +219,48 @@
                 ]
             }
         ]
+    },
+    {
+        "category": "Testing Hardware Classes",
+        "submenus": [
+            {
+                "name": "Record Video with PiCamera",
+                "function": "record_picamera_video",
+                "module": "testing.record_picamera_video",
+                "arguments": [
+                    {
+                        "name": "fps",
+                        "type": "int",
+                        "default": 30
+                    },
+                    {
+                        "name": "duration",
+                        "type": "int",
+                        "default": 1
+                    },
+                    {
+                        "name": "width",
+                        "type": "int",
+                        "default": 640
+                    },
+                    {
+                        "name": "height",
+                        "type": "int",
+                        "default": 480
+                    },
+                    {
+                        "name": "rotation",
+                        "type": "int",
+                        "default": 90
+                    },
+                    {
+                        "name": "file_path",
+                        "type": "str",
+                        "default": "../recordings/"
+                    }
+                ]
+            }
+        ]
     }
+    
 ]
