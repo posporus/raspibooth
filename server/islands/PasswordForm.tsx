@@ -1,3 +1,5 @@
+import { verifyStringWithChecksum } from '../utils/verifyStringWithChecksum.ts'
+import { useState, useEffect } from 'preact/hooks'
 import MultiInput from './MultiInput.tsx'
 
 //TODO: this should be a config
@@ -8,6 +10,24 @@ const fileIdLength = 10, passwordLength = 10
 
 export default function PasswordForm () {
     const tokenSegmentLength = (fileIdLength + passwordLength) / 4
+    const [tokenSegments, setTokenSegments] = useState<string[] | null>(null)
+    const [wrongToken, setWrongToken] = useState<true | null>(null)
+
+    useEffect(() => {
+        if (tokenSegments === null) return
+
+        const compositeKey = verifyToken(tokenSegments)
+
+        if (compositeKey) {
+            updateUrl(compositeKey)
+            setWrongToken(null)
+        }
+        else {
+            setWrongToken(true)
+        }
+
+    }, [tokenSegments])
+
     return (
         <>
             <div class="hero min-h-screen bg-base-200 flex items-center justify-center">
@@ -20,7 +40,9 @@ export default function PasswordForm () {
                                     <label class="label">
                                         Enter your Access Token:
                                     </label>
-                                    <MultiInput n={4} d={tokenSegmentLength} onCompleted={updateUrl} />
+                                    <MultiInput wrongToken={wrongToken} n={4} d={tokenSegmentLength} onCompleted={setTokenSegments} />
+                                    {wrongToken && <span class="text-warning">The Token is invalid</span>}
+                                        
                                 </form>
                             </div>
                         </div>
@@ -32,10 +54,13 @@ export default function PasswordForm () {
     )
 }
 
-function updateUrl (v: string[]) {
-    console.log('values:', v)
-    const { fileId, password } = generateCompositeKey(v, fileIdLength, passwordLength)
+function verifyToken (tokenSegments: string[]) {
+    const { fileId, password } = generateCompositeKey(tokenSegments, fileIdLength, passwordLength)
+    return verifyStringWithChecksum(fileId, 3) ? { fileId, password } : false
 
+}
+
+function updateUrl ({ fileId, password }: { fileId: string, password: string }) {
     const newUrl = `${window.location.origin}/${fileId}#${password}`
     window.location.href = newUrl
 

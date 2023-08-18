@@ -1,66 +1,73 @@
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks'
 
 interface MultiInputProps {
-    n: number;
-    d: number;
-    onCompleted?: (values: string[]) => void;
-    className?: string;
+    n: number
+    d: number
+    onCompleted?: (values: string[]) => void
+    className?: string
+    wrongToken: true | null
 }
 
-export default function MultiInput(props: MultiInputProps) {
-    const { n, d, onCompleted, className } = props;
-    const inputRefs = useRef(Array.from({ length: n }, () => useRef<HTMLInputElement>(null)));
-    const [values, setValues] = useState<string[]>(Array(n).fill(''));
-    
+export default function MultiInput (props: MultiInputProps) {
+    const { n, d, onCompleted, className, wrongToken } = props
+    const inputRefs = useRef(Array.from({ length: n }, () => useRef<HTMLInputElement>(null)))
+    const [values, setValues] = useState<string[]>(Array(n).fill(''))
+
     useEffect(() => {
-        inputRefs.current[0].current?.focus();
-    }, []);
-    
+        inputRefs.current[0].current?.focus()
+    }, [])
+
     const handleInput = (e: Event, index: number) => {
-        const target = e.target as HTMLInputElement;
-        const newValue = target.value;
-        const newValues = [...values];
-        newValues[index] = newValue;
-        setValues(newValues);
-        
+        const target = e.target as HTMLInputElement
+        const newValue = target.value
+        const newValues = [...values]
+        newValues[index] = newValue
+        setValues(newValues)
+
         if (newValue.length === d) {
             if (index === n - 1) {
                 if (onCompleted) {
-                    onCompleted(newValues);
+                    onCompleted(newValues)
                 }
             } else {
-                inputRefs.current[index + 1].current?.focus();
+                inputRefs.current[index + 1].current?.focus()
             }
         }
-    };
-    
+    }
+
     const handlePaste = (e: ClipboardEvent, index: number) => {
-        e.preventDefault();
-        const pastedData = e.clipboardData?.getData('text');
+        e.preventDefault()
+        const pastedData = e.clipboardData?.getData('text')
         if (pastedData) {
             // Remove characters that are not a-z, A-Z, or 0-9
-            const sanitizedData = pastedData.replace(/[^a-zA-Z0-9]/g, '');
-            
-            const pieces = [];
+            const sanitizedData = pastedData.replace(/[^a-zA-Z0-9]/g, '')
+
+            const pieces = []
             for (let i = 0; i < sanitizedData.length; i += d) {
-                pieces.push(sanitizedData.substring(i, i + d));
+                pieces.push(sanitizedData.substring(i, i + d))
             }
-            const newValues = [...values];
+            const newValues = [...values]
             for (let i = 0; i < pieces.length && (index + i) < n; i++) {
-                newValues[index + i] = pieces[i];
+                newValues[index + i] = pieces[i]
             }
-            setValues(newValues);
-    
+            setValues(newValues)
+
             // Trigger the onCompleted callback with the updated values
             if (onCompleted) {
-                onCompleted(newValues);
+                onCompleted(newValues)
             }
         }
-    };
-    
+    }
+
     return (
         <>
-            <div class="join flex space-x-1 font-mono">
+            <div class={[
+                "join",
+                "flex",
+                "space-x-1",
+                "font-mono",
+                //wrongToken && "bg-waring", <-- not working as expected
+            ].join(" ")}>
                 {Array.from({ length: n }, (_, index) => (
                     <>
                         <input
@@ -70,13 +77,21 @@ export default function MultiInput(props: MultiInputProps) {
                             maxLength={d}
                             onInput={(e) => handleInput(e, index)}
                             onPaste={(e) => handlePaste(e as ClipboardEvent, index)}
-                            class="input input-bordered w-1 input-sm grow join-item"
+                            className={[
+                                "input",
+                                "input-bordered",
+                                
+                                "w-1",
+                                "input-sm",
+                                "grow",
+                                "join-item",
+                            ].join(" ")}
                         />
-    
+
                         {index < n - 1 && <button disabled className="grow-0 join-item">-</button>}
                     </>
                 ))}
             </div>
         </>
-    );
+    )
 }

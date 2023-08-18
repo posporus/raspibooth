@@ -21,5 +21,15 @@
     },
     "editor.quickSuggestions": {
         "strings": true
-    }
+    },
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./booth",
+        "-p",
+        "test_*.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "pythonTestExplorer.testFramework": "unittest"
 }
