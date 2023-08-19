@@ -1,0 +1,22 @@
+{
+    "picamera": {
+        "installer": "apt",
+        "sudo": true,
+        "package": "python3-picamera"
+    },
+    "start-button": {
+        "installer": "apt",
+        "sudo": true,
+        "package": "rpi.gpio"
+    },
+    "ringlight": {
+        "installer": "pip",
+        "sudo": false,
+        "package": "rpi-ws281x"
+    },
+    "thermalprinter_serial": {
+        "installer": "pip",
+        "sudo": false,
+        "package": "escpos"
+    }
+}

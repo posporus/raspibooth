@@ -1,38 +1,28 @@
 #!/bin/bash
 
+# Define paths
+CONFIG_PATH="booth.config.yaml"
+COMMANDS_PATH="_setup/install_commands.json"
+
 # Get the absolute path of the current script
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-# Define the subdirectories you want to include in the Python path
-SUBDIRS=("booth" "utility")
-
-# Check if the venv directory exists
-if [ ! -d "${SCRIPT_DIR}/venv" ]; then
-  # If it doesn't exist, create a new virtual environment
-  echo "Creating new virtual environment in 'venv/'..."
-  python3 -m venv "${SCRIPT_DIR}/venv"
+# Check if the booth.config.yaml file exists in the root folder
+CONFIG_PATH="${SCRIPT_DIR}/booth.config.yaml"
+if [ ! -f "$CONFIG_PATH" ]; then
+  # If it doesn't exist, copy the example configuration file from _setup folder
+  echo "No configuration file found."
+  cp "${SCRIPT_DIR}/_setup/_booth.config.yaml" "$CONFIG_PATH"
+  echo "An example configuration file has been copied to: $CONFIG_PATH"
+  
+  # Pause and notify the user
+  echo "Please configure your project using this file, and then press any key to continue the setup..."
+  read -n 1 -s
 fi
 
 # Activate the virtual environment
 echo "Activating virtual environment..."
 source ${SCRIPT_DIR}/venv/bin/activate
-
-# Get the site-packages directory of the virtual environment
-SITE_PACKAGES=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
-
-# Create a .pth file in the site-packages directory
-PTH_FILE="${SITE_PACKAGES}/project_paths.pth"
-
-# Empty the .pth file or create it if it doesn't exist
-> $PTH_FILE
-
-# Write the absolute paths to the .pth file
-for SUBDIR in "${SUBDIRS[@]}"; do
-  echo "${SCRIPT_DIR}/${SUBDIR}/" >> $PTH_FILE
-done
-
-# Print a success message for .pth file creation
-echo "Created .pth file at: $PTH_FILE"
 
 # Install common Python dependencies from requirements.txt
 if [ -f "${SCRIPT_DIR}/requirements.txt" ]; then
@@ -42,28 +32,22 @@ else
   echo "Warning: No requirements.txt file found in ${SCRIPT_DIR}/"
 fi
 
-# Check for 'pi' argument to install Raspberry Pi-specific packages
-if [ "$1" == "pi" ]; then
-  if [ -f "${SCRIPT_DIR}/requirements_pi.txt" ]; then
-    echo "Installing Raspberry Pi-specific Python dependencies..."
-    pip install -r "${SCRIPT_DIR}/requirements_pi.txt"
-  else
-    echo "Warning: No requirements_pi.txt file found in ${SCRIPT_DIR}/"
-  fi
-fi
+# Iterate over hardware components and install or uninstall packages
+for hardware_name in "picamera" "start-button" "ringlight" "thermalprinter_serial"; do
+    # Install the package if it is enabled in the config
+    command=$(python3 _setup/hardware_config.py $CONFIG_PATH $COMMANDS_PATH $hardware_name install)
+    if [ -n "$command" ]; then
+        echo "Installing $hardware_name..."
+        eval $command
+    fi
 
-# List of script files to make executable
-SCRIPTS_TO_MAKE_EXECUTABLE=("task.sh" "helpercli.sh")
-
-# Loop through each script filename and make it executable
-for script in "${SCRIPTS_TO_MAKE_EXECUTABLE[@]}"; do
-  if [ -f "$script" ]; then
-    chmod +x "$script"
-    echo "Made $script executable."
-  else
-    echo "Warning: $script not found."
-  fi
+    # Remove the package if it is not enabled in the config
+    command=$(python3 _setup/hardware_config.py $CONFIG_PATH $COMMANDS_PATH $hardware_name remove)
+    if [ -n "$command" ]; then
+        echo "Removing $hardware_name..."
+        eval $command
+    fi
 done
 
-# Optionally: Deactivate the virtual environment
-# deactivate
+# Print a success message to inform the user that the setup is complete
+echo -e "\n🎉 Setup completed successfully! Your project is now ready to run. 🎉\n"
