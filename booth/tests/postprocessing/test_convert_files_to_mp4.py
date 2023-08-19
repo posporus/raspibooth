@@ -2,7 +2,7 @@ import unittest
 import os
 import shutil
 import tempfile
-from src.postprocessing.convert_files_to_mp4 import convert_files_to_mp4  # replace 'your_module' with the actual module name
+from src.postprocessing._convert_files_to_mp4 import convert_files_to_mp4  # replace 'your_module' with the actual module name
 
 class TestConvertFilesToMP4(unittest.TestCase):
 
