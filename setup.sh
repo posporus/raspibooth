@@ -52,5 +52,18 @@ if [ "$1" == "pi" ]; then
   fi
 fi
 
+# List of script files to make executable
+SCRIPTS_TO_MAKE_EXECUTABLE=("task.sh" "helpercli.sh")
+
+# Loop through each script filename and make it executable
+for script in "${SCRIPTS_TO_MAKE_EXECUTABLE[@]}"; do
+  if [ -f "$script" ]; then
+    chmod +x "$script"
+    echo "Made $script executable."
+  else
+    echo "Warning: $script not found."
+  fi
+done
+
 # Optionally: Deactivate the virtual environment
 # deactivate
