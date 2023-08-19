@@ -11,8 +11,53 @@ So why settle for ordinary snapshots when you can capture memories in motion? Br
 
 ![Project Diagram](./docs/images/schema.png)
 
-## Setting PYTHONPATH
-To make sure everything runs smoothly, you should the `booth/` directory in your `PYTHONPATH`. To do this, navigate to the root directory of this project and run `export PYTHONPATH="$PWD/booth/"` in the terminal.
+
+## Installation
+
+<!--  -->
+
+## Development
+
+This repository is organized into two main components, each with its specific role and technology stack:
+
+1. **booth/**
+   - Written in **Python**, this component contains the code that runs on the booth. It is responsible for capturing videos and controlling the various actions of the booth.
+
+2. **server/**
+   - Developed using **TypeScript** and running in a **Deno** runtime environment, this component serves as the web server for the project. It includes an API for communication with the booth, stores all the data, and serves a client-app.
+
+
+
+
+### Booth Setup
+
+TODO: instead of installing specific dependencies for the pi, the setup script should ask for installed hardware.
+
+The `setup.sh` script automates the setup of this project by creating a virtual Python environment, installing dependencies, and optionally installing additional Raspberry Pi-specific packages based on a command-line argument.
+
+To run the script, follow these steps:
+
+1. **Make the Script Executable:**
+   - In your terminal, navigate to the project directory and run:
+   ```bash
+   chmod +x setup.sh
+   ```
+
+2. **Run the Script:**
+   - To install the common dependencies, run:
+   ```bash
+   bash setup.sh
+   ```
+   - To install both the common and Raspberry Pi-specific dependencies, run:
+   ```bash
+   bash setup.sh pi
+   ```
+
+
+
+
+<!-- ## Setting PYTHONPATH
+To make sure everything runs smoothly, you should the `booth/` directory in your `PYTHONPATH`. To do this, navigate to the root directory of this project and run `export PYTHONPATH="$PWD/booth/"` in the terminal. -->
 
 ## Task Script Usage
 
