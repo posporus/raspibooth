@@ -1,7 +1,7 @@
 from rpi_ws281x import PixelStrip, Color
 from threading import Thread
 import time
-from src.abstract.led_strip import LedStrip
+from src.statuslight.statuslight import StatusLight
 
 
 def theaterChase(ringlight, color):
@@ -42,7 +42,7 @@ def make_color_darker(color, scale_factor):
     return Color(r, g, b)
 
 
-def fx_idle(ringlight: 'Ringlight', j):
+def fx_idle(ringlight: 'StatusLightWS281x', j):
     # print(locals())
     ringlight.strip.setBrightness(20)
     for i in range(ringlight.strip.numPixels()):
@@ -51,11 +51,11 @@ def fx_idle(ringlight: 'Ringlight', j):
     time.sleep(0.02)
 
 
-def fx_posprocessing(ringlight: 'Ringlight', _i):
+def fx_posprocessing(ringlight: 'StatusLightWS281x', _i):
     theaterChase(ringlight, Color(140, 30, 80))
 
 
-def fx_loading(ringlight: 'Ringlight', _i):
+def fx_loading(ringlight: 'StatusLightWS281x', _i):
     """Draws a moving pixel with a tail."""
     color = Color(255, 200, 100)
     tail = 6
@@ -74,13 +74,13 @@ def fx_loading(ringlight: 'Ringlight', _i):
     ringlight.strip.show()
     time.sleep(0.03)
 
-def fx_blackout(ringlight:'Ringlight',_i):
+def fx_blackout(ringlight:'StatusLightWS281x',_i):
     for i in range(ringlight.strip.numPixels()):
         ringlight.strip.setPixelColor(i, Color(0, 0, 0))
     ringlight.strip.show()
 
 
-class Ringlight(LedStrip):
+class StatusLightWS281x(StatusLight):
     state = "postprocessing"
 
     def __init__(self, pin: int, led_count: int) -> None:

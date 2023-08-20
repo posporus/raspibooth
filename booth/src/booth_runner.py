@@ -1,6 +1,6 @@
 from src.camera.camera import Camera
-from src.abstract.printer import Printer
-from src.abstract.led_strip import LedStrip
+from printer.printer import Printer
+from src.statuslight.statuslight import StatusLight
 from src.button.button import Button
 import time
 
@@ -10,7 +10,7 @@ def buttoncp():
     print('preeeeessssss!')
 
 class BoothRunner():
-    def __init__(self,camera:Camera, start_button:Button, ringlight:LedStrip, printer:Printer) -> None:
+    def __init__(self,camera:Camera, start_button:Button, statuslight:StatusLight, printer:Printer) -> None:
         self.camera = camera
         self.ringlight = ringlight
         self.start_button = start_button
