@@ -1,41 +1,47 @@
-from src.camera.camera import Camera
+from .camera import Camera
 from pathlib import Path
-import subprocess
-
+from .create_single_color_video import create_single_color_video
+import os
 
 class MockCamera(Camera):
-    def __init__(self, width: int, height: int, fps=30) -> None:
-        self._width = width
-        self._height = height
-        self._fps = fps
-
-    def take_video(self, fp: Path, duration_ms=500):
-        num_frames = int(self.fps*(duration_ms/1000))
-
-        dst_path = str(fp)
-        src_path = 'tests/fixtures/testvideo_540x960.h264'
-        command = [
-            'ffmpeg',
-            '-i', src_path,
-            '-vframes', str(num_frames),
-            '-c:v', 'copy',
-            dst_path
-        ]
-
-        if subprocess.run(command).returncode != 0:
-            print(f'Error occurred while copying video to {dst_path}')
-            return False
-
-        return True
+    def __init__(self):
+        self._width = 640  # Default width
+        self._height = 480  # Default height
+        self._fps = 30  # Default fps
 
     @property
-    def width(self):
+    def width(self) -> int:
         return self._width
 
     @property
-    def height(self):
+    def height(self) -> int:
         return self._height
 
     @property
-    def fps(self):
+    def fps(self) -> int:
         return self._fps
+
+    def record_video(self, fp: Path or str, duration_ms=500):
+        duration_s = duration_ms / 1000.0  # Convert duration to seconds
+        output_directory, filename = os.path.split(fp)
+        
+        # Default to the current directory if no directory is provided
+        output_directory = output_directory or '.'
+
+        create_single_color_video(duration_s, self._fps, self._width, self._height, output_directory, filename)
+
+
+
+if __name__ == '__main__':
+    # Create an instance of MockCamera
+    mock_camera = MockCamera()
+    
+    # Print camera properties
+    print(f"Camera Width: {mock_camera.width}")
+    print(f"Camera Height: {mock_camera.height}")
+    print(f"Camera FPS: {mock_camera.fps}")
+    
+    # Record a video
+    mock_camera.record_video('mock_video.mp4', duration_ms=5000)  # 5 seconds video for demonstration
+    
+    print("Video saved to 'mock_video.mp4'")

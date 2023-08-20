@@ -23,5 +23,5 @@ class Camera(ABC):
     #     pass
 
     @abstractmethod
-    def take_video(self, fp: Path or str, duration_ms=500):
+    def record_video(self, fp: Path or str, duration_ms=500):
         pass
