@@ -7,7 +7,16 @@ config_path = 'booth.config.yaml'
 with open(config_path, 'r') as file:
     config = yaml.safe_load(file)
 
-    print(config)
+    # print(config)
+
+
+def getHardware(type:str):
+    hardware = config['hardware'][type]
+    if isinstance(hardware,str):
+        return hardware
+    if isinstance(hardware,dict):
+        return list(hardware.keys())[0]
+    return None
 
 '''
 Usage:

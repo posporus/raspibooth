@@ -1,4 +1,4 @@
-from src.abstract.camera import Camera
+from src.camera.camera import Camera
 from pathlib import Path
 import subprocess
 

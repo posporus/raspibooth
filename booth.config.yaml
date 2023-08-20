@@ -3,6 +3,8 @@ video:
   duration: 1000
   # Frames per seconds
   fps: 30
+  resolution: [640,480]
+  rotation: 90
 
 api-endpoint: http://localhost:8000/api/file
 
@@ -10,6 +12,14 @@ api-endpoint: http://localhost:8000/api/file
 # configured hardware will be installed when running setup.sh
 # also unused hardware will be uninstalled.
 hardware:
+#----new:
+  # camera: picamera
+  # camera:
+  #   libCamPro:
+  #     id: 20df
+  
+  start_button:
+    gpio: 17
   # Camera
   # # Picamera
   # picamera:

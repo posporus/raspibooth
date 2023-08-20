@@ -1,7 +1,7 @@
-from src.abstract.camera import Camera
+from src.camera.camera import Camera
 from src.abstract.printer import Printer
 from src.abstract.led_strip import LedStrip
-from src.abstract.button import Button
+from src.button.button import Button
 import time
 
 import threading

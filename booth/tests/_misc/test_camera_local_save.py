@@ -1,5 +1,5 @@
 import unittest
-from src.hardware.camera_picamera import CameraPiCamera
+from src.camera.camera_picamera import CameraPiCamera
 from pathlib import Path
 import time
 

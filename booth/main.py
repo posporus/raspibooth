@@ -1,22 +1,18 @@
 from src.booth_runner import BoothRunner
-from src.hardware.camera_picamera import CameraPiCamera
-from src.hardware.printer_simple import ThermalPrinter
-from src.hardware.led_strip_ringlight import Ringlight
-from src.concatenate_videos import concatenate_videos
-from src.utility.load_config import config, config_dict
-import RPi.GPIO as GPIO
-from src.hardware.gpio_button import GpioButton
+from src.camera.main import camera
+from src.config import config
+
+
+from src.button.gpio_button import GpioButton
 
 
 def main():
 
 
+
+
     booth_runner = BoothRunner(
-        camera=CameraPiCamera(
-            config.camera.width,
-            config.camera.height,
-            rotation=config.camera.rotation
-        ),
+        camera
         ringlight=Ringlight(**config_dict['ringlight']),
         printer=ThermalPrinter(),
         start_button=GpioButton(config.button.pin)

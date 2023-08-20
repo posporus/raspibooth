@@ -1,5 +1,5 @@
 import unittest
-from src.abstract.button import Button
+from src.button.button import Button
 from tests.mocks.mock_button import MockButton
 
 class TestMockButton(unittest.TestCase):
