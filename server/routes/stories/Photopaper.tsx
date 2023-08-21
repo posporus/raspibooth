@@ -1,5 +1,5 @@
 // import Photopaper from "../../islands/Photopaper.tsx"
-// import { Story } from "./_/Story.tsx"
+import { Story } from "./_/Story.tsx"
 
 // let sample_video = new Uint8Array()
 // try {
@@ -18,10 +18,10 @@
 //   ]
 // }
 
-// export default function PhotoPaperStory () {
-//   return (
-//     <Story>
-//       <Photopaper {...photopaperProps} />
-//     </Story>
-//   )
-// }
+export default function PhotoPaperStory () {
+  return (
+    <Story>
+      {/* <Photopaper {...photopaperProps} /> */}
+    </Story>
+  )
+}
