@@ -1,22 +1,22 @@
-import { walk } from "https://deno.land/std/fs/mod.ts"
+// import { walk } from "https://deno.land/std/fs/mod.ts"
 
-async function getTsxFiles (path: string) {
-    const tsxFiles: string[] = []
-    for await (const entry of walk(path, {
-        match: [/\.tsx$/],
-        skip: [/index\.tsx$/, /^_.*$/, /_/],
-    })) {
-        if (entry.isFile) {
-            const relativePath = entry.path.replace(path, "")
-            tsxFiles.push(relativePath)
-        }
-    }
-    return tsxFiles
-}
+// async function getTsxFiles (path: string) {
+//     const tsxFiles: string[] = []
+//     for await (const entry of walk(path, {
+//         match: [/\.tsx$/],
+//         skip: [/index\.tsx$/, /^_.*$/, /_/],
+//     })) {
+//         if (entry.isFile) {
+//             const relativePath = entry.path.replace(path, "")
+//             tsxFiles.push(relativePath)
+//         }
+//     }
+//     return tsxFiles
+// }
 
-const path = "routes/stories" // Replace with your folder path
-const tsxFiles = await getTsxFiles(path)
-console.log(tsxFiles)
+// const path = "routes/stories" // Replace with your folder path
+// const tsxFiles = await getTsxFiles(path)
+// console.log(tsxFiles)
 
 
 export default function TestPage () {
@@ -25,8 +25,8 @@ export default function TestPage () {
         <>
 
             Stories:
-            {tsxFiles.map((story) => <li><a href={story}>{story}</a></li>)}
-            {window.location.href}
+            {/* {tsxFiles.map((story) => <li><a href={story}>{story}</a></li>)}
+            {window.location.href} */}
 
         </>
     )
