@@ -5,7 +5,7 @@ start_button: Button
 
 hardware_start_button = get_hardware("button",config)
 
-if hardware_start_button == "gpio":
+if hardware_start_button == "start_button":
     from src.button.gpio_button import GpioButton
     pin = config['hardware']['start_button']['gpio']
     start_button = GpioButton(pin)
