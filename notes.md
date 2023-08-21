@@ -52,3 +52,9 @@ checking tests for eache python module
 - hardware_isolated
     - [ ] test_isolated_hardware.py
 - [ ] test_booth_runner.py
+
+
+# plus
+
+Uberspace mit Github syncen
+- https://matthias-andrasch.eu/2021/tutorial-webseite-mittels-github-actions-deployment-zu-uberspace-uebertragen-rsync/
