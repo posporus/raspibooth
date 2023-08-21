@@ -1,7 +1,7 @@
 import Photopaper from "../../islands/Photopaper.tsx";
 import { Story } from "./_/Story.tsx";
 
-const sample_video = await Deno.readFile("../shared_test_files/test_videos/4colors.mp4")
+const sample_video = await Deno.readFile("../shared_test_files/test_videos/1s_30fps_480x640_Blue.mp4")
 
 const photopaperProps = {
     fps: 30,

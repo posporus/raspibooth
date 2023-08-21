@@ -1,14 +1,14 @@
-from .statuslight import StatusLight
-from src.config import getHardware, config
+from src.statuslight.statuslight import StatusLight
+from src.config import get_hardware, config
 
 statuslight: StatusLight
 
-hardware_statuslight = getHardware("statuslight")
+hardware_statuslight = get_hardware("statuslight",config)
 
 if hardware_statuslight == "ws281x":
-    import statuslight_ws281x
-    statuslight = statuslight_ws281x.StatusLightWS281x()
+    from src.statuslight.statuslight_ws281x import StatusLightWS281x
+    statuslight = StatusLightWS281x()
 
 else:
-    import mock_statuslight
-    staticmethod = mock_statuslight.MockStatusLight()
+    from src.statuslight.mock_statuslight import MockStatusLight
+    statuslight = MockStatusLight()

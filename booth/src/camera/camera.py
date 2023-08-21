@@ -3,6 +3,10 @@ from pathlib import Path
 
 
 class Camera(ABC):
+    @abstractmethod
+    def __init__(self,width: int, height: int, fps:int) -> None:
+        pass
+
     @property
     @abstractmethod
     def width(self) -> int:

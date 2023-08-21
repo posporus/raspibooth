@@ -4,10 +4,10 @@ from .create_single_color_video import create_single_color_video
 import os
 
 class MockCamera(Camera):
-    def __init__(self):
-        self._width = 640  # Default width
-        self._height = 480  # Default height
-        self._fps = 30  # Default fps
+    def __init__(self,width:int,height:int,fps:int):
+        self._width = width
+        self._height = height
+        self._fps = fps
 
     @property
     def width(self) -> int:

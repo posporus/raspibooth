@@ -6,7 +6,8 @@ video:
   resolution: [640,480]
   rotation: 90
 
-api-endpoint: http://localhost:8000/api/file
+UPLOAD_URL: http://localhost:8000/api/file
+API_KEY: helloworld
 
 # Hardware configuration
 # configured hardware will be installed when running setup.sh

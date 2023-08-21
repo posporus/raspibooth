@@ -20,6 +20,7 @@ export class KvMemoryList<K extends string, V> extends KvList<K, V> {
   set = (key: K, value: V): Promise<void> =>
     new Promise((resolve) => {
       this._list.set(key, value)
+      console.log(key,value)
       resolve()
     });
 

@@ -1,34 +1,44 @@
 import yaml
 
-# Path to the YAML configuration file
-config_path = 'booth.config.yaml'
+def load_config(config_file_path: str) -> dict:
+    """
+    Load the configuration from the given YAML file.
 
-# Load the configuration file
-with open(config_path, 'r') as file:
-    config = yaml.safe_load(file)
+    Args:
+        config_file_path (str): Path to the YAML configuration file.
 
-    # print(config)
+    Returns:
+        dict: Configuration dictionary.
+    """
+    with open(config_file_path, 'r') as file:
+        return yaml.safe_load(file)
 
 
-def getHardware(type:str):
-    hardware = config['hardware'][type]
-    if isinstance(hardware,str):
+config = load_config('booth.config.yaml')
+
+
+def get_hardware(type: str, config: dict) -> str:
+    """
+    Retrieve the hardware configuration based on the given type.
+
+    Args:
+        type (str): The type of hardware.
+        config (dict): Configuration dictionary.
+
+    Returns:
+        str or None: The hardware configuration, or None if not found.
+    """
+    hardware = config.get('hardware', {}).get(type)
+    
+    if isinstance(hardware, str):
         return hardware
-    if isinstance(hardware,dict):
+    if isinstance(hardware, dict):
         return list(hardware.keys())[0]
     return None
 
-'''
-Usage:
-```python
-# Import the config dictionary from config.py
-from config import config
 
-# Access the camera resolution from the configuration
-camera_resolution = config['hardware']['picamera']['resolution']
 
-# Now you can use camera_resolution in your code
-print("Camera Resolution:", camera_resolution)
-
-```
-'''
+# Usage:
+# Import the config dictionary from the module
+# camera_resolution = config['hardware']['picamera']['resolution']
+# print("Camera Resolution:", camera_resolution)

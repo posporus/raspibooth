@@ -1,14 +1,16 @@
-from .printer import Printer
-from src.config import getHardware, config
+from src.printer.printer import Printer
+from src.config import get_hardware, config
 
 printer: Printer
 
-hardware_printer = getHardware("button")
+hardware_printer = get_hardware("button",config)
 
 if hardware_printer == "serial_thermalprinter":
-    import printer.serial_thermalprinter as serial_thermalprinter
-    printer = serial_thermalprinter.SerialThermalprinter()
+    #from src.printer.serial_thermalprinter import SerialTermalprinter
+    #printer = SerialThermalprinter()
+    print('serial_thermalprinter not yet implemented.')
+    pass
 
 else:
-    import mock_printer
-    printer = mock_printer.MockPrinter()
+    from src.printer.mock_printer import MockPrinter
+    printer = MockPrinter()

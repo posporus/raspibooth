@@ -8,5 +8,6 @@ export let file_store:KvList<string,Uint8Array> = new KvMemoryList<string, Uint8
 export const subscription_store:KvList<string,string> = new KvMemoryList<string, string>();
 
 if(DEVMODE) {
+    console.log('using DEVMODE store')
     file_store = new DevKvStorageList()
 }
