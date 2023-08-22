@@ -27,7 +27,7 @@ export default function Home () {
   return (
     <>
       <Head>
-        <title>deno-e2e-encrypted-provider</title>
+        <title>Raspibooth DEMO</title>
       </Head>
       <PasswordForm/>
 
