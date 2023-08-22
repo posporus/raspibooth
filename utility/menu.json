@@ -219,5 +219,22 @@
                 ]
             }
         ]
+    },
+    {
+        "category": "Config Data",
+        "submenus": [
+            {
+                "name": "Generate Secure Authentication Key",
+                "function": "generate_auth_key",
+                "module": "generate_auth_key",
+                "arguments": [
+                    {
+                        "name": "length",
+                        "type": "int",
+                        "default": 32
+                    }
+                ]
+            }
+        ]
     }
 ]
