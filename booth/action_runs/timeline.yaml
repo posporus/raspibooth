@@ -1,0 +1,19 @@
+metadata:
+  author: "Your Name"
+  version: 1.0
+actions:
+  - time: 0
+    function: set_state
+    args:
+      - postprocessing
+  - time: 1000
+    function: set_state
+    args:
+      - loading
+  - time: 1500
+    function: record
+    args: []
+  - time: 3000
+    function: set_state
+    args:
+      - idle

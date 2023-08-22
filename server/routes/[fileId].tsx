@@ -1,29 +1,45 @@
-import { PageProps, Handlers } from "$fresh/server.ts";
-import Decryptor from "../islands/Decryptor.tsx";
+import { RouteContext } from "$fresh/server.ts"
+import DataFetcher from "../islands/DataFetcher.tsx"
+import { file_store } from "../store.ts"
+import Loader from "../islands/Loader.tsx"
+import LeaveMail from "../islands/LeaveMail.tsx"
+import { verifyStringWithChecksum } from "../utils/verifyStringWithChecksum.ts"
 
-export const handler: Handlers<Uint8Array | null> = {
-  async GET(_, ctx) {
-    const { fileId } = ctx.params;
-    const resp = await fetch(`http://localhost:8000/api/file/${fileId}`);
-    if (resp.status === 404) {
-      return ctx.render(null);
-    }
-    // const bodeReader = await resp.body?.getReader().read()
-    const data: Uint8Array | null = (await resp.body?.getReader().read())?.value || null
-    return ctx.render(data);
-  },
-};
-
-
-
-export default function GreetPage(props: PageProps<Uint8Array>) {
-  const { fileId } = props.params;
-  const data  = props.data
+export default async function VideoPage (_req: Request, ctx: RouteContext) {
+  const { fileId } = ctx.params
+  const verified = verifyStringWithChecksum(fileId, 3)
+  const hasFile = await file_store.has(fileId)
   return (
-    <main>
-      <p>File ID: <b>{fileId}</b></p>
-      <p>data: {data.toString()}</p>
-      <Decryptor fileId={fileId} data={data}></Decryptor>
-    </main>
-  );
+    <>
+      <main >
+
+        {
+          !verified ? <>
+            <WrongTokenHero/>
+          </> :
+
+            hasFile ?
+              <>
+                <Loader></Loader>
+                <DataFetcher fileId={fileId} />
+              </>
+              : <LeaveMail fileId={fileId} />}
+
+      </main>
+    </>
+  )
 }
+
+
+const WrongTokenHero = () => (
+  <div class="hero min-h-screen bg-base-200">
+    <div class="hero-content text-center">
+      <div class="max-w-md">
+        <h1 class="text-5xl font-bold">Wrong Url</h1>
+        <p class="py-6">There is probably a typo in your url.</p>
+        
+        <p></p>
+      </div>
+    </div>
+  </div>
+)

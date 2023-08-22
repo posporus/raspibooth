@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.114.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.199.0/assert/mod.ts";
 import { KvMemoryList } from "./../../storage/KvMemoryList.ts";
 
 Deno.test("KvMemoryList - set and get string", async () => {

@@ -1,0 +1,223 @@
+[
+    {
+        "category": "Test Data Generation",
+        "submenus": [
+            {
+                "name": "Generate Random Access Token",
+                "function": "generate_random_access_token",
+                "module": "generate_random_access_token",
+                "arguments": [
+                    {
+                        "name": "file_id_length",
+                        "type": "int",
+                        "default": 10
+                    },
+                    {
+                        "name": "password_length",
+                        "type": "int",
+                        "default": 10
+                    },
+                    {
+                        "name": "token_part_length",
+                        "type": "int",
+                        "default": 5
+                    },
+                    {
+                        "name": "checksum_length",
+                        "type": "int",
+                        "default": 3
+                    }
+                ]
+            },
+            {
+                "name": "Generate Access Tokens From File",
+                "function": "generate_access_tokens_from_file",
+                "module": "generate_access_tokens_from_file",
+                "arguments": [
+                    {
+                        "name": "file",
+                        "type": "str",
+                        "default": "../shared_test_files/test_archives/test_data.json"
+                    },
+                    {
+                        "name": "token_part_length",
+                        "type": "int",
+                        "default": 5
+                    }
+                ]
+            },
+            {
+                "name": "Generate Test Links From Files",
+                "function": "generate_test_links_from_files",
+                "module": "generate_test_links_from_files",
+                "arguments": [
+                    {
+                        "name": "file list",
+                        "type": "string",
+                        "default": "../shared_test_files/test_archives/test_data.json"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "category": "Test File Generation",
+        "submenus": [
+            {
+                "name": "Save Random Strings with Checksum to JSON",
+                "function": "random_strings_checksum_to_json",
+                "module": "test_file_generation.random_strings_checksum_to_json",
+                "arguments": [
+                    {
+                        "name": "num_strings",
+                        "type": "int"
+                    },
+                    {
+                        "name": "password_length",
+                        "type": "int",
+                        "default": 10
+                    },
+                    {
+                        "name": "checksum_length",
+                        "type": "int",
+                        "default": 3
+                    },
+                    {
+                        "name": "output_path",
+                        "type": "str",
+                        "default": "../shared_test_files/random_strings.json"
+                    },
+                    {
+                        "name": "append",
+                        "type": "bool",
+                        "default": false
+                    }
+                ]
+            },
+            {
+                "name": "Create Single Color Video",
+                "function": "create_single_color_video",
+                "module": "test_file_generation.create_single_color_video",
+                "arguments": [
+                    {
+                        "name": "duration",
+                        "type": "float",
+                        "default": 1
+                    },
+                    {
+                        "name": "fps",
+                        "type": "int",
+                        "default": 30
+                    },
+                    {
+                        "name": "width",
+                        "type": "int",
+                        "default": 480
+                    },
+                    {
+                        "name": "height",
+                        "type": "int",
+                        "default": 640
+                    },
+                    {
+                        "name": "output_path",
+                        "type": "str",
+                        "default": "../shared_test_files/test_videos/"
+                    }
+                ]
+            },
+            {
+                "name": "Generate Encrypted Archive",
+                "function": "generate_encrypted_archive",
+                "module": "test_file_generation.generate_encrypted_archive",
+                "arguments": [
+                    {
+                        "name": "input_directory",
+                        "type": "str",
+                        "default": "../shared_test_files/test_videos/"
+                    },
+                    {
+                        "name": "output_directory",
+                        "type": "str",
+                        "default": "../shared_test_files/test_archives"
+                    }
+                ]
+            },
+            {
+                "name": "Generate encryption_datasets.json",
+                "function": "gen_encryption_datasets",
+                "module": "test_file_generation.gen_encryption_datasets",
+                "arguments": [
+                    {
+                        "name": "file",
+                        "type": "str",
+                        "default": "../shared_test_files/encryption_datasets.json"
+                    },
+                    {
+                        "name": "number_of_datasets",
+                        "type": "int",
+                        "default": 10
+                    }
+                ]
+            },
+            {
+                "name": "Generate simple_string_encryption.json",
+                "function": "gen_simple_string_encryption",
+                "module": "test_file_generation.gen_simple_string_encryption",
+                "arguments": [
+                    {
+                        "name": "file_path",
+                        "type": "str",
+                        "default": "../shared_test_files/simple_string_encryption.json"
+                    }
+                ]
+            }
+        ]
+    },
+    
+    {
+        "category": "Input Hardware",
+        "submenus": [
+            {
+                "name": "Record Raw Test Video With PiCamera",
+                "function": "record_raw_videos_with_picamera",
+                "module": "record_raw_videos_with_picamera",
+                "arguments": [
+                    {
+                        "name": "output_directory",
+                        "type": "str",
+                        "default": "../shared_test_files/raw_test_videos"
+                    },
+                    {
+                        "name": "dimensions",
+                        "type": "tuple",
+                        "default": [
+                            480,
+                            640
+                        ]
+                    },
+                    {
+                        "name": "fps",
+                        "type": "int",
+                        "default": 30
+                    },
+                    {
+                        "name": "duration_ms",
+                        "type": "int",
+                        "default": 1000
+                    },
+                    {
+                        "name": "num_recordings",
+                        "type": "int",
+                        "default": 4
+                    },
+                    {
+                        "name": "rotation",
+                        "type": "int",
+                        "default": 90
+                    }
+                ]
+            }
+        ]
+    }
+]

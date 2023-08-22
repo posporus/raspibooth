@@ -1,53 +1,37 @@
-export async function decrypt(
-  encryptedData: Uint8Array,
-  password: string,
-  salt: Uint8Array,
-): Promise<Uint8Array> {
-  try {
-    console.log('--- decrypt ---')
-    console.log('password:',password)
-    const decoder = new TextDecoder()
-    console.log('salt:', salt,decoder.decode(salt))
-    // Derive a key from the password.
-    const encoder = new TextEncoder();
-    const passwordKey = await window.crypto.subtle.importKey(
-      "raw",
-      encoder.encode(password),
-      "PBKDF2",
-      false,
-      ["deriveBits", "deriveKey"],
-    );
-    const key = await window.crypto.subtle.deriveKey(
-      {
-        name: "PBKDF2",
-        salt: salt,
-        iterations: 100000,
-        hash: "SHA-256",
-      },
-      passwordKey,
-      { name: "AES-GCM", length: 256 },
-      false,
-      ["decrypt"],
-    );
+import { arrayBufferToString, cryptoKeyToString, uint8ArrayToBase64 } from "./convertions.ts"
 
-    // Separate the IV from the ciphertext.
-    const iv = encryptedData.slice(0, 12);
-    const ciphertext = encryptedData.slice(12);
-    console.log('IV:', iv)
+export async function decrypt (encryptedData: ArrayBuffer, key: CryptoKey, iv: ArrayBuffer, tag: ArrayBuffer): Promise<Uint8Array> {
+    // console.log('Decrypting with parameters:', {
+    //     encryptedData,
+    //     key,
+    //     iv,
+    //     tag,
+    //   });
 
-    // Decrypt the data.
-    const decryptedData = await window.crypto.subtle.decrypt(
-      {
-        name: "AES-GCM",
-        iv: iv,
-      },
-      key,
-      ciphertext,
-    );
+    try {
+        // Combine the ciphertext and tag into one ArrayBuffer
+        const ciphertextWithTag = new Uint8Array(encryptedData.byteLength + tag.byteLength)
+        ciphertextWithTag.set(new Uint8Array(encryptedData), 0)
+        ciphertextWithTag.set(new Uint8Array(tag), encryptedData.byteLength)
 
-    return new Uint8Array(decryptedData);
-  } catch (error) {
-    console.log('error:', error)
-    throw Error("Failed to decrypt data:", error);
-  }
+        console.log('key:', await cryptoKeyToString(key))
+        console.log('tag:', uint8ArrayToBase64(new Uint8Array(tag)))
+        console.log('iv:', uint8ArrayToBase64(new Uint8Array(iv)))
+        // Decrypt the data
+        const decryptedData = await crypto.subtle.decrypt(
+            {
+                name: "AES-GCM",
+                iv: new Uint8Array(iv),
+                tagLength: tag.byteLength * 8, // Length of authentication tag in bits
+            },
+            key,
+            ciphertextWithTag
+        )
+
+        return new Uint8Array(decryptedData)
+    } catch (error) {
+        console.error('Decryption failed:', error.message)
+        console.error(error.stack)
+        throw error // re-throw the error so it can be handled by the caller if needed
+    }
 }

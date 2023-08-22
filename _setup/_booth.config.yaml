@@ -1,0 +1,31 @@
+video:
+  # Duration in ms
+  duration: 1000
+  # Frames per seconds
+  fps: 30
+
+api-endpoint: http://localhost:8000/api/file
+
+# Hardware configuration
+# configured hardware will be installed when running setup.sh
+# also unused hardware will be uninstalled.
+hardware:
+  # Camera
+  # # Picamera
+  # picamera:
+  #   resolution: [640,480]
+  #   rotation: 90
+
+  # # Start Button connected to GPIO
+  # start-button:
+  #   pin: 17
+
+  # # ws2812b Ringlight
+  # ringlight:
+  #   pin: 18
+  #   count: 32
+  
+  # # Thermal Printen on serial GPIO
+  # thermalprinter_serial:
+  #   tx-pin: 2
+  #   rx-pin: 1

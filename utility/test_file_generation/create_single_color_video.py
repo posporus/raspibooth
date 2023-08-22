@@ -1,0 +1,1 @@
+from src.camera.create_single_color_video import create_single_color_video

@@ -1,9 +1,9 @@
-import requests
+import aiohttp
 import os
 
-def upload_file(file_path, url, api_key):
+async def upload_file(file_path, url, api_key):
     '''
-    Uploads a file to a given URL using POST.
+    Asynchronously uploads a file to a given URL using POST.
 
     Args:
     file_path (str): Path to the file to upload.
@@ -13,15 +13,23 @@ def upload_file(file_path, url, api_key):
     Returns:
     Response object.
     '''
-
+    file_id = os.path.basename(file_path)
+    print(file_id)
     # Open the file in binary mode
     with open(file_path, 'rb') as file:
-        # Set up the headers
-        headers = {
-            'X-API-Key': api_key,
-        }
+        data = file.read()
 
-        # Make the POST request
-        response = requests.post(url, headers=headers, data=file.read())
+    # Set up the headers
+    headers = {
+        'X-API-Key': api_key,
+        'X-File-Id': file_id
+    }
 
-    return response
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, headers=headers, data=data) as response:
+            return await response.text()
+
+# To test the function, you'll need an asyncio loop
+# For example:
+
+# asyncio.run(upload_file('path_to_file.txt', 'https://example.com/upload', 'YOUR_API_KEY'))
