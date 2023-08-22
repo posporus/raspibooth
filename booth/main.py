@@ -27,8 +27,6 @@ action_run_files = collect_action_runs()
 upload_dir = Path(config["UPLOAD_DIR"])
 
 SERVER_URL = config["SERVER_URL"]
-UPLOAD_PATH = config["UPLOAD_PATH"]
-upload_url = f'{SERVER_URL}{UPLOAD_PATH}'
 
 
 def session():
@@ -60,7 +58,7 @@ def session():
 
 
 def postPrint(fileId: str, password: str):
-    url = f"{upload_url}{fileId}#{password}"
+    url = f"{SERVER_URL}{fileId}#{password}"
     access_token = generate_access_token(fileId, password)
     printer.printQr(
         "Your way to your images",
