@@ -62,7 +62,7 @@ While development can proceed with mocked versions of the hardware, actual usage
 #### Booth:
 
 1. **Dependencies:** Install the necessary dependencies based on your platform and hardware:
-   - PiCamera: [Installation Instructions](#) *(Link to be added)*
+   - PiCamera: [Installation Instructions](https://picamera.readthedocs.io/en/release-1.13/install.html)
    - RPi.GPIO Library
    - Serial Thermal Printer: Use the `escpos` Python library.
    - WS2812B Ringlight: Use the `rpi_ws281x` Python library.
@@ -73,7 +73,7 @@ While development can proceed with mocked versions of the hardware, actual usage
    - Generate a config file at the project root.
    - Make helper scripts executable.
 
-3. **Cryptography Library:** Occasionally, the setup script might encounter issues with the cryptography library. Ensure `pip` is updated and the `rustc` compiler is correctly installed. If issues persist, manually run `pip install cryptography`. [Cryptography Installation Docs](#) *(Link to be added)*
+3. **Cryptography Library:** Occasionally, the setup script might encounter issues with the cryptography library. Ensure `pip` is updated and the `rustc` compiler is correctly installed. If issues persist, manually run `pip install cryptography`. [Cryptography Installation Docs](https://cryptography.io/en/latest/#installation)
 
 #### Server:
 
@@ -118,7 +118,8 @@ RaspiBooth operates on a unique mechanism:
 
 - **Encryption:** All files undergo AES-256 GCM encryption, ensuring data integrity and confidentiality.
 - **File ID & Password:** Both are generated as random strings containing characters from A-Z, a-z, and 0-9. Their lengths are configurable, with a default of 10 characters each. For enhanced security, their lengths can be extended.
-- **Key Derivation:** The password undergoes transformation into a 32-bit encryption key using PBKDF2HMAC. *(Please verify the exact name)*
+- **Key Derivation:** The password undergoes transformation into a 32-bit encryption key using PBKDF2. The file ID is the salt.
+- Python Pryptography libray is used for encryption and Web Crypto API is used to decrypt the data on client side.
 
 #### Access URL
 
