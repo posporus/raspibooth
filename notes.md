@@ -58,3 +58,38 @@ checking tests for eache python module
 
 Uberspace mit Github syncen
 - https://matthias-andrasch.eu/2021/tutorial-webseite-mittels-github-actions-deployment-zu-uberspace-uebertragen-rsync/
+
+# Readme
+
+## Development Status
+### Milestone 1
+- [x] picamera for video revording
+- [x] ws281x ringlight as status light and flash
+- [x] hardware start button
+- [ ] simple thermal printer for printing qr code and/or token
+- [x] simple server api w/ auth mechanism
+- [x] client web app for viesing videos
+- [x] AES-256 e2e encryption
+- [x] url w/ fileId and encryption password
+- [x] alternative: access token
+- [x] fileId checksum to validate in browser
+- [x] programable timeline using Yaml files
+- [ ] multithreading
+- [ ] email subsctiption to get informed on upload
+- [ ] optional safe credentials in localStorage
+- [ ] build a small (wall mounded) prototype
+- [ ] testing on a party
+- [ ] setup script for configuring python project under different conditions
+
+### Milestone 2
+- [ ] DMX for controlling lights and actions
+- [ ] building custom, simple dmx devices
+- [ ] Multi channel audio output
+- [ ] writin concepts for "action photo sessions"
+- [ ] record/produce audio
+- [ ] browser notification to get informed on upload
+- [ ] build an actual photo booth prototype
+- [ ] bring this to another party!
+
+## Development
+## Securit
