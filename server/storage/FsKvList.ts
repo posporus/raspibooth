@@ -1,19 +1,22 @@
 import { exists } from "https://deno.land/std@0.197.0/fs/mod.ts"
 import { KvList } from "./KvList.ts"
+import { ensureDir } from "https://deno.land/std/fs/mod.ts"
+
 
 const { readFile, writeFile, remove } = Deno
 
 export class FsKvList<K extends string, V> extends KvList<K, V> {
     private basePath: string
+    private listName :string
 
-    constructor(listName: string) {
+    constructor(listName: string, basePath?:string) {
         super()
-        const fsStoragePath = Deno.env.get('FILESYSTEM_STORAGE_PATH') || "./data"
-        this.basePath = `${fsStoragePath}/${listName}`
+        this.basePath = basePath || Deno.env.get('FILESYSTEM_STORAGE_PATH') || "./data"
+        this.listName = listName
     }
 
     private getFilePath (key: K): string {
-        return `${this.basePath}/${key}`
+        return `${this.basePath}/${this.listName}/${key}`
     }
 
     async has (key: K): Promise<boolean> {
@@ -22,6 +25,7 @@ export class FsKvList<K extends string, V> extends KvList<K, V> {
 
     async get (key: K): Promise<V | null> {
         const filePath = this.getFilePath(key)
+        
         if (await exists(filePath)) {
             const data = await readFile(filePath)
             const header = new TextDecoder().decode(data.slice(0, 5))
@@ -37,7 +41,9 @@ export class FsKvList<K extends string, V> extends KvList<K, V> {
     }
 
     async set (key: K, value: V): Promise<void> {
+        
         const filePath = this.getFilePath(key)
+        await ensureDir(`${this.basePath}/${this.listName}`);
         if (value instanceof Uint8Array) {
             const header = new TextEncoder().encode("BIN:")
             await writeFile(filePath, new Uint8Array([...header, ...value]))
