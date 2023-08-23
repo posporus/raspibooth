@@ -10,7 +10,7 @@ An innovative photobooth solution powered by Raspberry Pi, capturing moments as 
 - ✅ **Camera Integration:** Utilize `picamera` for video recording.
 - ✅ **Lighting:** Implement `ws281x` ringlight for status indication and flash functionality.
 - ✅ **Start Mechanism:** Integrate a hardware start button.
-- 🟡 **Printing:** Integrate a simple thermal printer for QR code and/or token printing.
+- ✅ **Printing:** Integrate a simple thermal printer for QR code and/or token printing.
 - ✅ **Server API:** Develop a basic server API with an authentication mechanism.
 - ✅ **Client Web App:** Create a web application for viewing videos.
 - ✅ **Security:** Implement AES-256 end-to-end encryption.
