@@ -6,9 +6,10 @@ const { readFile, writeFile, remove } = Deno
 export class FsKvList<K extends string, V> extends KvList<K, V> {
     private basePath: string
 
-    constructor(basePath: string) {
+    constructor(listName: string) {
         super()
-        this.basePath = basePath
+        const fsStoragePath = Deno.env.get('FILESYSTEM_STORAGE_PATH') || "./data"
+        this.basePath = `${fsStoragePath}/${listName}`
     }
 
     private getFilePath (key: K): string {
