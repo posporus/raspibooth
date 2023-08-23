@@ -30,15 +30,13 @@ const createClient = () => {
     return client
 }
 
-export async function sendmail (to: string, subject:string, content: string, html:string) {
+export async function sendmail (SendConfig:{to: string, subject:string, content?: string, html?:string}) {
     if(!MAIL) return
+
     createClient()
     client && await client.send({
         from: "noreply@raboo.uber.space",
-        to,
-        subject,
-        content,
-        html,
+        ...SendConfig
     })
 }
 
