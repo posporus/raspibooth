@@ -12,7 +12,7 @@ jobs:
     - name: rsync deployments
       uses: burnett01/rsync-deployments@4.1
       with:
-        switches: -avzr --delete --exclude=.env --exclude=./data
+        switches: -avzr --delete --exclude=.env --exclude=data/
         path: /server/
         remote_path: /home/${{ secrets.UBERSPACE_USER }}/raspibooth/
         remote_host: ${{ secrets.UBERSPACE_HOST }}
