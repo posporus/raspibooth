@@ -29,10 +29,10 @@ export const handler: Handlers<File | null> = {
     
     if(await subscription_store.has(fileId)) {
       const to = await subscription_store.get(fileId) || ''
-      const subject = `hey, your images are ready!
+      const html = `hey, your images are ready!
       
       <a href="https://raboo.uber.space">click here!</a>`
-      sendmail({to,html:'Your PHOTOBOOTH Upload Is Ready',subject})
+      sendmail({to,subject:'Your PHOTOBOOTH Upload Is Ready',html})
     }
 
     // Calculate the SHA-256 hash of the file data
