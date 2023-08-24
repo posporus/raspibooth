@@ -5,7 +5,7 @@
 /// <reference lib="deno.ns" />
 import "$std/dotenv/load.ts"
 
-import { client, sendmail } from "./utils/sendmail.ts"
+import { client as emailclient } from "./core/sendmail.ts"
 
 import { start } from "$fresh/server.ts"
 import manifest from "./fresh.gen.ts"
@@ -16,5 +16,5 @@ import twindConfig from "./twind.config.ts"
 await start(manifest, { plugins: [twindPlugin(twindConfig)] })
 
 //Close email connection
-if (client)
-    await client.close()
+if (emailclient)
+    await emailclient.close()

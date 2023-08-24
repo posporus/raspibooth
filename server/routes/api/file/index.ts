@@ -1,7 +1,7 @@
 /// <reference lib="deno.unstable" />
 import { Handlers } from "$fresh/server.ts";
 import { file_store, subscription_store } from "../../../store.ts"; // Add this line
-import { sendmail } from "../../../utils/sendmail.ts";
+import { sendmail } from "../../../core/sendmail.ts";
 
 
 const AUTHKEY = Deno.env.get('AUTHKEY')
