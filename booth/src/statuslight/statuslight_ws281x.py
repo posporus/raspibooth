@@ -110,7 +110,9 @@ class StatusLightWS281x(StatusLight):
 
         self.strip.begin()
 
-        self.effects = {
+        
+
+        self._effects = {
             "idle": fx_idle,
             "postprocessing": fx_posprocessing,
             "loading": fx_loading,
@@ -122,6 +124,10 @@ class StatusLightWS281x(StatusLight):
 
         self.sleep = 0.02
 
+    @property
+    def effects(self):
+        return self._effects
+    
     def run(self):
         i = 0
         while True:
@@ -131,3 +137,14 @@ class StatusLightWS281x(StatusLight):
 
     def set_state(self, state):
         self.state = state
+
+if __name__ == "__main__":
+    # Create an instance of MockStatusLight
+    mock_light = StatusLightWS281x(18,32)
+
+    # Test setting different states and observe the terminal outputs
+    states_to_test = ["idle", "postprocessing", "loading", "blackout", "nonexistent_state"]
+    for state in states_to_test:
+        print(f"Setting state to: {state}")
+        mock_light.set_state(state)
+        print("\n")

@@ -22,6 +22,10 @@ FILE=$2
 
 # Run the appropriate task
 case $TASK in
+    booth_run)
+        echo "running booth"
+        sudo venv/bin/python3.9 booth/main.py
+        ;;
     server_test)
         # Navigate to 'server' and run tests
         pushd server

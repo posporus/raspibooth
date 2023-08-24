@@ -11,7 +11,7 @@ async def upload_file(file_path, url, api_key):
     api_key (str): API key for authentication.
 
     Returns:
-    Response object.
+    Tuple containing response text and status code.
     '''
     file_id = os.path.basename(file_path)
     print(file_id)
@@ -27,9 +27,4 @@ async def upload_file(file_path, url, api_key):
 
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=headers, data=data) as response:
-            return await response.text()
-
-# To test the function, you'll need an asyncio loop
-# For example:
-
-# asyncio.run(upload_file('path_to_file.txt', 'https://example.com/upload', 'YOUR_API_KEY'))
+            return await response.text(), response.status  # Return both response text and status code
