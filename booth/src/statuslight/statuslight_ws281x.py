@@ -44,7 +44,7 @@ def make_color_darker(color, scale_factor):
 
 def fx_idle(ringlight: 'StatusLightWS281x', j):
     # print(locals())
-    ringlight.strip.setBrightness(20)
+    ringlight.strip.setBrightness(10)
     for i in range(ringlight.strip.numPixels()):
         ringlight.strip.setPixelColor(i, wheel((i + j) & 255))
     ringlight.strip.show()
@@ -52,10 +52,12 @@ def fx_idle(ringlight: 'StatusLightWS281x', j):
 
 
 def fx_posprocessing(ringlight: 'StatusLightWS281x', _i):
+    ringlight.strip.setBrightness(50)
     theaterChase(ringlight, Color(140, 30, 80))
 
 
 def fx_loading(ringlight: 'StatusLightWS281x', _i):
+    ringlight.strip.setBrightness(50)
     """Draws a moving pixel with a tail."""
     color = Color(255, 200, 100)
     tail = 6
@@ -80,8 +82,15 @@ def fx_blackout(ringlight:'StatusLightWS281x',_i):
     ringlight.strip.show()
 
 
+def fx_white(ringlight:'StatusLightWS281x',_i):
+    ringlight.strip.setBrightness(255)
+    for i in range(ringlight.strip.numPixels()):
+        ringlight.strip.setPixelColor(i, Color(255, 255, 255))
+    ringlight.strip.show()
+
+
 class StatusLightWS281x(StatusLight):
-    state = "postprocessing"
+    state = "idle"
 
     def __init__(self, pin: int, led_count: int) -> None:
 
@@ -116,7 +125,8 @@ class StatusLightWS281x(StatusLight):
             "idle": fx_idle,
             "postprocessing": fx_posprocessing,
             "loading": fx_loading,
-            "blackout": fx_blackout
+            "blackout": fx_blackout,
+            "flash":fx_white
         }
 
         self.thread = Thread(target=self.run)

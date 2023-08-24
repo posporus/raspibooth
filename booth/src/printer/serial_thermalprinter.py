@@ -12,10 +12,10 @@ class SerialThermalprinter(Printer):
             dsrdtr=True)
 
     def printQr(self, title, qrcode, token, message):
-        self.p.text(title)
+        self.p.text(f'{title}\n')
         self.p.qr(qrcode)
-        self.p.text(f"Access Token: {token}")
-        self.p.text(message)
+        self.p.text(f"Access Token: {token}\n")
+        self.p.text(f'{message}\n')
         self.p.print_and_feed(3)
 
     def printMessage(self, message):

@@ -53,6 +53,8 @@ def session():
 
             timeline.run()
 
+        camera.completed()
+
         file_id, password = postprocessing(temp_dir, upload_dir)
         postPrint(file_id, password)
 
