@@ -5,14 +5,18 @@ actions:
   - time: 0
     function: set_state
     args:
-      - postprocessing
-  - time: 1000
-    function: set_state
-    args:
-      - loading
+      - blackout
   - time: 1500
     function: record
     args: []
+  - time: 1500
+    function: set_state
+    args:
+      - flash
+  - time: 2500
+    function: set_state
+    args:
+      - blackout
   - time: 3000
     function: set_state
     args:

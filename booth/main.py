@@ -53,12 +53,14 @@ def session():
 
             timeline.run()
 
+        camera.completed()
+
         file_id, password = postprocessing(temp_dir, upload_dir)
         postPrint(file_id, password)
 
 
 def postPrint(fileId: str, password: str):
-    url = f"{SERVER_URL}{fileId}#{password}"
+    url = f"{SERVER_URL}/{fileId}#{password}"
     access_token = generate_access_token(fileId, password)
     printer.printQr(
         "Your way to your images",
