@@ -1,13 +1,15 @@
-import { SMTPClient } from "../deps.ts"
-import { config } from "./config.ts"
+import { sendmail, type SendmailFunction } from "./mailUtils.ts";
+import { config } from "./config.ts";
+import { SendConfig } from "../deps.ts";
 
-const isMail = config.mail_hostname && config.mail_password && config.mail_username
 
-export let client: SMTPClient | null = null
+const isMail = config.mail_hostname && config.mail_password && config.mail_username;
 
-const createClient = () => {
-    if (client !== null || !isMail) return
-    client = new SMTPClient({
+
+export const sendmailNoreply: SendmailFunction = async (templateFn) => {
+    if (!isMail) return;
+
+    const clientOptions = {
         connection: {
             hostname: config.mail_hostname,
             port: config.mail_port,
@@ -17,16 +19,23 @@ const createClient = () => {
                 password: config.mail_password,
             },
         },
-    })
-    return client
+    };
+
+    const sendConfig: SendConfig = {
+        ...templateFn(),
+        from: config.mail_from
+    };
+
+    await sendmail(clientOptions, sendConfig);
 }
 
-export async function sendmail (SendConfig:{to: string, subject:string, content?: string, html?:string}) {
-    if(!isMail) return
-
-    createClient()
-    client && await client.send({
-        from: "noreply@raboo.uber.space",
-        ...SendConfig
-    })
+const exampleTemplate = (props: { name: string, to: string, subject: string }) => {
+    return {
+        to: props.to,
+        subject: props.subject,
+        html: `Hello ${props.name}, welcome to our platform!`
+    };
 }
+
+// Using the sendmailNoreply function
+sendmailNoreply(() => exampleTemplate({ name: 'Peter', to: 'peter@example.com', subject: 'Welcome!' }));

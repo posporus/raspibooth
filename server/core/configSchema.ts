@@ -7,6 +7,8 @@ export const configSchema = defineSchema({
     mail_hostname: { defaultValue: undefined, type: "string" },
     mail_username: { defaultValue: undefined, type: "string" },
     mail_password: { defaultValue: undefined, type: "string" },
+    mail_from: { defaultValue: undefined, type: "string" },
     mail_port: { defaultValue: undefined, type: "number" },
     mail_tls: { defaultValue: undefined, type: "boolean" },
+    url: { defaultValue: undefined, type: "string" }
 })
