@@ -1,4 +1,4 @@
-import { verifyStringWithChecksum } from '../browser/verifyStringWithChecksum.ts'
+import { verifyStringWithChecksum } from '../utils/verifyStringWithChecksum.ts'
 import { useState, useEffect } from 'preact/hooks'
 import MultiInput from './MultiInput.tsx'
 

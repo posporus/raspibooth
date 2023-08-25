@@ -28,14 +28,3 @@ export const sendmailNoreply: SendmailFunction = async (templateFn) => {
 
     await sendmail(clientOptions, sendConfig);
 }
-
-const exampleTemplate = (props: { name: string, to: string, subject: string }) => {
-    return {
-        to: props.to,
-        subject: props.subject,
-        html: `Hello ${props.name}, welcome to our platform!`
-    };
-}
-
-// Using the sendmailNoreply function
-sendmailNoreply(() => exampleTemplate({ name: 'Peter', to: 'peter@example.com', subject: 'Welcome!' }));
