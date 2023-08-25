@@ -1,7 +1,6 @@
 import { useEffect } from "preact/hooks"
-import { useClient } from "../utils/client.ts"
-import { type StateUpdater } from "preact/hooks"
-import { type LoadingState, loadingState } from "../islands/Loader.tsx"
+import { IS_BROWSER } from '$fresh/runtime.ts'
+import { loadingState } from "../islands/Loader.tsx"
 interface BoothCanvasProps {
     videos: Uint8Array[]
     fps: number
@@ -11,9 +10,8 @@ interface BoothCanvasProps {
 
 
 export default function Photopaper (props: BoothCanvasProps) {
-    const [client] = useClient()
     useEffect(() => {
-        if (!client) return
+        if (!IS_BROWSER) return
         console.log('canvas', props)
         createCollage(props)
     }, [])

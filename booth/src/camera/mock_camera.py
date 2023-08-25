@@ -30,7 +30,8 @@ class MockCamera(Camera):
 
         create_single_color_video(duration_s, self._fps, self._width, self._height, output_directory, filename)
 
-
+    def completed(self):
+        return super().completed()
 
 if __name__ == '__main__':
     # Create an instance of MockCamera

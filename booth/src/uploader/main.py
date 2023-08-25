@@ -6,7 +6,6 @@ from src.config import config
 import asyncio
 
 API_KEY = config["API_KEY"]
-
 SERVER_URL = config["SERVER_URL"]
 UPLOAD_PATH = config["UPLOAD_PATH"]
 upload_url = f'{SERVER_URL}{UPLOAD_PATH}'
@@ -21,7 +20,7 @@ async def uploader(upload_dir: str):
             print("Invalid API key. Aborting uploads.")
             break
         elif status_code == 400:
-            print(f"Error uploading {file}. No fileId provided by the server.")
+            print(f"Error uploading {file}. No fileId/checksum provided by the server.")
         elif status_code == 200:
             response_dict = json.loads(response_text)
             if "fileId" in response_dict:

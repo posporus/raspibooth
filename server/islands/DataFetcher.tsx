@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'preact/hooks'
 import { loadingState } from '../islands/Loader.tsx'
-import { useClient } from '../utils/client.ts'
-import { fetchFile } from '../utils/fetchFile.ts'
+import { IS_BROWSER } from '$fresh/runtime.ts'
+import { fetchFile } from '../browser/fetchFile.ts'
 import Decryptor from './Decryptor.tsx'
 
 interface DataFetcherProps {
@@ -12,11 +12,10 @@ export default function DataFetcher (props: DataFetcherProps) {
     const { fileId } = props
 
     const [error, setError] = useState<string | null>(null)
-    const [client] = useClient()
     const [encryptedData, setEncryptedData] = useState<Uint8Array | null>(null)
 
     useEffect(() => {
-        if (!client || !props.fileId) return
+        if (!IS_BROWSER || !props.fileId) return
 
         loadingState.value = 'fetching';
 
@@ -29,7 +28,7 @@ export default function DataFetcher (props: DataFetcherProps) {
                 setError(`Error fetching file ${props.fileId}: ${error.message}`)
             }
         })()
-    }, [client, props.fileId])
+    }, [props.fileId])
 
     if (error || encryptedData === null) {
         return (

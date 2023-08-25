@@ -1,4 +1,4 @@
-import { useState, useEffect, StateUpdater } from 'preact/hooks'
+import { useEffect } from 'preact/hooks'
 
 interface DecryptorProps {
     videoData: Uint8Array

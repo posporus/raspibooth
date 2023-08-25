@@ -17,9 +17,3 @@ export function verifyStringWithChecksum(inputString: string, checksumLength: nu
     // Compare the expected checksum with the actual checksum in the input string
     return expectedChecksumStr === checksum;
 }
-
-// // Test the function
-// const testString = 'ABWBQ5q531'; // Example string with a checksum
-// const checksumLength = 5; // Example checksum length
-// const isValid = verifyStringWithChecksum(testString, checksumLength);
-// console.log(isValid); // Output: true or false

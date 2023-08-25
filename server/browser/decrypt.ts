@@ -1,12 +1,6 @@
-import { arrayBufferToString, cryptoKeyToString, uint8ArrayToBase64 } from "./convertions.ts"
+import {  cryptoKeyToString, uint8ArrayToBase64 } from "./convertions.ts"
 
 export async function decrypt (encryptedData: ArrayBuffer, key: CryptoKey, iv: ArrayBuffer, tag: ArrayBuffer): Promise<Uint8Array> {
-    // console.log('Decrypting with parameters:', {
-    //     encryptedData,
-    //     key,
-    //     iv,
-    //     tag,
-    //   });
 
     try {
         // Combine the ciphertext and tag into one ArrayBuffer

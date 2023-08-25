@@ -1,15 +1,13 @@
 // @deno-types="https://cdn.skypack.dev/fflate@0.8.0/lib/index.d.ts"
 import * as fflate from 'https://cdn.skypack.dev/fflate@0.8.0?min'
 import { useState, useEffect, useMemo, useCallback, type StateUpdater } from 'preact/hooks'
-import { isClient } from "../utils/isClient.ts"
-import { generateCryptoKeyFromPassword } from "../utils/generateCryptoKeyFromPassword.ts"
-import { decrypt_buffer } from "../utils/decrypt_buffer.ts"
-import { useClient } from '../utils/client.ts'
-import { type LoadingState, loadingState } from '../islands/Loader.tsx'
-
+import { generateCryptoKeyFromPassword } from "../browser/generateCryptoKeyFromPassword.ts"
+import { decrypt_buffer } from "../browser/decrypt_buffer.ts"
+import { loadingState } from '../islands/Loader.tsx'
+import { IS_BROWSER } from '$fresh/runtime.ts'
 
 import Photopaper from './Photopaper.tsx'
-import { type CanvasData, getDataFromUnzipped } from '../utils/getDataFromUnzipped.ts'
+import { type CanvasData, getDataFromUnzipped } from '../browser/getDataFromUnzipped.ts'
 import { PhotopaperWrapper } from '../components/PhotopaperWrapper.tsx'
 interface DecryptorProps {
   data: Uint8Array
@@ -24,9 +22,6 @@ export default function Decryptor (props: DecryptorProps) {
 
   // Use useMemo for the password state
   const password = useMemo(() => getPasswordFromUrl(), [])
-
-  const [client] = useClient()
-
 
   // Memoize the decryptProcedure function using useCallback
   const memoizedDecryptProcedure = useCallback(
@@ -68,4 +63,4 @@ export default function Decryptor (props: DecryptorProps) {
   )
 }
 
-const getPasswordFromUrl = (): string => (isClient() ? decodeURIComponent(self.location.hash.substring(1)) : '')
+const getPasswordFromUrl = (): string => (IS_BROWSER ? decodeURIComponent(self.location.hash.substring(1)) : '')

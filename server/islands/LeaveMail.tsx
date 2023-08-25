@@ -1,4 +1,3 @@
-import { useState } from 'preact/hooks'
 import EmailSubscriptionInput from './EmailSubscriptionInput.tsx'
 
 interface LeaveMailProps {

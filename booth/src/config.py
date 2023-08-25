@@ -28,12 +28,17 @@ def get_hardware(type: str, config: dict) -> str:
     Returns:
         str or None: The hardware configuration, or None if not found.
     """
-    hardware = config.get('hardware', {}).get(type)
+
+    hardware = config.get('hardware', {})
+    if hardware == None:
+        return None
+    print(hardware)
+    device = hardware.get(type)
     
-    if isinstance(hardware, str):
-        return hardware
-    if isinstance(hardware, dict):
-        return list(hardware.keys())[0]
+    if isinstance(device, str):
+        return device
+    if isinstance(device, dict):
+        return list(device.keys())[0]
     return None
 
 

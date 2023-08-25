@@ -1,6 +1,5 @@
-import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts"
+import { SMTPClient } from "../deps.ts"
 import { config } from "./config.ts"
-
 
 const isMail = config.mail_hostname && config.mail_password && config.mail_username
 
@@ -31,5 +30,3 @@ export async function sendmail (SendConfig:{to: string, subject:string, content?
         ...SendConfig
     })
 }
-
-// await sendmail('test2@posporus.de','freshdigga','hello','<>')
