@@ -10,5 +10,5 @@ export const configSchema = defineSchema({
     mail_from: { defaultValue: undefined, type: "string" },
     mail_port: { defaultValue: undefined, type: "number" },
     mail_tls: { defaultValue: undefined, type: "boolean" },
-    url: { defaultValue: undefined, type: "string" }
+    url: { defaultValue: "[no url provided]", type: "string" }
 })

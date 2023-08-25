@@ -2,10 +2,8 @@
 import { Handlers } from "$fresh/server.ts";
 import { file_store, subscription_store } from "../../../store.ts"; // Add this line
 import { uploadNotificationMail } from "../../../modifiables/mail-templates.ts";
-import { sendmailNoreply } from "../../../core/sendmail.ts";
+import { sendmailNoreply } from "../../../core/sendmailNoreply.ts";
 import { config } from "../../../core/config.ts";
-
-const AUTHKEY = Deno.env.get('AUTHKEY')
 
 export const handler: Handlers<File | null> = {
   async POST(req, _ctx) {
