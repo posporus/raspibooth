@@ -9,5 +9,6 @@ __pycache__
 
 notes.md
 venv/
+booth/upload/
 
 booth.config.yaml
