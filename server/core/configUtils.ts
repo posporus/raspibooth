@@ -1,3 +1,5 @@
+import { logger } from "./logger.ts";
+
 type ConfigValueType = string | number | boolean;
 
 type ConfigSchemaEntry<T extends ConfigValueType> = {
@@ -39,7 +41,12 @@ export function loadConfig<S extends ConfigSchemaType>(env: Environment, configS
         
         const envValue = env.get(key.toUpperCase());
 
-        if (envValue === undefined) return schemaEntry.defaultValue as ConfigType[K];
+        if (envValue === undefined) {
+            if (schemaEntry.defaultValue === undefined) {
+                logger.warning(`Value for ${key} is not defined in the environment and the schema does not have a default value.`);
+            }
+            return schemaEntry.defaultValue as ConfigType[K];
+        }
 
         switch (schemaEntry.type) {
             case "number":
