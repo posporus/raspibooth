@@ -10,5 +10,7 @@ export const configSchema = defineSchema({
     mail_from: { defaultValue: undefined, type: "string" },
     mail_port: { defaultValue: undefined, type: "number" },
     mail_tls: { defaultValue: undefined, type: "boolean" },
-    url: { defaultValue: "[no url provided]", type: "string" }
+    url: { defaultValue: "[no url provided]", type: "string" },
+    max_file_upload_size: { defaultValue: 1000000, type: "number" },
+    file_id_length: { defaultValue: 10, type: "number" }
 })

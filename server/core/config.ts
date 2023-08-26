@@ -1,4 +1,5 @@
 import { loadConfig } from "./configUtils.ts";
 import { configSchema } from "./configSchema.ts";
 
-export const config = loadConfig(Deno.env,configSchema)
+
+export const _config = () => loadConfig(Deno.env,configSchema)

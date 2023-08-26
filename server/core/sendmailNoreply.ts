@@ -1,9 +1,10 @@
 import { sendmail, type SendmailFunction } from "./mailUtils.ts"
-import { config } from "./config.ts"
+import { _config } from "./config.ts"
 import { SendConfig } from "../deps.ts"
 import { isDefined } from "../utils/typeguards.ts"
 import { logger } from "./logger.ts"
 
+const config = _config()
 
 export const sendmailNoreply: SendmailFunction = async (templateFn) => {
     if (!isDefined(config.mail_hostname) ||
