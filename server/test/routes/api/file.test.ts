@@ -217,3 +217,19 @@ Deno.test("File upload route - Checksum Verification", async (t) => {
     assertEquals(resp.status, 422);
   });
 });
+
+Deno.test("File upload route - GET request", async (t) => {
+  const testHandler = await createHandler(manifest);
+
+  await t.step("GET request to file upload route", async () => {
+    const req = new Request("http://localhost/api/file", {
+      method: "GET",
+      headers: {
+        "X-API-Key": my_apikey,
+      },
+    });
+    const resp = await testHandler(req, CONN_INFO);
+    assertEquals(resp.status, 405);
+    assertEquals(resp.headers.get("Allow"), "POST");
+  });
+});
