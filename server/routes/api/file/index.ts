@@ -33,7 +33,7 @@ export const handler: Handlers<File | null> = {
         return new Response("No fileId provided", { status: 400 })
       }
 
-      if (!isValidFileId(fileId, config.file_id_length)) {
+      if (!isValidFileId(fileId, config.file_id_length,config.file_id_checksum_length)) {
         logger.warning("Invalid fileId format provided in the request.")
         return new Response("Invalid fileId format", { status: 400 })
       }

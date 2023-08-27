@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.200.0/assert/mod.ts";
-import { isValidFileId, hasValidIdFormat, hasValidChecksum } from "../../utils/isValidFileWithChecksum.ts";
+import { isValidFileId, hasValidIdFormat, hasValidChecksum } from "../../utils/isValidFileId.ts";
 
 // Import the JSON content
 const currentDir = new URL('../../../shared_test_files', import.meta.url).pathname;
@@ -39,6 +39,6 @@ Deno.test("Invalid File ID with Checksum - Incorrect Checksum", () => {
 validFileIds.forEach((fileIdObj: { string: string, checksum_length: number, string_length: number }, index: number) => {
     Deno.test(`Valid File ID with Checksum from JSON - Test ${index + 1}`, () => {
         const { string, checksum_length, string_length } = fileIdObj;
-        assertEquals(isValidFileId(string, string_length - checksum_length, checksum_length), true);
+        assertEquals(isValidFileId(string, string_length, checksum_length), true);
     });
 });

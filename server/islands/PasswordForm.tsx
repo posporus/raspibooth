@@ -1,4 +1,4 @@
-import { verifyStringWithChecksum } from '../utils/verifyStringWithChecksum.ts'
+import { isValidFileId } from '../utils/isValidFileId.ts'
 import { useState, useEffect } from 'preact/hooks'
 import MultiInput from './MultiInput.tsx'
 
@@ -56,7 +56,8 @@ export default function PasswordForm () {
 
 function verifyToken (tokenSegments: string[]) {
     const { fileId, password } = generateCompositeKey(tokenSegments, fileIdLength, passwordLength)
-    return verifyStringWithChecksum(fileId, 3) ? { fileId, password } : false
+    //TODO: set this dynamically according to config somehow.
+    return isValidFileId(fileId,10, 3) ? { fileId, password } : false
 
 }
 

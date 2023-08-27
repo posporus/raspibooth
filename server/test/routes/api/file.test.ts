@@ -3,6 +3,12 @@ import manifest from "../../../fresh.gen.ts"
 import { assertEquals } from "$std/testing/asserts.ts"
 import { _config } from "../../../core/config.ts"
 import { calculateChecksum } from "../../../utils/calculateChecksum.ts"
+import { isValidFileId } from "../../../utils/isValidFileId.ts"
+
+const validFileId = "KrImJZb633"
+if (!isValidFileId(validFileId, 10, 3)) {
+  throw Error("file Id not valid")
+}
 
 const my_apikey = "mySuperN1c3EnvTest4uThk3y"
 Deno.env.set('AUTHKEY', my_apikey)
@@ -28,7 +34,7 @@ Deno.test("File upload route test.", async (t) => {
       method: "POST",
       headers: {
         "X-API-Key": my_apikey,
-        "X-File-Id": "testFileId",
+        "X-File-Id": validFileId,
         "X-Checksum": checksum
       },
       body: testData
@@ -45,7 +51,7 @@ Deno.test("File upload route test.", async (t) => {
       method: "POST",
       headers: {
         "X-API-Key": 'invalid_key',
-        "X-File-Id": "testFileId",
+        "X-File-Id": validFileId,
         "X-Checksum": checksum
       },
       body: testData
@@ -76,7 +82,7 @@ Deno.test("File upload route test.", async (t) => {
       method: "POST",
       headers: {
         "X-API-Key": my_apikey,
-        "X-File-Id": "testFileId"
+        "X-File-Id": validFileId
       }
     })
     const resp = await testHandler(req, CONN_INFO)
@@ -92,12 +98,11 @@ Deno.test("File upload route - Valid File Format", async (t) => {
   await t.step("POST with valid file ID format", async () => {
     const testData = new Uint8Array([1, 2, 3])
     const checksum = await calculateChecksum(testData)
-    const fileId = "Valid57890" // Assuming this matches the config.file_id_length
     const req = new Request("http://localhost/api/file", {
       method: "POST",
       headers: {
         "X-API-Key": my_apikey,
-        "X-File-Id": fileId,
+        "X-File-Id": validFileId,
         "X-Checksum": checksum
       },
       body: testData
@@ -132,12 +137,11 @@ Deno.test("File upload route - File Size Limit", async (t) => {
   await t.step("POST with file within allowed size", async () => {
     const testData = new Uint8Array(config.max_file_upload_size)
     const checksum = await calculateChecksum(testData)
-    const fileId = "testFileId"
     const req = new Request("http://localhost/api/file", {
       method: "POST",
       headers: {
         "X-API-Key": my_apikey,
-        "X-File-Id": fileId,
+        "X-File-Id": validFileId,
         "X-Checksum": checksum
       },
       body: testData
@@ -150,12 +154,11 @@ Deno.test("File upload route - File Size Limit", async (t) => {
   await t.step("POST with file exceeding allowed size", async () => {
     const testData = new Uint8Array(config.max_file_upload_size + 1)
     const checksum = await calculateChecksum(testData)
-    const fileId = "TestFile45"
     const req = new Request("http://localhost/api/file", {
       method: "POST",
       headers: {
         "X-API-Key": my_apikey,
-        "X-File-Id": fileId,
+        "X-File-Id": validFileId,
         "X-Checksum": checksum
       },
       body: testData
@@ -176,7 +179,7 @@ Deno.test("File upload route - Checksum Verification", async (t) => {
       method: "POST",
       headers: {
         "X-API-Key": my_apikey,
-        "X-File-Id": "testFileId",
+        "X-File-Id": validFileId,
         "X-Checksum": checksum
       },
       body: testData
@@ -193,7 +196,7 @@ Deno.test("File upload route - Checksum Verification", async (t) => {
       method: "POST",
       headers: {
         "X-API-Key": my_apikey,
-        "X-File-Id": "testFileId",
+        "X-File-Id": validFileId,
         "X-Checksum": invalidChecksum
       },
       body: testData
@@ -209,7 +212,7 @@ Deno.test("File upload route - Checksum Verification", async (t) => {
       method: "POST",
       headers: {
         "X-API-Key": my_apikey,
-        "X-File-Id": "testFileId"
+        "X-File-Id": validFileId
       },
       body: testData
     })
@@ -247,7 +250,7 @@ import { file_store } from "../../../store.ts"
 Deno.test("Successful File Retrieval", async () => {
   const testHandler = await createHandler(manifest)
 
-  const testFileKey = "validFileKey"
+  const testFileKey = validFileId
   const testData = new Uint8Array([1, 2, 3, 4, 5])
   await file_store.set(testFileKey, testData)
 
@@ -274,11 +277,11 @@ Deno.test("File Not Found", async () => {
 Deno.test("Content-Type Verification", async () => {
   const testHandler = await createHandler(manifest)
 
-  const testFileKey = "anotherValidFileKey"
+  const testFileKey = validFileId
   const testData = new Uint8Array([6, 7, 8, 9, 10])
   await file_store.set(testFileKey, testData)
 
-  const req = new Request(`http://localhost/api/file/${testFileKey}`, {
+  const req = new Request(`http://localhost/api/file/${validFileId}`, {
     method: "GET"
   })
   const resp = await testHandler(req)

@@ -1,6 +1,6 @@
-export function isValidFileId(fileId: string, idLength: number, checksumLength: number): boolean {
+export function isValidFileId(fileId: string, fileIdLength: number, checksumLength: number): boolean {
     // Validate the fileId format and length
-    const isValidId = hasValidIdFormat(fileId, idLength + checksumLength);
+    const isValidId = hasValidIdFormat(fileId, fileIdLength);
     if (!isValidId) return false;
 
     // Verify the fileId with the checksum
