@@ -8,7 +8,6 @@ import { logger } from "../../../core/logger.ts"
 import { isValidFileId } from "../../../utils/isValidFileId.ts"
 import { calculateChecksum } from "../../../utils/calculateChecksum.ts"
 
-//console.log('loaded config',config)
 
 export const handler: Handlers<File | null> = {
   GET (_req, _ctx) {
