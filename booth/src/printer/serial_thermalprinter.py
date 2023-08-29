@@ -12,11 +12,20 @@ class SerialThermalprinter(Printer):
             dsrdtr=True)
 
     def printQr(self, title, qrcode, token, message):
+        self.p.set(underline=True)
         self.p.text(f'{title}\n')
-        self.p.qr(qrcode)
-        self.p.text(f"Access Token: {token}\n")
+        self.p.set(underline=False)
+        self.p.qr(qrcode,size=4, center=True)
+        self.p.text(f"Access Token:\n")
+        self.p.set(bold=True,align='center')
+        self.p.text(f"{token}\n")
+        self.p.set(bold=False,align='left')
+        self.p.set(align='center')
+        self.p.text(f'-----------------\n')
+        self.p.set(align='left')
         self.p.text(f'{message}\n')
-        self.p.print_and_feed(3)
+
+        self.p.print_and_feed(5)
 
     def printMessage(self, message):
         self.p.text(message)
@@ -26,8 +35,8 @@ class SerialThermalprinter(Printer):
 if __name__ == "__main__":
     printer = SerialThermalprinter()
     test_title = "RaspiBooth QR Code"
-    test_qrcode = "https://example.com/qr"
-    test_token = "ABC123"
+    test_qrcode = "https://example.com/qrasdfasdf#ölkasjdö"
+    test_token = "jgeh3-ldD8e-0jL4d-uzdbD"
     test_message = "Thank you for choosing RaspiBooth!"
     printer.printQr(test_title, test_qrcode, test_token, test_message)
     print("Test print completed.")
