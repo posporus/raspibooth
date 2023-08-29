@@ -1,8 +1,10 @@
 import { assertEquals } from "https://deno.land/std@0.114.0/testing/asserts.ts"
-import { decrypt } from "../utils/decrypt.ts"
+import { decrypt } from "../../browser/decrypt.ts"
 
 // Load the test data
-const testData = JSON.parse(await Deno.readTextFile("../shared_test_files/encyption_datasets.json"))
+const testFilesFolder = new URL('../../../shared_test_files', import.meta.url).pathname;
+
+const testData = JSON.parse(await Deno.readTextFile(`${testFilesFolder}/encryption_datasets.json`))
 let i = 0
 for (const data of testData) {
   i++
@@ -14,6 +16,7 @@ for (const data of testData) {
     const encryptedData = base64ToUint8Array(data.encrypted_data)
     const tag = base64ToUint8Array(data.tag)
 
+    console.log(`${data}`)
     // Import the key data as a CryptoKey
     const key = await crypto.subtle.importKey(
       "raw",

@@ -1,5 +1,3 @@
-import {  cryptoKeyToString, uint8ArrayToBase64 } from "./convertions.ts"
-
 export async function decrypt (encryptedData: ArrayBuffer, key: CryptoKey, iv: ArrayBuffer, tag: ArrayBuffer): Promise<Uint8Array> {
 
     try {
@@ -8,9 +6,6 @@ export async function decrypt (encryptedData: ArrayBuffer, key: CryptoKey, iv: A
         ciphertextWithTag.set(new Uint8Array(encryptedData), 0)
         ciphertextWithTag.set(new Uint8Array(tag), encryptedData.byteLength)
 
-        console.log('key:', await cryptoKeyToString(key))
-        console.log('tag:', uint8ArrayToBase64(new Uint8Array(tag)))
-        console.log('iv:', uint8ArrayToBase64(new Uint8Array(iv)))
         // Decrypt the data
         const decryptedData = await crypto.subtle.decrypt(
             {
