@@ -19,6 +19,8 @@ from src.encryption.encrypt_file import encrypt_file
 from src.utility.generate_access_token import generate_access_token
 import os
 import atexit
+from src.uploader.main import uploader
+import asyncio
 
 
 
@@ -66,6 +68,8 @@ def session():
 
         file_id, password = postprocessing(temp_dir, upload_dir)
         postPrint(file_id, password)
+
+        asyncio.run(uploader('booth/upload'))
 
 
 def postPrint(fileId: str, password: str):

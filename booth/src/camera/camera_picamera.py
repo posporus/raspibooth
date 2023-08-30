@@ -77,7 +77,7 @@ class CameraPiCamera(Camera):
 
 if __name__ == "__main__":
     # Create a CameraPiCamera instance with specific width, height, and fps
-    cam = CameraPiCamera(width=640, height=480, fps=25)
+    cam = CameraPiCamera(width=480, height=640, fps=25, rotation=270)
 
     # Define the output path for the .mp4 video
     output_path = Path("video.mp4")
