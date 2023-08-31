@@ -73,13 +73,15 @@ def session():
 
 
 def postPrint(fileId: str, password: str):
-    url = f"{SERVER_URL}/{fileId}#{password}"
+    qrcode = f"{SERVER_URL}/{fileId}#{password}"
+    url = SERVER_URL
     access_token = generate_access_token(fileId, password)
     printer.printQr(
         "Your way to your images",
-        url,
+        qrcode,
         access_token,
         "If you have any questions, the answer is 42.",
+        url
     )
 
 
