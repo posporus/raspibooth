@@ -1,5 +1,7 @@
+import { PhotopaperWrapper } from "../../components/PhotopaperWrapper.tsx";
+import { Story } from "./_/Story.tsx";
 import Photopaper from "../../islands/Photopaper.tsx"
-import { Story } from "./_/Story.tsx"
+
 
 let sample_video = new Uint8Array()
 try {
@@ -18,10 +20,12 @@ const photopaperProps = {
   ]
 }
 
-export default function PhotoPaperStory () {
+export default function PhotoPaperWrapperStory () {
   return (
     <Story>
-      <Photopaper {...photopaperProps} />
+      <PhotopaperWrapper>
+        <Photopaper {...photopaperProps} />
+      </PhotopaperWrapper>
     </Story>
-  )
+  );
 }

@@ -18,9 +18,9 @@ export default function Photopaper (props: BoothCanvasProps) {
 
     return (
 
-        
-            <canvas id={"picture_canvas"} width={1080} height={1440} class="max-v-full max-h-full h-auto bg-white"></canvas>
-      
+
+        <canvas id={"picture_canvas"} width={1080} height={1440} class="max-w-full max-h-full h-auto"></canvas>
+
 
     )
 }
@@ -51,6 +51,7 @@ class VideoElement {
         this.videoElement.muted = true
         this.videoElement.loop = true
         document.body.appendChild(this.videoElement)
+        console.log(this.videoElement)
 
         this._x = x
         this._y = y
@@ -72,6 +73,7 @@ class VideoElement {
     pauseAtMiddle () {
         const onTimeUpdate = () => {
             const halfDuration = this.videoElement.duration / 2
+            console.log('halfDuration:',halfDuration)
             const currentTime = this.videoElement.currentTime
             console.log('onTimeUpdate called')
             if (currentTime >= halfDuration) {
@@ -81,6 +83,12 @@ class VideoElement {
         }
         this.videoElement.addEventListener('timeupdate', onTimeUpdate)
         console.log('attach event!')
+    }
+
+    jumpToMiddle () {
+        const halfDuration = this.videoElement.duration / 2
+        this.videoElement.pause()
+        this.videoElement.currentTime = halfDuration
     }
 
 
@@ -114,13 +122,23 @@ class VideoElement {
 function createCollage (canvasData: BoothCanvasProps) {
     const { videos, fps, duration, timestamp } = canvasData
 
+    const iContainerWidth = 1080
+    const iConstainerHeight = 1440
+    const handleHeight = 220
+
     const c = document.getElementById("picture_canvas") as HTMLCanvasElement
+    c.width = iContainerWidth
+    c.height = iConstainerHeight + handleHeight
+
     const ctx = c.getContext("2d") as CanvasRenderingContext2D
+
+    ctx.fillStyle = "white"
+    ctx.fillRect(0, 0, c.width, c.height)
 
     const videoElements: VideoElement[] = []
     const gap = 30 // Set this to the desired gap size
-    const cellWidth = c.width / 2
-    const cellHeight = c.height / Math.ceil(videos.length / 2)
+    const cellWidth = iContainerWidth / 2 - gap
+    const cellHeight = iConstainerHeight / Math.ceil(videos.length / 2) - gap
 
     function drawVideoFrame (videoElement: VideoElement) {
         videoElement.draw(ctx)
@@ -128,8 +146,8 @@ function createCollage (canvasData: BoothCanvasProps) {
 
     }
     for (let i = 0; i < videos.length; i++) {
-        const x = (i % 2) * cellWidth + cellWidth / 2
-        const y = Math.floor(i / 2) * cellHeight + cellHeight / 2
+        const x = (i % 2) * cellWidth + cellWidth / 2 + gap
+        const y = Math.floor(i / 2) * cellHeight + cellHeight / 2 + gap
         const width = cellWidth - 2 * gap
         const height = cellHeight - 2 * gap
 
@@ -139,44 +157,80 @@ function createCollage (canvasData: BoothCanvasProps) {
 
     }
 
-    let hoveredVideo: VideoElement | null = null
+    let hoveredVideo: VideoElement | null = null;
 
-    c.addEventListener('mousemove', function (e) {
-        const rect = c.getBoundingClientRect()
-        const scaleX = c.width / rect.width
-        const scaleY = c.height / rect.height
-        const x = (e.clientX - rect.left) * scaleX
-        const y = (e.clientY - rect.top) * scaleY
-
+    function handleHover(x: number, y: number) {
         for (let i = 0; i < videoElements.length; i++) {
             if (videoElements[i].isPointInside(x, y)) {
                 if (hoveredVideo !== videoElements[i]) {
                     if (hoveredVideo !== null) {
-                        console.log('Mouse left video ' + (videoElements.indexOf(hoveredVideo) + 1))
+                        console.log('Mouse left video ' + (videoElements.indexOf(hoveredVideo) + 1));
                     }
-                    hoveredVideo = videoElements[i]
-                    console.log('Mouse entered video ' + (i + 1))
+                    hoveredVideo = videoElements[i];
+                    console.log('Mouse entered video ' + (i + 1));
 
-                    hoveredVideo.play()
+                    hoveredVideo.play();
                 }
-                return
+                return;
             }
         }
 
         if (hoveredVideo !== null) {
-            console.log('Mouse left video ' + (videoElements.indexOf(hoveredVideo) + 1))
-            hoveredVideo.pauseAtMiddle()
-            hoveredVideo = null
+            console.log('Mouse left video ' + (videoElements.indexOf(hoveredVideo) + 1));
+            hoveredVideo.jumpToMiddle();
+            hoveredVideo = null;
         }
-    })
+    }
+
+    c.addEventListener('mousemove', function (e) {
+        const rect = c.getBoundingClientRect();
+        const scaleX = iContainerWidth / rect.width;
+        const scaleY = iConstainerHeight / rect.height;
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
+        handleHover(x, y);
+    });
+
+    c.addEventListener('touchstart', function (e) {
+        const rect = c.getBoundingClientRect();
+        const scaleX = iContainerWidth / rect.width;
+        const scaleY = iConstainerHeight / rect.height;
+        const touch = e.changedTouches[0];
+        const x = (touch.clientX - rect.left) * scaleX;
+        const y = (touch.clientY - rect.top) * scaleY;
+        handleHover(x, y);
+    });
+    
+    c.addEventListener('touchstart', function (e) {
+        e.preventDefault();  // Prevent default touch behavior
+        const rect = c.getBoundingClientRect();
+        const scaleX = iContainerWidth / rect.width;
+        const scaleY = iConstainerHeight / rect.height;
+        const touch = e.changedTouches[0];
+        const x = (touch.clientX - rect.left) * scaleX;
+        const y = (touch.clientY - rect.top) * scaleY;
+        handleHover(x, y);
+    }, { passive: false });  // Set passive to false to allow preventDefault()
+    
+    c.addEventListener('touchend', function (e) {
+        e.preventDefault();  // Prevent default touch behavior
+        if (hoveredVideo) {
+            console.log('Touch ended for video ' + (videoElements.indexOf(hoveredVideo) + 1));
+            hoveredVideo.jumpToMiddle();
+            hoveredVideo = null;
+        }
+    }, { passive: false });  // Set passive to false to allow preventDefault()
+    
+    
+    
 
     c.addEventListener('mouseleave', function () {
         if (hoveredVideo !== null) {
-            console.log('Mouse left canvas ' + (videoElements.indexOf(hoveredVideo) + 1))
-            hoveredVideo.pauseAtMiddle()
-            hoveredVideo = null
+            console.log('Mouse left canvas ' + (videoElements.indexOf(hoveredVideo) + 1));
+            hoveredVideo.jumpToMiddle();
+            hoveredVideo = null;
         }
-    })
+    });
 
 
 
@@ -187,7 +241,7 @@ function createCollage (canvasData: BoothCanvasProps) {
             videoElement.play()
             videoElement.pauseAtMiddle()
         })
-        loadingState.value ='done'
+        loadingState.value = 'done'
     })
 
 
