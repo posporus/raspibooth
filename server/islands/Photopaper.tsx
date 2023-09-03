@@ -19,7 +19,7 @@ export default function Photopaper (props: BoothCanvasProps) {
     return (
 
 
-        <canvas id={"picture_canvas"} class="max-w-full max-h-full h-auto  rounded-lg overflow-hidden"></canvas>
+        <canvas id={"picture_canvas"} class="max-w-full max-h-full h-auto rounded-lg overflow-hidden"></canvas>
 
 
     )
@@ -35,13 +35,20 @@ class VideoElement {
     _offsetY: number
     _borderWidth: number
     _borderColor: string
+    _stopmark: number | null
+    _scrubbing: boolean
 
     initialized: Promise<void>
+
+
 
     constructor(videoData: Uint8Array, x: number, y: number, width: number, height: number) {
         const blob = new Blob([videoData], { type: 'video/mp4' })
         const url = URL.createObjectURL(blob)
 
+        this._scrubbing = false
+
+        
         this.videoElement = document.createElement('video')
         this.videoElement.src = url
         this.videoElement.width = width
@@ -52,7 +59,8 @@ class VideoElement {
         this.videoElement.loop = true
         document.body.appendChild(this.videoElement)
         console.log(this.videoElement)
-
+        
+        
         this._x = x
         this._y = y
         this._width = width
@@ -62,6 +70,8 @@ class VideoElement {
         this._borderWidth = 0
         this._borderColor = 'black'
 
+        this._stopmark = null
+
         this.initialized = new Promise<void>((resolve) => {
             this.videoElement.oncanplaythrough = () => {
                 console.log('video readey!')
@@ -70,13 +80,12 @@ class VideoElement {
         })
     }
 
-    pauseAtMiddle () {
+    pauseAtStopmark () {
         const onTimeUpdate = () => {
-            const halfDuration = this.videoElement.duration / 2
-            console.log('halfDuration:',halfDuration)
+            console.log('stopmark:',this.stopmark)
             const currentTime = this.videoElement.currentTime
             console.log('onTimeUpdate called')
-            if (currentTime >= halfDuration) {
+            if (currentTime >= this.stopmark) {
                 this.videoElement.pause()
                 this.videoElement.removeEventListener('timeupdate', onTimeUpdate)
             }
@@ -85,10 +94,9 @@ class VideoElement {
         console.log('attach event!')
     }
 
-    jumpToMiddle () {
-        const halfDuration = this.videoElement.duration / 2
+    jumpToStopmark () {
         this.videoElement.pause()
-        this.videoElement.currentTime = halfDuration
+        this.videoElement.currentTime = this.stopmark
     }
 
 
@@ -117,6 +125,41 @@ class VideoElement {
         return x >= this._x + this._offsetX && x <= this._x + this._offsetX + this._width &&
             y >= this._y + this._offsetY && y <= this._y + this._offsetY + this._height
     }
+
+    
+
+    startScrubbing() {
+        this._scrubbing = true;
+        this.videoElement.pause();
+    }
+    
+    stopScrubbing() {
+        this._scrubbing = false;
+        this._stopmark = this.videoElement.currentTime;
+    }
+
+    scrub(x: number, startX: number, scaleX: number) {
+        if (!this._scrubbing) return;
+    
+        const scrubDistance = (x - startX) * scaleX;
+        const sensitivity = 100; // Adjust this value to control sensitivity
+        const scrubFactor = (scrubDistance / (this._width * sensitivity));
+        const newTime = this.videoElement.currentTime + scrubFactor * this.videoElement.duration;
+    
+        this.videoElement.currentTime = Math.max(0, Math.min(this.videoElement.duration, newTime));
+    }
+
+    
+    
+    public set stopmark(v : number) {
+        this._stopmark = v;
+    }
+
+    public get stopmark() {
+        if(this._stopmark) return this._stopmark
+        return this.videoElement.duration / 2
+    }
+    
 }
 
 function createCollage (canvasData: BoothCanvasProps) {
@@ -177,49 +220,74 @@ function createCollage (canvasData: BoothCanvasProps) {
 
         if (hoveredVideo !== null) {
             console.log('Mouse left video ' + (videoElements.indexOf(hoveredVideo) + 1));
-            hoveredVideo.jumpToMiddle();
+            hoveredVideo.jumpToStopmark();
             hoveredVideo = null;
         }
     }
 
-    c.addEventListener('mousemove', function (e) {
-        const rect = c.getBoundingClientRect();
-        const scaleX = iContainerWidth / rect.width;
-        const scaleY = iConstainerHeight / rect.height;
-        const x = (e.clientX - rect.left) * scaleX;
-        const y = (e.clientY - rect.top) * scaleY;
-        handleHover(x, y);
-    });
+    let scrubStartX: number;
 
-    c.addEventListener('touchstart', function (e) {
-        const rect = c.getBoundingClientRect();
-        const scaleX = iContainerWidth / rect.width;
-        const scaleY = iConstainerHeight / rect.height;
-        const touch = e.changedTouches[0];
-        const x = (touch.clientX - rect.left) * scaleX;
-        const y = (touch.clientY - rect.top) * scaleY;
+c.addEventListener('mousedown', function (e) {
+    if (hoveredVideo) {
+        hoveredVideo.startScrubbing();
+        scrubStartX = e.clientX;
+    }
+});
+
+c.addEventListener('mousemove', function (e) {
+    const rect = c.getBoundingClientRect();
+    const scaleX = iContainerWidth / rect.width;
+    const scaleY = iConstainerHeight / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+
+    if (hoveredVideo && hoveredVideo._scrubbing) {
+        hoveredVideo.scrub(e.clientX, scrubStartX, scaleX);
+    } else {
         handleHover(x, y);
-    });
-    
-    c.addEventListener('touchstart', function (e) {
-        e.preventDefault();  // Prevent default touch behavior
-        const rect = c.getBoundingClientRect();
-        const scaleX = iContainerWidth / rect.width;
-        const scaleY = iConstainerHeight / rect.height;
-        const touch = e.changedTouches[0];
-        const x = (touch.clientX - rect.left) * scaleX;
-        const y = (touch.clientY - rect.top) * scaleY;
+    }
+});
+
+
+c.addEventListener('mouseup', function (e) {
+    if (hoveredVideo && hoveredVideo._scrubbing) {
+        hoveredVideo.stopScrubbing();
+    }
+});
+
+c.addEventListener('touchstart', function (e) {
+    const rect = c.getBoundingClientRect();
+    const scaleX = iContainerWidth / rect.width;
+    const scaleY = iConstainerHeight / rect.height;
+    const touch = e.changedTouches[0];
+    const x = (touch.clientX - rect.left) * scaleX;
+    const y = (touch.clientY - rect.top) * scaleY;
+
+    if (hoveredVideo) {
+        hoveredVideo.startScrubbing();
+        scrubStartX = touch.clientX;
+    } else {
         handleHover(x, y);
-    }, { passive: false });  // Set passive to false to allow preventDefault()
-    
-    c.addEventListener('touchend', function (e) {
-        e.preventDefault();  // Prevent default touch behavior
-        if (hoveredVideo) {
-            console.log('Touch ended for video ' + (videoElements.indexOf(hoveredVideo) + 1));
-            hoveredVideo.jumpToMiddle();
-            hoveredVideo = null;
-        }
-    }, { passive: false });  // Set passive to false to allow preventDefault()
+    }
+});
+
+c.addEventListener('touchmove', function (e) {
+    const rect = c.getBoundingClientRect();
+    const scaleX = iContainerWidth / rect.width;
+    const scaleY = iConstainerHeight / rect.height;
+    const touch = e.changedTouches[0];
+
+    if (hoveredVideo && hoveredVideo._scrubbing) {
+        hoveredVideo.scrub(touch.clientX, scrubStartX, scaleX);
+    }
+});
+
+c.addEventListener('touchend', function (e) {
+    if (hoveredVideo && hoveredVideo._scrubbing) {
+        hoveredVideo.stopScrubbing();
+    }
+});
+
     
     
     
@@ -227,7 +295,7 @@ function createCollage (canvasData: BoothCanvasProps) {
     c.addEventListener('mouseleave', function () {
         if (hoveredVideo !== null) {
             console.log('Mouse left canvas ' + (videoElements.indexOf(hoveredVideo) + 1));
-            hoveredVideo.jumpToMiddle();
+            hoveredVideo.jumpToStopmark();
             hoveredVideo = null;
         }
     });
@@ -239,7 +307,7 @@ function createCollage (canvasData: BoothCanvasProps) {
         videoElements.forEach((videoElement) => {
             drawVideoFrame(videoElement)
             videoElement.play()
-            videoElement.pauseAtMiddle()
+            videoElement.pauseAtStopmark()
         })
         loadingState.value = 'done'
     })
