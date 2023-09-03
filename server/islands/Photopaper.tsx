@@ -19,7 +19,7 @@ export default function Photopaper (props: BoothCanvasProps) {
     return (
 
 
-        <canvas id={"picture_canvas"} width={1080} height={1440} class="max-w-full max-h-full h-auto"></canvas>
+        <canvas id={"picture_canvas"} class="max-w-full max-h-full h-auto  rounded-lg overflow-hidden"></canvas>
 
 
     )
