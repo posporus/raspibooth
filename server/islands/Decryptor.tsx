@@ -6,7 +6,7 @@ import { decrypt_buffer } from "../browser/decrypt_buffer.ts"
 import { loadingState } from '../islands/Loader.tsx'
 import { IS_BROWSER } from '$fresh/runtime.ts'
 
-import Photopaper from './Photopaper.tsx'
+import Photopaper, {type PhotopaperProps} from './Photopaper.tsx'
 import { type CanvasData, getDataFromUnzipped } from '../browser/getDataFromUnzipped.ts'
 import { PhotopaperWrapper } from '../components/PhotopaperWrapper.tsx'
 interface DecryptorProps {
@@ -17,7 +17,7 @@ interface DecryptorProps {
 export default function Decryptor (props: DecryptorProps) {
   const { data } = props
 
-  const [canvasData, setCanvasData] = useState<CanvasData | null>(null)
+  const [canvasData, setCanvasData] = useState<PhotopaperProps | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   // Use useMemo for the password state
@@ -30,8 +30,12 @@ export default function Decryptor (props: DecryptorProps) {
         const cryptoKey = await generateCryptoKeyFromPassword(password, fileId)
         const decrypted = await decrypt_buffer(data, cryptoKey)
         const unzipped = fflate.unzipSync(decrypted)
+        const zipData = getDataFromUnzipped(unzipped)
 
-        setCanvasData(getDataFromUnzipped(unzipped))
+        setCanvasData({
+          fileId,
+          ...zipData
+        })
       } catch (error) {
         throw error
       }

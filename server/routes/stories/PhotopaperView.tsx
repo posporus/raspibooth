@@ -1,6 +1,6 @@
 import { PhotopaperWrapper } from "../../components/PhotopaperWrapper.tsx";
 import { Story } from "./_/Story.tsx";
-import Photopaper from "../../islands/Photopaper.tsx"
+import Photopaper, {type PhotopaperProps} from "../../islands/Photopaper.tsx"
 
 
 let sample_video = new Uint8Array()
@@ -11,13 +11,16 @@ try {
 } catch (err) {
   console.error(err)
 }
-const photopaperProps = {
+const photopaperProps:PhotopaperProps = {
   fps: 30,
   duration: 2,
   timestamp: 12345678,
   videos: [
     sample_video, sample_video, sample_video, sample_video
-  ]
+  ],
+  location: 'fedde party',
+  fileId:'D048mdDfje'
+
 }
 
 export default function PhotoPaperWrapperStory () {
