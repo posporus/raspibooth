@@ -17,6 +17,7 @@ import {
     faCalendarCheck,
     faEnvelope,
     faAt,
+    faCamera
 } from 'npm:@fortawesome/free-solid-svg-icons'
 library.add({
     faPlay,
@@ -35,6 +36,7 @@ library.add({
     faCalendarCheck,
     faEnvelope,
     faAt,
+    faCamera,
 })
 
 /* brand icons */

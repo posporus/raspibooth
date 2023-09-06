@@ -11,7 +11,6 @@ interface SVGProps {
 
 export default function Icon (props: IconProps) {
     const svgData = icon(props)
-    console.log(svgData)
     return (
         <SVG data={svgData} />
     )

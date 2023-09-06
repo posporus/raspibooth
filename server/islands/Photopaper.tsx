@@ -10,18 +10,17 @@ export interface PhotopaperProps {
     duration: number
     timestamp: number
     location?: string
-    eventName?:string
+    eventName?: string
 }
 
 export default function Photopaper (props: PhotopaperProps) {
 
     useEffect(() => {
         const canvasCollage = new CanvasCollage(props) //any
-        canvasCollage.onReady(()=>{
+        canvasCollage.onReady(() => {
             loadingState.value = 'done'
         })
         canvasCollage.teaseVideos()
-
         if (!IS_BROWSER) return
         console.log('canvas', props)
     }, [])

@@ -7,7 +7,7 @@ export default function App ({ Component }: AppProps) {
   return (
     <>
       <Head>
-        <link href="daisyui.css" rel="stylesheet" type="text/css" />
+        <link href="/daisyui.css" rel="stylesheet" type="text/css" />
       </Head>
         <AnimatedBackground/>
       <div class="">
