@@ -1,5 +1,58 @@
-import { type IconName, type Icon, type IconPrefix } from 'npm:@fortawesome/fontawesome-svg-core'
-import { icon } from '../icons.ts'
+import { library, icon, type IconName, type Icon, type IconPrefix } from '../deps.ts'
+/* solid icons */
+import {
+    faPlay,
+    faBars,
+    faDownload,
+    faCaretUp,
+    faCaretDown,
+    faQuestion,
+    faCircleInfo,
+    faFileZipper,
+    faImage,
+    faImages,
+    faSliders,
+    faPersonBooth,
+    faLocation,
+    faCalendarCheck,
+    faEnvelope,
+    faAt,
+    faCamera,
+    faGauge,
+    faFilm,
+    faShareNodes,
+
+} from 'https://esm.sh/*@fortawesome/free-solid-svg-icons'
+library.add({
+    faPlay,
+    faBars,
+    faDownload,
+    faCaretUp,
+    faCaretDown,
+    faQuestion,
+    faCircleInfo,
+    faFileZipper,
+    faImage,
+    faImages,
+    faSliders,
+    faPersonBooth,
+    faLocation,
+    faCalendarCheck,
+    faEnvelope,
+    faAt,
+    faCamera,
+    faGauge,
+    faFilm,
+    faShareNodes,
+
+})
+
+/* brand icons */
+import { faGithub } from 'https://esm.sh/*@fortawesome/free-brands-svg-icons'
+library.add({
+    faGithub,
+})
+
 type IconProps = {
     iconName: IconName
     prefix: IconPrefix
@@ -11,6 +64,8 @@ interface SVGProps {
 
 export default function Icon (props: IconProps) {
     const svgData = icon(props)
+    if(!svgData) return null
+    //console.log('svgData',svgData)
     return (
         <SVG data={svgData} />
     )
@@ -20,7 +75,7 @@ export default function Icon (props: IconProps) {
 function SVG ({ data }: SVGProps) {
     const { type, prefix, iconName, icon } = data
 
-    if (type !== 'icon' || !icon) {
+    if (!type || type !== 'icon' || !icon) {
         return null
     }
 

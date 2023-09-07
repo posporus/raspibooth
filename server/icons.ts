@@ -1,4 +1,4 @@
-import { library, icon } from 'npm:@fortawesome/fontawesome-svg-core'
+import { library } from './deps.ts'
 /* solid icons */
 import {
     faPlay,
@@ -17,8 +17,11 @@ import {
     faCalendarCheck,
     faEnvelope,
     faAt,
-    faCamera
-} from 'npm:@fortawesome/free-solid-svg-icons'
+    faCamera,
+    faGauge,
+    faFilm,
+    faShareNodes,
+} from 'https://esm.sh/*@fortawesome/free-solid-svg-icons'
 library.add({
     faPlay,
     faBars,
@@ -37,12 +40,13 @@ library.add({
     faEnvelope,
     faAt,
     faCamera,
+    faGauge,
+    faFilm,
+    faShareNodes,
 })
 
 /* brand icons */
-import { faGithub } from 'npm:@fortawesome/free-brands-svg-icons'
+import { faGithub } from 'https://esm.sh/*@fortawesome/free-brands-svg-icons'
 library.add({
     faGithub,
 })
-
-export { library, icon }
