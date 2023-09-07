@@ -9,11 +9,11 @@ export default function App ({ Component }: AppProps) {
       <Head>
         <link href="/daisyui.css" rel="stylesheet" type="text/css" />
       </Head>
-        <AnimatedBackground/>
+      <AnimatedBackground />
       <div class="w-screen h-screen">
-        {/* <div class="navbar bg-base-100 fixed">
+        <div class="navbar bg-base-100 fixed">
           <a class="btn btn-ghost normal-case text-xl">raspibooth</a>
-        </div> */}
+        </div>
         <Component />
       </div>
     </>
