@@ -1,3 +1,5 @@
+
+
 export class VideoElement {
     videoElement: HTMLVideoElement
     _x: number
@@ -11,12 +13,14 @@ export class VideoElement {
     _stopmark: number | null
     _scrubbing: boolean
 
+
     initialized: Promise<void>
 
     constructor(videoData: Uint8Array, x: number, y: number, width: number, height: number) {
+        
         const blob = new Blob([videoData], { type: 'video/mp4' })
         const url = URL.createObjectURL(blob)
-
+        
         this._scrubbing = false
 
         this.videoElement = document.createElement('video')
@@ -44,38 +48,65 @@ export class VideoElement {
 
         this.initialized = new Promise<void>((resolve) => {
             this.videoElement.oncanplaythrough = () => {
-                console.log('video readey!')
+                //console.log('video readey!',x,y)
                 resolve()
             }
         })
     }
 
-    pauseAtStopmark () {
-        const onTimeUpdate = () => {
-            console.log('stopmark:', this.stopmark)
-            const currentTime = this.videoElement.currentTime
-            console.log('onTimeUpdate called')
-            if (currentTime >= this.stopmark) {
-                this.videoElement.pause()
-                this.videoElement.removeEventListener('timeupdate', onTimeUpdate)
-            }
-        }
-        this.videoElement.addEventListener('timeupdate', onTimeUpdate)
-        console.log('attach event!')
+
+    pos1() {
+        this.videoElement.currentTime = 0
     }
+
+    // async pos1UntilEnd() {
+    //     this.pos1()
+    //     await this.untilTime(this.videoElement.duration)
+    // }
+
+    // async untilPlayedOnce() {
+    //     await this.untilTime(this.videoElement.duration)
+    // }
+
+
+
+    setPlaybackRate(rate: number): void {
+        this.videoElement.playbackRate = rate;
+    }
+
+    reachingTime (time:number) {
+        console.log('called reachingTime')
+        return new Promise<void>((resolve) => {
+            const onTimeUpdate = () => {
+                console.log('this.videoElement.currentTime',this.videoElement.currentTime,'time',time)
+                if (this.videoElement.currentTime >= time) {
+                    console.log('reached time')
+                    resolve()
+                    this.videoElement.removeEventListener('timeupdate', onTimeUpdate)
+                }
+            }
+            this.videoElement.addEventListener('timeupdate', onTimeUpdate)
+        })
+    }
+
+
+    reachingStopmark = () => this.reachingTime(this.stopmark)
+    reachingEnd = () => this.reachingTime(this.videoElement.duration)
 
     jumpToStopmark () {
         this.videoElement.pause()
-        this.videoElement.currentTime = this.stopmark
+        this.videoElement.currentTime = this.stopmark || 0
     }
 
 
     play = () => this.videoElement.play()
+    
+    pause = () => this.videoElement.pause()
 
-    border (width: number, color: string) {
-        this._borderWidth = width
-        this._borderColor = color
-    }
+    // border (width: number, color: string) {
+    //     this._borderWidth = width
+    //     this._borderColor = color
+    // }
 
     draw (ctx: CanvasRenderingContext2D) {
         ctx.drawImage(this.videoElement, this._x + this._offsetX, this._y + this._offsetY, this._width, this._height)

@@ -23,8 +23,10 @@ import * as $$4 from "./islands/Loader.tsx";
 import * as $$5 from "./islands/MultiInput.tsx";
 import * as $$6 from "./islands/PasswordForm.tsx";
 import * as $$7 from "./islands/Photopaper.tsx";
-import * as $$8 from "./islands/_VideoPlayer.tsx";
-import * as $$9 from "./islands/test_helpers/TestPhotopaper.tsx";
+import * as $$8 from "./islands/PhotopaperMenu.tsx";
+import * as $$9 from "./islands/PhotopaperWithMenu.tsx";
+import * as $$10 from "./islands/_VideoPlayer.tsx";
+import * as $$11 from "./islands/test_helpers/TestPhotopaper.tsx";
 
 const manifest = {
   routes: {
@@ -51,8 +53,10 @@ const manifest = {
     "./islands/MultiInput.tsx": $$5,
     "./islands/PasswordForm.tsx": $$6,
     "./islands/Photopaper.tsx": $$7,
-    "./islands/_VideoPlayer.tsx": $$8,
-    "./islands/test_helpers/TestPhotopaper.tsx": $$9,
+    "./islands/PhotopaperMenu.tsx": $$8,
+    "./islands/PhotopaperWithMenu.tsx": $$9,
+    "./islands/_VideoPlayer.tsx": $$10,
+    "./islands/test_helpers/TestPhotopaper.tsx": $$11,
   },
   baseUrl: import.meta.url,
 };

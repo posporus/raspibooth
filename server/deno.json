@@ -27,7 +27,8 @@
     "twind": "https://esm.sh/twind@0.16.19",
     "twind/": "https://esm.sh/twind@0.16.19/",
     "$std/": "https://deno.land/std@0.193.0/",
-    "fontawesome":"https://esm.sh/*@fortawesome/fontawesome-svg-core"
+    "fontawesome":"https://esm.sh/*@fortawesome/fontawesome-svg-core",
+    "imagescript":"https://deno.land/x/imagescript@1.2.15/mod.ts"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

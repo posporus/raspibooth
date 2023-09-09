@@ -1,7 +1,8 @@
 import { PhotopaperWrapper } from "../../components/PhotopaperWrapper.tsx";
+import PhotopaperWithMenu, { PhotopaperWithMenuProps } from "../../islands/PhotopaperWithMenu.tsx";
 import { Story } from "./_/Story.tsx";
-import Photopaper, {type PhotopaperProps} from "../../islands/Photopaper.tsx"
-
+import { PhotopaperProps } from "../../islands/Photopaper.tsx";
+import { useTrigger } from "../../hooks/useTrigger.ts";
 
 let sample_video = new Uint8Array()
 try {
@@ -11,23 +12,29 @@ try {
 } catch (err) {
   console.error(err)
 }
-const photopaperProps:PhotopaperProps = {
-  fps: 30,
-  duration: 2,
-  timestamp: 12345678,
+const photopaperProps:PhotopaperWithMenuProps = {
   videos: [
     sample_video, sample_video, sample_video, sample_video
   ],
-  location: 'fedde party',
-  fileId:'D048mdDfje'
+  fileId:'D048mdDfje',
+  metadata: {
+    duration:1,
+    playSpeed:1,
+    timestamp: 109345029
+  }
+  
 
 }
 
 export default function PhotoPaperWrapperStory () {
+
+
+
+ 
   return (
     <Story>
       <PhotopaperWrapper>
-        <Photopaper {...photopaperProps} />
+        <PhotopaperWithMenu {... photopaperProps}/>
       </PhotopaperWrapper>
     </Story>
   );

@@ -4,7 +4,7 @@ export type FileObject = {
 
 export type Metadata = {
     duration: number
-    fps: number
+    playSpeed: number
     timestamp: number
     location?: string
     eventName?: string
@@ -14,7 +14,7 @@ export interface CanvasData extends Metadata {
     videos: Uint8Array[]
 }
 
-export function getDataFromUnzipped (unzipped_obj: FileObject): CanvasData {
+export function getDataFromUnzipped (unzipped_obj: FileObject): {metadata:Metadata,videos:Uint8Array[]} {
     // Extract and parse metadata.json
     const metadataString = new TextDecoder().decode(unzipped_obj["metadata.json"])
     const metadata: Metadata = JSON.parse(metadataString)
@@ -26,7 +26,7 @@ export function getDataFromUnzipped (unzipped_obj: FileObject): CanvasData {
 
     // Combine everything into the final object
     const result = {
-        ...metadata,
+        metadata,
         videos: videos
     }
 

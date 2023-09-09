@@ -1,15 +1,19 @@
+
+import { Signal } from "@preact/signals"
 import { VideoElement } from "./VideoElement.ts"
+import { Metadata } from "../../browser/getDataFromUnzipped.ts"
+
 
 interface CollageData {
     fileId: string
     videos: Uint8Array[]
-    timestamp: number
-    fps: number
-    location?: string
-    eventName?:string
+    playSpeed: Signal<number>
+    playing: Signal<boolean>
+    metadata: Metadata
+
 }
 
-type ReadyCallback = () => void;
+type ReadyCallback = () => void
 
 export class CanvasCollage {
     private iContainerWidth = 1080;
@@ -20,26 +24,114 @@ export class CanvasCollage {
     private hoveredVideo: VideoElement | null = null;
     private canvas: HTMLCanvasElement
     private ctx: CanvasRenderingContext2D
+    private playing: Signal
+    private isReady: boolean
+    private readyCallbacks: ReadyCallback[]
+    
     fileId: string
 
-    private isReady: boolean;
-    private readyCallbacks: ReadyCallback[];
-
-
     constructor(collageData: CollageData) {
-        const { videos, fileId } = collageData
+        const { videos, fileId, playSpeed, playing } = collageData
         this.fileId = fileId
 
-        this.isReady = false;
-        this.readyCallbacks = [];
+        this.isReady = false
+        this.readyCallbacks = []
 
         this.canvas = document.getElementById(this.fileId) as HTMLCanvasElement
         this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D
 
-        this.createVideoElements(videos)
-        this.initializeVideoElements()
-        this.initializeCanvas()
-        this.addEventListeners()
+        (async ()=>{
+            this.createVideoElements(videos)
+            await this.initializeVideoElements()
+            this.initializeCanvas()
+            this.addEventListeners()
+            this.initDrawVideoFrame()
+            this.setReady()
+        })()
+
+        playSpeed.subscribe((v) => {
+            this.setPlaybackSpeedForAllVideos(v)
+        })
+
+        this.playing = playing
+        this.playing.subscribe(v => {
+            v ? this.playAllVideos() : this.stopAllVideos()
+        })
+    }
+
+    //TODO: maybe rename play and pause
+    play () {
+        this.playing.value = true
+    }
+
+    pause() {
+        this.playing.value = false
+    }
+
+    setReady (): void {
+        this.isReady = true
+        this.executeReadyCallbacks()
+    }
+
+    onReady (callback: ReadyCallback): void {
+        if (this.isReady) {
+            callback() // If already ready, execute the callback immediately
+        } else {
+            this.readyCallbacks.push(callback) // Otherwise, store it for later
+        }
+    }
+
+    private executeReadyCallbacks (): void {
+        while (this.readyCallbacks.length) {
+            const callback = this.readyCallbacks.shift()
+            if (callback) {
+                callback()
+            }
+        }
+    }
+
+    // async playAllVideosOnce() {
+    //     this.allPos1()
+    //     const playOncePromises = this.videoElements.map(videoElement => videoElement.untilPlayedOnce())
+    //     await Promise.any(playOncePromises)
+    //     this.pause()
+    // }
+
+    async reachingEndOfAnyVideo() {
+        const playOncePromises = this.videoElements.map(videoElement => videoElement.reachingEnd())
+        await Promise.all(playOncePromises)
+        console.log('reached end of all')
+    }
+
+    allPos1 () {
+        for (const videoElement of this.videoElements) {
+            videoElement.pos1()
+        }
+    }
+
+    private initDrawVideoFrame () {
+        for (const videoElement of this.videoElements) {
+            this.drawVideoFrame(videoElement)
+        }
+    }
+
+    private playAllVideos (): void {
+        for (const videoElement of this.videoElements) {
+            videoElement.play()
+        }
+    }
+
+    private stopAllVideos (): void {
+        for (const videoElement of this.videoElements) {
+            videoElement.pause()
+            videoElement.jumpToStopmark()
+        }
+    }
+
+    private setPlaybackSpeedForAllVideos (speed: number): void {
+        for (const videoElement of this.videoElements) {
+            videoElement.setPlaybackRate(speed)
+        }
     }
 
     private initializeCanvas () {
@@ -47,6 +139,11 @@ export class CanvasCollage {
         this.canvas.height = this.iConstainerHeight + this.handleHeight
         this.ctx.fillStyle = "white"
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+    }
+
+    private async initializeVideoElements () {
+        const initializationPromises = this.videoElements.map(videoElement => videoElement.initialized)
+        await Promise.all(initializationPromises)
     }
 
     private createVideoElements (videos: Uint8Array[]) {
@@ -71,6 +168,9 @@ export class CanvasCollage {
     }
 
     private handleHover (x: number, y: number) {
+
+        if(this.playing.value) return
+
         for (let i = 0; i < this.videoElements.length; i++) {
             if (this.videoElements[i].isPointInside(x, y)) {
                 if (this.hoveredVideo !== this.videoElements[i]) {
@@ -79,7 +179,7 @@ export class CanvasCollage {
                     }
                     this.hoveredVideo = this.videoElements[i]
                     console.log('Mouse entered video ' + (i + 1))
-
+                    this.hoveredVideo.pos1
                     this.hoveredVideo.play()
                 }
                 return
@@ -134,43 +234,13 @@ export class CanvasCollage {
 
     }
 
-    setReady(): void {
-        this.isReady = true;
-        this.executeReadyCallbacks();
-    }
+    // async playCycle () {
+    //     const pos1UntilEndPromises = this.videoElements.map(videoElement => videoElement.pos1UntilEnd())
+    //     await Promise.any(pos1UntilEndPromises)
+    //     this.pause()
+    // }
 
-    onReady(callback: ReadyCallback): void {
-        if (this.isReady) {
-            callback(); // If already ready, execute the callback immediately
-        } else {
-            this.readyCallbacks.push(callback); // Otherwise, store it for later
-        }
-    }
-
-    private executeReadyCallbacks(): void {
-        while (this.readyCallbacks.length) {
-            const callback = this.readyCallbacks.shift();
-            if (callback) {
-                callback();
-            }
-        }
-    }
-
-    teaseVideos () {
-        this.videoElements.forEach((videoElement) => {
-            this.drawVideoFrame(videoElement)
-            videoElement.play()
-            videoElement.pauseAtStopmark()
-        })
-    }
-
-
-    private initializeVideoElements () {
-        const initializationPromises = this.videoElements.map(videoElement => videoElement.initialized)
-        Promise.all(initializationPromises).then(() => { 
-            this.setReady()
-        })
-    }
+    
 }
 
 

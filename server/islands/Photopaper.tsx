@@ -2,32 +2,50 @@ import { useEffect } from "preact/hooks"
 import { IS_BROWSER } from '$fresh/runtime.ts'
 import { CanvasCollage } from "../core/Photopaper/CanvasCollage.ts"
 import { loadingState } from "./Loader.tsx"
+import { Signal } from "@preact/signals"
+import { Metadata } from "../browser/getDataFromUnzipped.ts"
+import { Trigger } from "../hooks/useTrigger.ts"
+
 
 export interface PhotopaperProps {
     fileId: string
     videos: Uint8Array[]
-    fps: number
-    duration: number
-    timestamp: number
-    location?: string
-    eventName?: string
+    metadata: Metadata
+    playing: Signal<boolean>
+    playSpeed: Signal<number>
+    triggerDownload: Trigger;
 }
 
+
 export default function Photopaper (props: PhotopaperProps) {
+    
 
     useEffect(() => {
+        if (!IS_BROWSER) return
+
         const canvasCollage = new CanvasCollage(props) //any
         canvasCollage.onReady(() => {
             loadingState.value = 'done'
+            canvasCollage.allPos1()
+            canvasCollage.play()
+            canvasCollage.reachingEndOfAnyVideo().then(()=>{
+                canvasCollage.pause()
+            })
         })
-        canvasCollage.teaseVideos()
-        if (!IS_BROWSER) return
         console.log('canvas', props)
+        
+        props.triggerDownload.subscribe(()=>{
+            //canvasCollage.downloadGif()
+        })
+
+        
     }, [])
 
     return (
         <>
-            <CanvasElement id={props.fileId}></CanvasElement>
+            <div class="drop-shadow-xl p-5">
+                <CanvasElement id={props.fileId}></CanvasElement>
+            </div>
         </>
 
     )

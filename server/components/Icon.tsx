@@ -2,6 +2,7 @@ import { library, icon, type IconName, type Icon, type IconPrefix } from '../dep
 /* solid icons */
 import {
     faPlay,
+    faStop,
     faBars,
     faDownload,
     faCaretUp,
@@ -25,6 +26,7 @@ import {
 } from 'https://esm.sh/*@fortawesome/free-solid-svg-icons'
 library.add({
     faPlay,
+    faStop,
     faBars,
     faDownload,
     faCaretUp,
