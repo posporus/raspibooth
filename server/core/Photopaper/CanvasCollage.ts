@@ -55,17 +55,31 @@ export class CanvasCollage {
 
         this.playing = playing
         this.playing.subscribe(v => {
-            v ? this.playAllVideos() : this.stopAllVideos()
+            v ? this.loopAllVideos() : this.stopAllVideos()
         })
     }
 
-    //TODO: maybe rename play and pause
-    play () {
+    //loop and stop handled thru preact signal
+    loop () {
         this.playing.value = true
     }
 
-    pause() {
+    stop() {
         this.playing.value = false
+    }
+
+    play() {
+        this.playAllVideos()
+    }
+    
+    reset() {
+        this.resetAllVideos()
+    }
+
+    async playOnce() {
+        this.allPos1()
+        this.playAllVideos()
+        await this.reachingEndOfAnyVideo()
     }
 
     setReady (): void {
@@ -89,13 +103,6 @@ export class CanvasCollage {
             }
         }
     }
-
-    // async playAllVideosOnce() {
-    //     this.allPos1()
-    //     const playOncePromises = this.videoElements.map(videoElement => videoElement.untilPlayedOnce())
-    //     await Promise.any(playOncePromises)
-    //     this.pause()
-    // }
 
     async reachingEndOfAnyVideo() {
         const playOncePromises = this.videoElements.map(videoElement => videoElement.reachingEnd())
@@ -121,11 +128,27 @@ export class CanvasCollage {
         }
     }
 
-    private stopAllVideos (): void {
+    private loopAllVideos (): void {
         for (const videoElement of this.videoElements) {
-            videoElement.pause()
+            videoElement.loop()
+        }
+    }
+
+    private resetAllVideos ():void {
+        for (const videoElement of this.videoElements) {
             videoElement.jumpToStopmark()
         }
+    }
+
+    private pauseAllVideos (): void {
+        for (const videoElement of this.videoElements) {
+            videoElement.pause()
+        }
+    }
+
+    private stopAllVideos (): void {
+        this.pauseAllVideos()
+        this.resetAllVideos()
     }
 
     private setPlaybackSpeedForAllVideos (speed: number): void {
@@ -180,7 +203,7 @@ export class CanvasCollage {
                     this.hoveredVideo = this.videoElements[i]
                     console.log('Mouse entered video ' + (i + 1))
                     this.hoveredVideo.pos1
-                    this.hoveredVideo.play()
+                    this.hoveredVideo.loop()
                 }
                 return
             }
@@ -233,13 +256,6 @@ export class CanvasCollage {
         })
 
     }
-
-    // async playCycle () {
-    //     const pos1UntilEndPromises = this.videoElements.map(videoElement => videoElement.pos1UntilEnd())
-    //     await Promise.any(pos1UntilEndPromises)
-    //     this.pause()
-    // }
-
     
 }
 

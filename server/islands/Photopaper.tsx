@@ -24,18 +24,21 @@ export default function Photopaper (props: PhotopaperProps) {
         if (!IS_BROWSER) return
 
         const canvasCollage = new CanvasCollage(props) //any
-        canvasCollage.onReady(() => {
-            loadingState.value = 'done'
-            canvasCollage.allPos1()
-            canvasCollage.play()
-            canvasCollage.reachingEndOfAnyVideo().then(()=>{
-                canvasCollage.pause()
-            })
+
+        canvasCollage.reachingEndOfAnyVideo().then(()=>{
+            //canvasCollage.pause()
         })
-        console.log('canvas', props)
+
+        canvasCollage.onReady(async() => {
+            loadingState.value = 'done'
+            //canvasCollage.stop()
+            await canvasCollage.playOnce()
+            canvasCollage.reset()
+        })
         
-        props.triggerDownload.subscribe(()=>{
-            //canvasCollage.downloadGif()
+        props.triggerDownload.subscribe(async ()=>{
+            await canvasCollage.playOnce()
+            console.log('played once.')
         })
 
         

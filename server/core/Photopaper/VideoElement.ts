@@ -30,7 +30,7 @@ export class VideoElement {
         this.videoElement.style.display = 'none'
         this.videoElement.autoplay = true
         this.videoElement.muted = true
-        this.videoElement.loop = true
+        this.videoElement.loop = false
         document.body.appendChild(this.videoElement)
         console.log(this.videoElement)
 
@@ -53,6 +53,8 @@ export class VideoElement {
             }
         })
     }
+
+    
 
 
     pos1() {
@@ -91,17 +93,37 @@ export class VideoElement {
 
 
     reachingStopmark = () => this.reachingTime(this.stopmark)
-    reachingEnd = () => this.reachingTime(this.videoElement.duration)
+    reachingEnd() {
+        console.log('called reachingEnd');
+        return new Promise<void>((resolve) => {
+            const onEnded = () => {
+                console.log('reached end');
+                resolve();
+                this.videoElement.removeEventListener('ended', onEnded);
+            };
+            this.videoElement.addEventListener('ended', onEnded);
+        });
+    }
+    
 
     jumpToStopmark () {
         this.videoElement.pause()
         this.videoElement.currentTime = this.stopmark || 0
     }
 
+    loop () {
+        this.videoElement.loop = true
+        this.videoElement.play()
+    }
 
-    play = () => this.videoElement.play()
+    play = () => {
+        this.videoElement.loop = false
+        this.videoElement.play()
+    }
     
-    pause = () => this.videoElement.pause()
+    pause = () => {
+        this.videoElement.pause()
+    }
 
     // border (width: number, color: string) {
     //     this._borderWidth = width
