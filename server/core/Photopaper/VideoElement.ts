@@ -17,10 +17,10 @@ export class VideoElement {
     initialized: Promise<void>
 
     constructor(videoData: Uint8Array, x: number, y: number, width: number, height: number) {
-        
+
         const blob = new Blob([videoData], { type: 'video/mp4' })
         const url = URL.createObjectURL(blob)
-        
+
         this._scrubbing = false
 
         this.videoElement = document.createElement('video')
@@ -31,8 +31,9 @@ export class VideoElement {
         this.videoElement.autoplay = true
         this.videoElement.muted = true
         this.videoElement.loop = false
+
         document.body.appendChild(this.videoElement)
-        console.log(this.videoElement)
+        //console.log(this.videoElement)
 
 
         this._x = x
@@ -54,10 +55,10 @@ export class VideoElement {
         })
     }
 
-    
 
 
-    pos1() {
+
+    pos1 () {
         this.videoElement.currentTime = 0
     }
 
@@ -72,15 +73,15 @@ export class VideoElement {
 
 
 
-    setPlaybackRate(rate: number): void {
+    setPlaybackRate (rate: number): void {
         this.videoElement.playbackRate = rate;
     }
 
-    reachingTime (time:number) {
+    reachingTime (time: number) {
         console.log('called reachingTime')
         return new Promise<void>((resolve) => {
             const onTimeUpdate = () => {
-                console.log('this.videoElement.currentTime',this.videoElement.currentTime,'time',time)
+                console.log('this.videoElement.currentTime', this.videoElement.currentTime, 'time', time)
                 if (this.videoElement.currentTime >= time) {
                     console.log('reached time')
                     resolve()
@@ -93,7 +94,7 @@ export class VideoElement {
 
 
     reachingStopmark = () => this.reachingTime(this.stopmark)
-    reachingEnd() {
+    reachingEnd () {
         console.log('called reachingEnd');
         return new Promise<void>((resolve) => {
             const onEnded = () => {
@@ -104,7 +105,7 @@ export class VideoElement {
             this.videoElement.addEventListener('ended', onEnded);
         });
     }
-    
+
 
     jumpToStopmark () {
         this.videoElement.pause()
@@ -120,7 +121,7 @@ export class VideoElement {
         this.videoElement.loop = false
         this.videoElement.play()
     }
-    
+
     pause = () => {
         this.videoElement.pause()
     }
@@ -180,5 +181,12 @@ export class VideoElement {
         if (this._stopmark) return this._stopmark
         return this.videoElement.duration / 2
     }
+
+    goToFrame = (frameNumber: number, fps = 30) => new Promise<void>((resolve)=>{
+        this.videoElement.currentTime = (frameNumber / fps) / this.videoElement.playbackRate;
+        this.videoElement.onseeked = () => {
+            resolve()
+        }
+    })
 
 }

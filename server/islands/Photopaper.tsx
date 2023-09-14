@@ -6,7 +6,6 @@ import { Signal } from "@preact/signals"
 import { Metadata } from "../browser/getDataFromUnzipped.ts"
 import { Trigger } from "../hooks/useTrigger.ts"
 
-
 export interface PhotopaperProps {
     fileId: string
     videos: Uint8Array[]
@@ -18,30 +17,33 @@ export interface PhotopaperProps {
 
 
 export default function Photopaper (props: PhotopaperProps) {
-    
+
 
     useEffect(() => {
         if (!IS_BROWSER) return
 
         const canvasCollage = new CanvasCollage(props) //any
 
-        canvasCollage.reachingEndOfAnyVideo().then(()=>{
+        canvasCollage.reachingEndOfAnyVideo().then(() => {
             //canvasCollage.pause()
         })
 
-        canvasCollage.onReady(async() => {
+        canvasCollage.onReady(async () => {
             loadingState.value = 'done'
             //canvasCollage.stop()
             await canvasCollage.playOnce()
             canvasCollage.reset()
         })
-        
-        props.triggerDownload.subscribe(async ()=>{
-            await canvasCollage.playOnce()
-            console.log('played once.')
+
+        props.triggerDownload.subscribe(async (v) => {
+            if (v === 0) return
+            await canvasCollage.capture()
+            
+            console.log('gif created.')
+
         })
 
-        
+
     }, [])
 
     return (

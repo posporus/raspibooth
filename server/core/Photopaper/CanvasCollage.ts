@@ -3,6 +3,16 @@ import { Signal } from "@preact/signals"
 import { VideoElement } from "./VideoElement.ts"
 import { Metadata } from "../../browser/getDataFromUnzipped.ts"
 
+import { GIFEncoder, quantize, applyPalette } from 'https://unpkg.com/gifenc';
+
+function download (buf: Uint8Array, filename: string, { type }: { type: string }) {
+    const blob = buf instanceof Blob ? buf : new Blob([buf], { type });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.click();
+}
 
 interface CollageData {
     fileId: string
@@ -27,20 +37,25 @@ export class CanvasCollage {
     private playing: Signal
     private isReady: boolean
     private readyCallbacks: ReadyCallback[]
-    
+    private capturing = false
+    private playSpeed = 1
+
+    metadata: Metadata
     fileId: string
 
     constructor(collageData: CollageData) {
-        const { videos, fileId, playSpeed, playing } = collageData
+        const { videos, fileId, playSpeed, playing, metadata } = collageData
+
         this.fileId = fileId
+        this.metadata = metadata
 
         this.isReady = false
         this.readyCallbacks = []
 
         this.canvas = document.getElementById(this.fileId) as HTMLCanvasElement
-        this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D
+        this.ctx = this.canvas.getContext("2d", { willReadFrequently: true }) as CanvasRenderingContext2D
 
-        (async ()=>{
+        (async () => {
             this.createVideoElements(videos)
             await this.initializeVideoElements()
             this.initializeCanvas()
@@ -50,6 +65,7 @@ export class CanvasCollage {
         })()
 
         playSpeed.subscribe((v) => {
+            this.playSpeed = v
             this.setPlaybackSpeedForAllVideos(v)
         })
 
@@ -59,24 +75,76 @@ export class CanvasCollage {
         })
     }
 
+
+
+    async capture (targetFps = 30) {
+
+        const frames = this.metadata.duration / this.playSpeed * targetFps
+
+        const width = this.iContainerWidth, height = this.iConstainerHeight
+
+        const gif = GIFEncoder();
+
+        this.capturing = true
+
+        const addend = this.metadata.fps * this.playSpeed / targetFps
+        console.log(this.metadata.fps, this.playSpeed, targetFps)
+        console.log('debug:', frames, addend)
+
+
+        for (let frame = 0; frame < frames; frame = frame + addend) {
+
+            await this.goToFrameOfAllVideos(frame);
+            this.draw();
+
+            const { data } = this.ctx.getImageData(0, 0, width, height)
+            const format = "rgb444";
+            const palette = quantize(data, 256, { format });
+            const index = applyPalette(data, palette, format);
+            gif.writeFrame(index, width, height, { palette });
+
+        }
+
+        this.capturing = false
+
+        this.initDrawVideoFrame()
+
+        console.log(`${this.fileId}_${this.playSpeed}x_${targetFps}fps.gif`)
+
+
+        gif.finish();
+        const buffer = gif.bytesView();
+        download(buffer, `${this.fileId}_${this.playSpeed}x_${targetFps}fps.gif`, { type: 'image/gif' })
+
+    }
+
+    async drawRandom () {
+        this.capturing = true
+        const frames = 30
+        const random = Math.floor(Math.random() * frames)
+        console.log('drawing frame', random)
+        await this.goToFrameOfAllVideos(random)
+        this.draw()
+    }
+
     //loop and stop handled thru preact signal
     loop () {
         this.playing.value = true
     }
 
-    stop() {
+    stop () {
         this.playing.value = false
     }
 
-    play() {
+    play () {
         this.playAllVideos()
     }
-    
-    reset() {
+
+    reset () {
         this.resetAllVideos()
     }
 
-    async playOnce() {
+    async playOnce () {
         this.allPos1()
         this.playAllVideos()
         await this.reachingEndOfAnyVideo()
@@ -104,7 +172,7 @@ export class CanvasCollage {
         }
     }
 
-    async reachingEndOfAnyVideo() {
+    async reachingEndOfAnyVideo () {
         const playOncePromises = this.videoElements.map(videoElement => videoElement.reachingEnd())
         await Promise.all(playOncePromises)
         console.log('reached end of all')
@@ -116,9 +184,19 @@ export class CanvasCollage {
         }
     }
 
-    private initDrawVideoFrame () {
+    private initDrawVideoFrame () { //TODO: get rid of this.
+        this.drawVideoFrame()
+    }
+
+    private drawVideoFrame () {
+        if (this.capturing) return
+        this.draw()
+        requestAnimationFrame(() => this.drawVideoFrame())
+    }
+
+    private draw () {
         for (const videoElement of this.videoElements) {
-            this.drawVideoFrame(videoElement)
+            videoElement.draw(this.ctx)
         }
     }
 
@@ -134,7 +212,7 @@ export class CanvasCollage {
         }
     }
 
-    private resetAllVideos ():void {
+    private resetAllVideos (): void {
         for (const videoElement of this.videoElements) {
             videoElement.jumpToStopmark()
         }
@@ -155,6 +233,11 @@ export class CanvasCollage {
         for (const videoElement of this.videoElements) {
             videoElement.setPlaybackRate(speed)
         }
+    }
+
+    private async goToFrameOfAllVideos (frame: number): Promise<void> {
+        const goToFramePromises = this.videoElements.map(videoElement => videoElement.goToFrame(frame, this.metadata.fps))
+        await Promise.all(goToFramePromises)
     }
 
     private initializeCanvas () {
@@ -185,14 +268,9 @@ export class CanvasCollage {
         }
     }
 
-    private drawVideoFrame (videoElement: VideoElement) {
-        videoElement.draw(this.ctx)
-        requestAnimationFrame(() => this.drawVideoFrame(videoElement))
-    }
-
     private handleHover (x: number, y: number) {
 
-        if(this.playing.value) return
+        if (this.playing.value) return
 
         for (let i = 0; i < this.videoElements.length; i++) {
             if (this.videoElements[i].isPointInside(x, y)) {
@@ -256,7 +334,7 @@ export class CanvasCollage {
         })
 
     }
-    
+
 }
 
 

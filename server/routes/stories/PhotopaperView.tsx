@@ -20,7 +20,8 @@ const photopaperProps:PhotopaperWithMenuProps = {
   metadata: {
     duration:1,
     playSpeed:1,
-    timestamp: 109345029
+    timestamp: 109345029,
+    fps:30
   }
   
 

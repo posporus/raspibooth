@@ -6,6 +6,7 @@ export type Metadata = {
     duration: number
     playSpeed: number
     timestamp: number
+    fps:number
     location?: string
     eventName?: string
 }
