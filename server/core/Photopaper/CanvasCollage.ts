@@ -3,7 +3,7 @@ import { Signal } from "@preact/signals"
 import { VideoElement } from "./VideoElement.ts"
 import { Metadata } from "../../browser/getDataFromUnzipped.ts"
 
-import { GIFEncoder, quantize, applyPalette } from 'https://unpkg.com/gifenc';
+import { GIFEncoder, quantize, applyPalette } from "https://unpkg.com/gifenc@1.0.3/dist/gifenc.esm.js";
 
 function download (buf: Uint8Array, filename: string, { type }: { type: string }) {
     const blob = buf instanceof Blob ? buf : new Blob([buf], { type });
