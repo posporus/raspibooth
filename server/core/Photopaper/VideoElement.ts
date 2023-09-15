@@ -184,6 +184,7 @@ export class VideoElement {
 
     goToFrame = (frameNumber: number, fps = 30) => new Promise<void>((resolve)=>{
         this.videoElement.currentTime = (frameNumber / fps) / this.videoElement.playbackRate;
+        console.log('')
         this.videoElement.onseeked = () => {
             resolve()
         }
