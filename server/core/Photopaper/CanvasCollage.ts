@@ -75,10 +75,12 @@ export class CanvasCollage {
 
     snapshot = () => {
         const fileUrl = this.canvas.toDataURL()
-        download(`${this.fileId}.png`,fileUrl)
+        download(`${this.fileId}.png`, fileUrl)
     }
 
     async capture (targetFps = 30) {
+
+        this.capturing = true
 
         const frames = this.metadata.duration / this.playSpeed * targetFps
 
@@ -86,16 +88,15 @@ export class CanvasCollage {
 
         const gif = GIFEncoder();
 
-        this.capturing = true
+        const addend = 1 // (this.metadata.fps * this.playSpeed / targetFps)
 
-        const addend = this.metadata.fps * this.playSpeed / targetFps
         console.log(this.metadata.fps, this.playSpeed, targetFps)
         console.log('debug:', frames, addend)
 
 
-        for (let frame = 0; frame < frames; frame = frame + addend) {
+        for (let frame = 0; frame < frames; frame++) {
 
-            await this.goToFrameOfAllVideos(frame);
+            await this.goToFrameOfAllVideos(frame * this.playSpeed);
             this.draw();
 
             const { data } = this.ctx.getImageData(0, 0, width, height)

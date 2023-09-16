@@ -1,5 +1,3 @@
-
-
 export class VideoElement {
     videoElement: HTMLVideoElement
     _x: number
@@ -12,7 +10,6 @@ export class VideoElement {
     _borderColor: string
     _stopmark: number | null
     _scrubbing: boolean
-
 
     initialized: Promise<void>
 
@@ -33,8 +30,6 @@ export class VideoElement {
         this.videoElement.loop = false
 
         document.body.appendChild(this.videoElement)
-        //console.log(this.videoElement)
-
 
         this._x = x
         this._y = y
@@ -49,29 +44,14 @@ export class VideoElement {
 
         this.initialized = new Promise<void>((resolve) => {
             this.videoElement.oncanplaythrough = () => {
-                //console.log('video readey!',x,y)
                 resolve()
             }
         })
     }
 
-
-
-
     pos1 () {
         this.videoElement.currentTime = 0
     }
-
-    // async pos1UntilEnd() {
-    //     this.pos1()
-    //     await this.untilTime(this.videoElement.duration)
-    // }
-
-    // async untilPlayedOnce() {
-    //     await this.untilTime(this.videoElement.duration)
-    // }
-
-
 
     setPlaybackRate (rate: number): void {
         this.videoElement.playbackRate = rate;
@@ -91,7 +71,6 @@ export class VideoElement {
             this.videoElement.addEventListener('timeupdate', onTimeUpdate)
         })
     }
-
 
     reachingStopmark = () => this.reachingTime(this.stopmark)
     reachingEnd () {
@@ -126,11 +105,6 @@ export class VideoElement {
         this.videoElement.pause()
     }
 
-    // border (width: number, color: string) {
-    //     this._borderWidth = width
-    //     this._borderColor = color
-    // }
-
     draw (ctx: CanvasRenderingContext2D) {
         ctx.drawImage(this.videoElement, this._x + this._offsetX, this._y + this._offsetY, this._width, this._height)
         if (this._borderWidth > 0) {
@@ -149,8 +123,6 @@ export class VideoElement {
         return x >= this._x + this._offsetX && x <= this._x + this._offsetX + this._width &&
             y >= this._y + this._offsetY && y <= this._y + this._offsetY + this._height
     }
-
-
 
     startScrubbing () {
         this._scrubbing = true
@@ -182,8 +154,8 @@ export class VideoElement {
         return this.videoElement.duration / 2
     }
 
-    goToFrame = (frameNumber: number, fps = 30) => new Promise<void>((resolve)=>{
-        this.videoElement.currentTime = (frameNumber / fps) / this.videoElement.playbackRate;
+    goToFrame = (frameNumber: number, fps = 30) => new Promise<void>((resolve) => {
+        this.videoElement.currentTime = (frameNumber / fps);
         console.log('')
         this.videoElement.onseeked = () => {
             resolve()
