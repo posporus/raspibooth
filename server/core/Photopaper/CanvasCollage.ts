@@ -5,11 +5,9 @@ import { Metadata } from "../../browser/getDataFromUnzipped.ts"
 
 import { GIFEncoder, quantize, applyPalette } from "https://unpkg.com/gifenc@1.0.3/dist/gifenc.esm.js";
 
-function download (buf: Uint8Array, filename: string, { type }: { type: string }) {
-    const blob = buf instanceof Blob ? buf : new Blob([buf], { type });
-    const url = URL.createObjectURL(blob);
+function download (filename: string, dataUrl: string) {
     const anchor = document.createElement("a");
-    anchor.href = url;
+    anchor.href = dataUrl;
     anchor.download = filename;
     anchor.click();
 }
@@ -75,7 +73,10 @@ export class CanvasCollage {
         })
     }
 
-
+    snapshot = () => {
+        const fileUrl = this.canvas.toDataURL()
+        download(`${this.fileId}.png`,fileUrl)
+    }
 
     async capture (targetFps = 30) {
 
@@ -111,10 +112,12 @@ export class CanvasCollage {
 
         console.log(`${this.fileId}_${this.playSpeed}x_${targetFps}fps.gif`)
 
-
         gif.finish();
         const buffer = gif.bytesView();
-        download(buffer, `${this.fileId}_${this.playSpeed}x_${targetFps}fps.gif`, { type: 'image/gif' })
+
+        const blob = buffer instanceof Blob ? buffer : new Blob([buffer], { type: 'image/gif' });
+        const url = URL.createObjectURL(blob);
+        download(`${this.fileId}_${this.playSpeed}x_${targetFps}fps.gif`, url)
 
     }
 

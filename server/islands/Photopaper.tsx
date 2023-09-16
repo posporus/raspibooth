@@ -12,7 +12,9 @@ export interface PhotopaperProps {
     metadata: Metadata
     playing: Signal<boolean>
     playSpeed: Signal<number>
-    triggerDownload: Trigger;
+    triggerDownloadGif?: Trigger
+    triggerDownloadSnapshot?: Trigger
+
 }
 
 
@@ -35,12 +37,16 @@ export default function Photopaper (props: PhotopaperProps) {
             canvasCollage.reset()
         })
 
-        props.triggerDownload.subscribe(async (v) => {
+        props.triggerDownloadGif?.subscribe(async (v) => {
             if (v === 0) return
             await canvasCollage.capture()
-            
             console.log('gif created.')
+        })
 
+        props.triggerDownloadSnapshot?.subscribe((v) => {
+            if (v === 0) return
+            canvasCollage.snapshot()
+            console.log('snapshot created.')
         })
 
 

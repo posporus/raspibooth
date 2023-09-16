@@ -5,13 +5,14 @@ import { useSignal } from "@preact/signals"
 import { useEffect } from "preact/hooks"
 
 
-export type PhotopaperWithMenuProps = Omit<PhotopaperProps,'playSpeed' | 'playing' | 'triggerDownload'>
+export type PhotopaperWithMenuProps = Omit<PhotopaperProps, 'playSpeed' | 'playing' | 'triggerDownload'>
 
 
 export default function PhotopaperWithMenu (props: PhotopaperWithMenuProps) {
     const speedSignal = useSignal(1)
     const playingSignal = useSignal(false)
-    const [triggerDownload,callTriggerDownload] = useTrigger()
+    const [triggerDownloadGif, callTriggerDownloadGif] = useTrigger()
+    const [triggerDownloadSnapshot, callTriggerDownloadSnapshot] = useTrigger()
 
 
     useEffect(() => {
@@ -23,14 +24,19 @@ export default function PhotopaperWithMenu (props: PhotopaperWithMenuProps) {
         })
     }, [])
 
-    const handleDownload = (o:DownloadOptionsType) => {
-        console.log('handleDownload',o)
-        if(o === 'gif') callTriggerDownload()
+    const handleDownload = (o: DownloadOptionsType) => {
+        console.log('handleDownload', o)
+        if (o === 'gif') callTriggerDownloadGif()
+        if (o === 'snapshot') callTriggerDownloadSnapshot()
     }
     return (
-
         <>
-            <Photopaper {...props} playSpeed={speedSignal} playing={playingSignal} triggerDownload={triggerDownload}/>
+            <Photopaper
+                {...props} playSpeed={speedSignal}
+                playing={playingSignal}
+                triggerDownloadSnapshot={triggerDownloadSnapshot}
+                triggerDownloadGif={triggerDownloadGif}
+            />
             <PhotopaperMenu
                 speed={speedSignal}
                 onDownloadOptionClick={handleDownload}
@@ -38,6 +44,5 @@ export default function PhotopaperWithMenu (props: PhotopaperWithMenuProps) {
                 onShareClick={() => console.log('share')}
             />
         </>
-
     )
 }
