@@ -88,12 +88,6 @@ export class CanvasCollage {
 
         const gif = GIFEncoder();
 
-        const addend = 1 // (this.metadata.fps * this.playSpeed / targetFps)
-
-        console.log(this.metadata.fps, this.playSpeed, targetFps)
-        console.log('debug:', frames, addend)
-
-
         for (let frame = 0; frame < frames; frame++) {
 
             await this.goToFrameOfAllVideos(frame * this.playSpeed);
