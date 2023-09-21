@@ -22,6 +22,8 @@ interface CollageData {
 }
 
 type ReadyCallback = () => void
+type Effect = { contrast?: number, grayscale?: number, hueRotate?: number, saturate?: number, sepia?: number }
+type Presets = {[key:string]:Effect}
 
 export class CanvasCollage {
     private iContainerWidth = 1080;
@@ -38,6 +40,9 @@ export class CanvasCollage {
     private capturing = false
     private playSpeed = 1
 
+
+    private _presets: Presets = {};
+
     metadata: Metadata
     fileId: string
 
@@ -53,7 +58,9 @@ export class CanvasCollage {
         this.canvas = document.getElementById(this.fileId) as HTMLCanvasElement
         this.ctx = this.canvas.getContext("2d", { willReadFrequently: true }) as CanvasRenderingContext2D
 
-        (async () => {
+        this.resetPresets()
+
+        ; (async () => {
             this.createVideoElements(videos)
             await this.initializeVideoElements()
             this.initializeCanvas()
@@ -71,6 +78,65 @@ export class CanvasCollage {
         this.playing.subscribe(v => {
             v ? this.loopAllVideos() : this.stopAllVideos()
         })
+    }
+
+    applyEffects (effects: Effect) {
+        // Construct the filter string from the effects object
+        let filterString = '';
+
+        if (effects.contrast !== undefined) {
+            filterString += `contrast(${effects.contrast}%) `;
+        }
+        if (effects.grayscale !== undefined) {
+            filterString += `grayscale(${effects.grayscale}%) `;
+        }
+        if (effects.hueRotate !== undefined) {
+            filterString += `hue-rotate(${effects.hueRotate}deg) `;
+        }
+        if (effects.saturate !== undefined) {
+            filterString += `saturate(${effects.saturate}%) `;
+        }
+        if (effects.sepia !== undefined) {
+            filterString += `sepia(${effects.sepia}%) `;
+        }
+
+        // Set the filter property on the canvas context
+        this.ctx.filter = filterString.trim();
+
+    }
+
+    savePreset (presetName: string, effects: Effect) {
+        // Save the preset with the specified name
+        this.presets[presetName] = effects;
+    }
+
+    loadPreset (presetName: string) {
+        // Load the preset with the specified name
+        const preset = this.presets[presetName];
+        if (preset) {
+            this.applyEffects(preset);
+        } else {
+            console.error(`Preset "${presetName}" does not exist.`);
+        }
+    }
+
+    get presets() {
+        return this._presets
+    }
+
+    set presets(v:Presets) {
+        this._presets = {
+            ...this._presets,
+            ...v
+        }
+    }
+
+    resetPresets () {
+        this.presets = {
+            'Grayscale': { grayscale: 100 },
+            'Contrasty': { contrast: 100 },
+            'Sepia': { sepia: 100 }
+        }
     }
 
     snapshot = () => {

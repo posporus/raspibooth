@@ -3,6 +3,7 @@ import Photopaper, { type PhotopaperProps } from "./Photopaper.tsx"
 import { DownloadOptionsType, PhotopaperMenu } from "./PhotopaperMenu.tsx"
 import { useSignal } from "@preact/signals"
 import { useEffect } from "preact/hooks"
+import { PhotopaperTopMenu } from "./PhotopaperTopMenu.tsx"
 
 
 export type PhotopaperWithMenuProps = Omit<PhotopaperProps, 'playSpeed' | 'playing' | 'triggerDownload'>
@@ -31,6 +32,7 @@ export default function PhotopaperWithMenu (props: PhotopaperWithMenuProps) {
     }
     return (
         <>
+            <PhotopaperTopMenu />
             <Photopaper
                 {...props} playSpeed={speedSignal}
                 playing={playingSignal}
