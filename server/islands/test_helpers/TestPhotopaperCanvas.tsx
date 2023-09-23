@@ -7,7 +7,7 @@ interface TestPhotopaperProps {
     height: number // Canvas height
 }
 
-export default function TestPhotopaper (props: TestPhotopaperProps) {
+export default function TestPhotopaperCanvas (props: TestPhotopaperProps) {
     const { count, gap, width, height } = props
 
     useEffect(() => {

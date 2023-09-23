@@ -1,4 +1,4 @@
-import Icon from '../components/Icon.tsx'
+import Icon from '../../components/Icon.tsx'
 
 export type DownloadOptionsType = 'archive' | 'snapshot' | 'gif'
 

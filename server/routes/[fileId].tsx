@@ -1,10 +1,11 @@
 import { RouteContext } from "$fresh/server.ts"
-import DataFetcher from "../islands/DataFetcher.tsx"
 import { file_store } from "../store.ts"
 import Loader from "../islands/Loader.tsx"
 import LeaveMail from "../islands/LeaveMail.tsx"
 import { isValidFileId } from "../utils/isValidFileId.ts"
 import { _config } from "../core/config.ts"
+import Photopaper from '../islands/Photopaper/index.tsx'
+import { PhotopaperWrapper } from "../components/PhotopaperWrapper.tsx"
 
 const config = _config()
 
@@ -25,7 +26,9 @@ export default async function VideoPage (_req: Request, ctx: RouteContext) {
             hasFile ?
               <>
                 <Loader></Loader>
-                <DataFetcher fileId={fileId} />
+                <PhotopaperWrapper>
+                  <Photopaper fileId={fileId}/>
+                </PhotopaperWrapper>
               </>
               : <LeaveMail fileId={fileId} />}
 

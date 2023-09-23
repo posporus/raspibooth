@@ -1,30 +1,26 @@
 import { useEffect } from "preact/hooks"
 import { IS_BROWSER } from '$fresh/runtime.ts'
-import { CanvasCollage } from "../core/Photopaper/CanvasCollage.ts"
-import { loadingState } from "./Loader.tsx"
-import { Signal } from "@preact/signals"
-import { Metadata } from "../browser/getDataFromUnzipped.ts"
-import { Trigger } from "../hooks/useTrigger.ts"
+import { CanvasCollage } from "../../core/Photopaper/CanvasCollage.ts"
+import { loadingState } from "../Loader.tsx"
+import { Metadata } from "../../browser/getDataFromUnzipped.ts"
 
-export interface PhotopaperProps {
+import { speedSignal, playingSignal, triggerDownloadGif, triggerDownloadSnapshot } from './signals.ts'
+
+export interface PhotopaperCanvasProps {
     fileId: string
     videos: Uint8Array[]
     metadata: Metadata
-    playing: Signal<boolean>
-    playSpeed: Signal<number>
-    triggerDownloadGif?: Trigger
-    triggerDownloadSnapshot?: Trigger
-
 }
 
 
-export default function Photopaper (props: PhotopaperProps) {
+
+export default function PhotopaperCanvas (props: PhotopaperCanvasProps) {
 
 
     useEffect(() => {
         if (!IS_BROWSER) return
 
-        const canvasCollage = new CanvasCollage(props) //any
+        const canvasCollage = new CanvasCollage({ playSpeed: speedSignal, playing: playingSignal, ...props }) //any
 
         canvasCollage.reachingEndOfAnyVideo().then(() => {
             //canvasCollage.pause()
@@ -37,13 +33,13 @@ export default function Photopaper (props: PhotopaperProps) {
             canvasCollage.reset()
         })
 
-        props.triggerDownloadGif?.subscribe(async (v) => {
+        triggerDownloadGif?.subscribe(async (v) => {
             if (v === 0) return
             await canvasCollage.capture()
             console.log('gif created.')
         })
 
-        props.triggerDownloadSnapshot?.subscribe((v) => {
+        triggerDownloadSnapshot?.subscribe((v) => {
             if (v === 0) return
             canvasCollage.snapshot()
             console.log('snapshot created.')
@@ -55,11 +51,10 @@ export default function Photopaper (props: PhotopaperProps) {
     return (
         <>
             <div class="drop-shadow-xl p-5">
-                <CanvasElement id={props.fileId}></CanvasElement>
+                <canvas id={props.fileId} className="max-w-[100%] max-h-[100%]" > </canvas>
             </div>
         </>
 
     )
 }
 
-const CanvasElement = (props: { id: string }) => <canvas id={props.id} class="max-w-full max-h-full h-auto rounded" > </canvas>

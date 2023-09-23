@@ -1,7 +1,9 @@
-import { Signal, useSignal } from "@preact/signals"
+import { Signal } from "@preact/signals"
+import {signal} from '@preact/signals-core'
 
-export const useTrigger = ():[Trigger, TriggerCaller] => {
-    const trigger = useSignal(0)
+
+export const trigger = ():[Trigger, TriggerCaller] => {
+    const trigger = signal(0)
     const callTrigger = () => trigger.value++
     return [trigger, callTrigger]
 }

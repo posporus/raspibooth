@@ -1,8 +1,6 @@
 import { PhotopaperWrapper } from "../../components/PhotopaperWrapper.tsx";
-import PhotopaperWithMenu, { PhotopaperWithMenuProps } from "../../islands/PhotopaperWithMenu.tsx";
 import { Story } from "./_/Story.tsx";
-import { PhotopaperProps } from "../../islands/Photopaper.tsx";
-import { useTrigger } from "../../hooks/useTrigger.ts";
+import PhotopaperCanvas, {type PhotopaperCanvasProps} from "../../islands/Photopaper/PhotopaperCanvas.tsx";
 
 let sample_video = new Uint8Array()
 try {
@@ -12,7 +10,7 @@ try {
 } catch (err) {
   console.error(err)
 }
-const photopaperProps:PhotopaperWithMenuProps = {
+const props:PhotopaperCanvasProps = {
   videos: [
     sample_video, sample_video, sample_video, sample_video
   ],
@@ -28,14 +26,10 @@ const photopaperProps:PhotopaperWithMenuProps = {
 }
 
 export default function PhotoPaperWrapperStory () {
-
-
-
- 
   return (
     <Story>
       <PhotopaperWrapper>
-        <PhotopaperWithMenu {... photopaperProps}/>
+        <PhotopaperCanvas {...props}/>
       </PhotopaperWrapper>
     </Story>
   );

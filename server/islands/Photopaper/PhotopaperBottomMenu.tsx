@@ -1,25 +1,26 @@
-import { Signal } from "@preact/signals"
-import Icon from '../components/Icon.tsx'
+import Icon from '../../components/Icon.tsx'
+import { playingSignal, speedSignal, callTriggerDownloadGif, callTriggerDownloadSnapshot } from "./signals.ts"
 
 export type DownloadOptionsType = 'archive' | 'snapshot' | 'gif'
-interface MenuProps {
-    speed: Signal<number>
-    playing: Signal<boolean>
-    onDownloadOptionClick: (option: DownloadOptionsType) => void
-    onShareClick: () => void
-}
+// interface MenuProps {
+//     speed: Signal<number>
+//     playing: Signal<boolean>
+//     onDownloadOptionClick: (option: DownloadOptionsType) => void
+//     onShareClick: () => void
+// }
 
-const PlayButton = ({ playing }: { playing: Signal }) => {
+const PlayButton = () => {
     return (
         <li>
-            <a class="tooltip" data-tip="Play" onClick={() => { playing.value = !playing.value }}>
-                {playing.value ? <Icon iconName="stop" prefix="fas" /> : <Icon iconName="play" prefix="fas" />}
+            <a class="tooltip" data-tip="Play" onClick={() => { playingSignal.value = !playingSignal.value }}>
+                {playingSignal.value ? <Icon iconName="stop" prefix="fas" /> : <Icon iconName="play" prefix="fas" />}
             </a>
         </li>
     )
 }
-
-const SpeedControl = ({ speed }: { speed: Signal<number> }) => (
+//TODO: speedSignal does not render on change.
+function SpeedControl() {
+    return (
     <li class="dropdown dropdown-top">
         <label class="tooltip" data-tip="Play speed" tabIndex={0}>
             <Icon iconName="gauge" prefix="fas" />
@@ -32,29 +33,29 @@ const SpeedControl = ({ speed }: { speed: Signal<number> }) => (
                 max={1.75}
                 step={0.05}
 
-                value={speed.value}
-                onInput={(e) => (speed.value = Number(e.currentTarget.value))}
+                value={speedSignal.value}
+                onInput={(e) => (speedSignal.value = Number(e.currentTarget.value))}
                 class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
             />
-            <span class="badge">{speed}x</span>
+            <span class="badge">{speedSignal.value}x</span>
         </div>
     </li>
-)
+)}
 
-const DownloadOptions = ({ onDownloadOptionClick }: { onDownloadOptionClick: (option: DownloadOptionsType) => void }) => (
+const DownloadOptions = () => (
     <li class="dropdown dropdown-top dropdown-end">
         <label class="tooltip" data-tip="Download" tabIndex={0}>
             <Icon iconName="download" prefix="fas" />
         </label>
         <ul tabIndex={0} class="dropdown-content z-[1] menu shadow bg-base-100 rounded-box">
-            <li><a onClick={() => onDownloadOptionClick('archive')}><Icon iconName="file-zipper" prefix="fas" /> Archive</a></li>
-            <li><a onClick={() => onDownloadOptionClick('snapshot')}><Icon iconName="camera" prefix="fas" /> Snapshot</a></li>
-            <li><a onClick={() => onDownloadOptionClick('gif')}><Icon iconName="film" prefix="fas" /> Gif</a></li>
+            <li><a onClick={() => console.log('not yet implemented')}><Icon iconName="file-zipper" prefix="fas" /> Archive</a></li>
+            <li><a onClick={callTriggerDownloadSnapshot}><Icon iconName="camera" prefix="fas" /> Snapshot</a></li>
+            <li><a onClick={callTriggerDownloadGif}><Icon iconName="film" prefix="fas" /> Gif</a></li>
         </ul>
     </li>
 )
 
-const ShareButton = ({ onShareClick }: { onShareClick: () => void }) => {
+const ShareButton = () => {
     const handleShare = async () => {
         try {
             (document.getElementById('share_warning_modal') as HTMLDialogElement)?.close()
@@ -66,7 +67,7 @@ const ShareButton = ({ onShareClick }: { onShareClick: () => void }) => {
                 })
             } else {
                 // Fallback for browsers that do not support the Web Share API
-                onShareClick()
+                throw Error('Web Share API not supported.')
             }
         } catch (error) {
             console.error('Sharing failed', error)
@@ -99,22 +100,17 @@ const ShareButton = ({ onShareClick }: { onShareClick: () => void }) => {
 
 
 
-export const PhotopaperMenu = ({
-    speed,
-    playing,
-    onDownloadOptionClick,
-    onShareClick,
-}: MenuProps) => {
+export const PhotopaperBottomMenu = () => {
     return (
         <div class="grid grid-flow-col gap-4">
             <ul class="menu menu-horizontal menu-lg bg-base-200 rounded-box text-2xl">
-                <PlayButton playing={playing} />
-                <SpeedControl speed={speed} />
+                <PlayButton />
+                <SpeedControl />
             </ul>
 
             <ul class="menu menu-horizontal menu-lg bg-base-200 rounded-box text-2xl">
-                <DownloadOptions onDownloadOptionClick={onDownloadOptionClick} />
-                <ShareButton onShareClick={onShareClick} />
+                <DownloadOptions />
+                <ShareButton />
             </ul>
         </div>
     )

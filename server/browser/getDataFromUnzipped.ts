@@ -11,11 +11,12 @@ export type Metadata = {
     eventName?: string
 }
 
-export interface CanvasData extends Metadata {
-    videos: Uint8Array[]
+export interface UnpackedData {
+    metadata: Metadata
+    videos:Uint8Array[]
 }
 
-export function getDataFromUnzipped (unzipped_obj: FileObject): {metadata:Metadata,videos:Uint8Array[]} {
+export function getDataFromUnzipped (unzipped_obj: FileObject): UnpackedData {
     // Extract and parse metadata.json
     const metadataString = new TextDecoder().decode(unzipped_obj["metadata.json"])
     const metadata: Metadata = JSON.parse(metadataString)
