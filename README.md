@@ -5,7 +5,7 @@ An innovative photobooth solution powered by Raspberry Pi, capturing moments as 
 
 ## 🚀 Development Status
 
-### 🎯 **Milestone 1**
+### 🎯 **Milestone 1 - Raspibooth 1**
 
 - ✅ **Camera Integration:** Utilize `picamera` for video recording.
 - ✅ **Lighting:** Implement `ws281x` ringlight for status indication and flash functionality.
@@ -19,15 +19,15 @@ An innovative photobooth solution powered by Raspberry Pi, capturing moments as 
 - ✅ **File Validation:** Use `fileId` checksum for browser validation.
 - ✅ **Timeline Configuration:** Allow programmable timelines using YAML files.
 - 🟡 **Configuration**: Introduce configuration files for customizable settings and preferences.
-- 🟡 **Uploader**: Implement a mechanism to upload encrypted photos/videos.
-- 🟡 **Performance:** Implement multithreading.
+- ✅ **Uploader**: Implement a mechanism to upload encrypted photos/videos.
+- ✅ **Performance:** Implement multithreading.
 - 🟡 **Notifications:** Add email subscription for upload notifications.
 - 🟡 **Credential Storage:** Option to save credentials in `localStorage`.
-- 🟡 **Prototype:** Design and build a compact, wall-mounted prototype.
+- ✅ **Prototype:** Design and build a compact, wall-mounted prototype.
 - 🟡 **Setup:** Develop a script for configuring the Python project under various conditions.
 - 🟡 **Real-world Testing:** Test the booth at a party.
 
-### 🎯 **Milestone 2**
+### 🎯 **Milestone 2 - Raspibooth 2**
 
 - 🟡 **Light & Action Control:** Integrate DMX for controlling lights and interactive elements.
 - 🟡 **Custom DMX Devices:** Design and build custom, simple DMX devices.
