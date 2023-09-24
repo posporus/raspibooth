@@ -4,7 +4,7 @@ import { CanvasCollage } from "../../core/Photopaper/CanvasCollage.ts"
 import { loadingState } from "../Loader.tsx"
 import { Metadata } from "../../browser/getDataFromUnzipped.ts"
 
-import { speedSignal, playingSignal, triggerDownloadGif, triggerDownloadSnapshot } from './signals.ts'
+import { speedSignal, playingSignal, triggerDownloadGif, triggerDownloadSnapshot } from './PhotopaperBottomMenu.tsx'
 
 export interface PhotopaperCanvasProps {
     fileId: string

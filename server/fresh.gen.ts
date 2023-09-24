@@ -23,8 +23,7 @@ import * as $$5 from "./islands/Photopaper/PhotopaperBottomMenu.tsx";
 import * as $$6 from "./islands/Photopaper/PhotopaperCanvas.tsx";
 import * as $$7 from "./islands/Photopaper/PhotopaperTopMenu.tsx";
 import * as $$8 from "./islands/Photopaper/index.tsx";
-import * as $$9 from "./islands/Photopaper/signals.ts";
-import * as $$10 from "./islands/test_helpers/TestPhotopaperCanvas.tsx";
+import * as $$9 from "./islands/test_helpers/TestPhotopaperCanvas.tsx";
 
 const manifest = {
   routes: {
@@ -51,8 +50,7 @@ const manifest = {
     "./islands/Photopaper/PhotopaperCanvas.tsx": $$6,
     "./islands/Photopaper/PhotopaperTopMenu.tsx": $$7,
     "./islands/Photopaper/index.tsx": $$8,
-    "./islands/Photopaper/signals.ts": $$9,
-    "./islands/test_helpers/TestPhotopaperCanvas.tsx": $$10,
+    "./islands/test_helpers/TestPhotopaperCanvas.tsx": $$9,
   },
   baseUrl: import.meta.url,
 };

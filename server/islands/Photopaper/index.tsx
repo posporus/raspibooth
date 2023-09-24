@@ -11,10 +11,17 @@ import { decrypt_buffer } from "../../browser/decrypt_buffer.ts"
 import { type UnpackedData, getDataFromUnzipped } from '../../browser/getDataFromUnzipped.ts'
 import PhotopaperCanvas from "./PhotopaperCanvas.tsx"
 
+import { trigger } from "../../hooks/useTrigger.ts"
+import { download } from '../../utils/download.ts'
+// import {uint8ArrayToBase64} from '../../browser/convertions.ts'
+
+
 
 interface PhotopaperProps {
     fileId: string
 }
+
+export const [triggerDownloadArchive, callTriggerDownloadArchive] = trigger()
 
 export default function Photopaper (props: PhotopaperProps) {
 
@@ -26,6 +33,15 @@ export default function Photopaper (props: PhotopaperProps) {
     const [unpackedData, setUnpackedData] = useState<UnpackedData | null>(null)
     // Use useMemo for the password state
     const password = useMemo(() => getPasswordFromUrl(), [])
+
+    useEffect(() => {
+        if (!encryptedData) return
+        triggerDownloadArchive.subscribe((v) => {
+            if (v <= 0) return
+            const blobUrl = URL.createObjectURL(new Blob([encryptedData], {type: "application/zip"}));
+            download(`${fileId}.zip`,blobUrl)
+        })
+    }, [])
 
     //fetching encrypted, zipped videos from server
     useEffect(() => {

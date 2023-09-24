@@ -3,14 +3,9 @@ import { Signal } from "@preact/signals"
 import { VideoElement } from "./VideoElement.ts"
 import { Metadata } from "../../browser/getDataFromUnzipped.ts"
 
-import { GIFEncoder, quantize, applyPalette } from "https://unpkg.com/gifenc@1.0.3/dist/gifenc.esm.js";
+import { GIFEncoder, quantize, applyPalette } from "https://unpkg.com/gifenc@1.0.3/dist/gifenc.esm.js"
 
-function download (filename: string, dataUrl: string) {
-    const anchor = document.createElement("a");
-    anchor.href = dataUrl;
-    anchor.download = filename;
-    anchor.click();
-}
+import { download } from '../../utils/download.ts'
 
 interface CollageData {
     fileId: string
@@ -23,7 +18,7 @@ interface CollageData {
 
 type ReadyCallback = () => void
 type Effect = { contrast?: number, grayscale?: number, hueRotate?: number, saturate?: number, sepia?: number }
-type Presets = {[key:string]:Effect}
+type Presets = { [key: string]: Effect }
 
 export class CanvasCollage {
     private iContainerWidth = 1080;
@@ -60,14 +55,14 @@ export class CanvasCollage {
 
         this.resetPresets()
 
-        ; (async () => {
-            this.createVideoElements(videos)
-            await this.initializeVideoElements()
-            this.initializeCanvas()
-            this.addEventListeners()
-            this.initDrawVideoFrame()
-            this.setReady()
-        })()
+            ; (async () => {
+                this.createVideoElements(videos)
+                await this.initializeVideoElements()
+                this.initializeCanvas()
+                this.addEventListeners()
+                this.initDrawVideoFrame()
+                this.setReady()
+            })()
 
         playSpeed.subscribe((v) => {
             this.playSpeed = v
@@ -82,49 +77,49 @@ export class CanvasCollage {
 
     applyEffects (effects: Effect) {
         // Construct the filter string from the effects object
-        let filterString = '';
+        let filterString = ''
 
         if (effects.contrast !== undefined) {
-            filterString += `contrast(${effects.contrast}%) `;
+            filterString += `contrast(${effects.contrast}%) `
         }
         if (effects.grayscale !== undefined) {
-            filterString += `grayscale(${effects.grayscale}%) `;
+            filterString += `grayscale(${effects.grayscale}%) `
         }
         if (effects.hueRotate !== undefined) {
-            filterString += `hue-rotate(${effects.hueRotate}deg) `;
+            filterString += `hue-rotate(${effects.hueRotate}deg) `
         }
         if (effects.saturate !== undefined) {
-            filterString += `saturate(${effects.saturate}%) `;
+            filterString += `saturate(${effects.saturate}%) `
         }
         if (effects.sepia !== undefined) {
-            filterString += `sepia(${effects.sepia}%) `;
+            filterString += `sepia(${effects.sepia}%) `
         }
 
         // Set the filter property on the canvas context
-        this.ctx.filter = filterString.trim();
+        this.ctx.filter = filterString.trim()
 
     }
 
     savePreset (presetName: string, effects: Effect) {
         // Save the preset with the specified name
-        this.presets[presetName] = effects;
+        this.presets[presetName] = effects
     }
 
     loadPreset (presetName: string) {
         // Load the preset with the specified name
-        const preset = this.presets[presetName];
+        const preset = this.presets[presetName]
         if (preset) {
-            this.applyEffects(preset);
+            this.applyEffects(preset)
         } else {
-            console.error(`Preset "${presetName}" does not exist.`);
+            console.error(`Preset "${presetName}" does not exist.`)
         }
     }
 
-    get presets() {
+    get presets () {
         return this._presets
     }
 
-    set presets(v:Presets) {
+    set presets (v: Presets) {
         this._presets = {
             ...this._presets,
             ...v
@@ -152,18 +147,18 @@ export class CanvasCollage {
 
         const width = this.iContainerWidth, height = this.iConstainerHeight
 
-        const gif = GIFEncoder();
+        const gif = GIFEncoder()
 
         for (let frame = 0; frame < frames; frame++) {
 
-            await this.goToFrameOfAllVideos(frame * this.playSpeed);
-            this.draw();
+            await this.goToFrameOfAllVideos(frame * this.playSpeed)
+            this.draw()
 
             const { data } = this.ctx.getImageData(0, 0, width, height)
-            const format = "rgb444";
-            const palette = quantize(data, 256, { format });
-            const index = applyPalette(data, palette, format);
-            gif.writeFrame(index, width, height, { palette });
+            const format = "rgb444"
+            const palette = quantize(data, 256, { format })
+            const index = applyPalette(data, palette, format)
+            gif.writeFrame(index, width, height, { palette })
 
         }
 
@@ -173,11 +168,11 @@ export class CanvasCollage {
 
         console.log(`${this.fileId}_${this.playSpeed}x_${targetFps}fps.gif`)
 
-        gif.finish();
-        const buffer = gif.bytesView();
+        gif.finish()
+        const buffer = gif.bytesView()
 
-        const blob = buffer instanceof Blob ? buffer : new Blob([buffer], { type: 'image/gif' });
-        const url = URL.createObjectURL(blob);
+        const blob = buffer instanceof Blob ? buffer : new Blob([buffer], { type: 'image/gif' })
+        const url = URL.createObjectURL(blob)
         download(`${this.fileId}_${this.playSpeed}x_${targetFps}fps.gif`, url)
 
     }
