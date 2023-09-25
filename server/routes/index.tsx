@@ -26,9 +26,6 @@ import PasswordForm from "../islands/PasswordForm.tsx"
 export default function Home () {
   return (
     <>
-      <Head>
-        <title>Raspibooth DEMO</title>
-      </Head>
       <PasswordForm/>
 
 

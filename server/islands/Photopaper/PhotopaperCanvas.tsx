@@ -49,12 +49,7 @@ export default function PhotopaperCanvas (props: PhotopaperCanvasProps) {
     }, [])
 
     return (
-        <>
-            <div class="drop-shadow-xl p-5">
-                <canvas id={props.fileId} className="max-w-[100%] max-h-[100%]" > </canvas>
-            </div>
-        </>
-
+        <canvas id={props.fileId} className="object-none object-left w-[80vmin] h-[80vmin]  drop-shadow-xl" />
     )
 }
 

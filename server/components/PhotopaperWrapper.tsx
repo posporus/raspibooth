@@ -10,19 +10,27 @@ export function PhotopaperWrapper (props: MenuOverlayProps) {
     const { children } = props
 
     return (
-        <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-b from-[#332F7D] via-[#93245E] to-[#00D4FF]">
-            <div className="flex flex-col max-h-[100vh] max-w-[100vw] absolute">
+        <>
+            <div className="flex flex-col h-full w-full justify-center">
+                <div className="flex flex-col max-h-full w-full items-center">
+                    <div className="w-full flex justify-center">
+                        <PhotopaperTopMenu />
+                    </div>
 
-                <PhotopaperTopMenu />
+                    <div className="w-full flex justify-center flex-grow" style={{ maxHeight: 'calc(80vh - 4rem)' }}>
+                        <div className="h-full p-5 drop-shadow-xl" >
+                            {/* <canvas width="300" height="400" style="background-color: pink;" className="max-w-full max-h-full h-auto"></canvas> */}
+                            {children}
+                        </div>
+                    </div>
 
-                <div className="">
-                    {children} {/* This is presumably where your canvas is */}
+                    <div className="w-full flex justify-center">
+                        <PhotopaperBottomMenu />
+                    </div>
                 </div>
-
-                <PhotopaperBottomMenu />
-
             </div>
-        </div>
+        </>
+
 
     )
 }
