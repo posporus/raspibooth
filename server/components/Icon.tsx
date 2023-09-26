@@ -22,7 +22,11 @@ import {
     faGauge,
     faFilm,
     faShareNodes,
+    faStar,
+    faTrashCan,
+    faEllipsis,
 
+    
 } from 'https://esm.sh/*@fortawesome/free-solid-svg-icons'
 library.add({
     faPlay,
@@ -46,7 +50,9 @@ library.add({
     faGauge,
     faFilm,
     faShareNodes,
-
+    faStar,
+    faTrashCan,
+    faEllipsis,
 })
 
 /* brand icons */

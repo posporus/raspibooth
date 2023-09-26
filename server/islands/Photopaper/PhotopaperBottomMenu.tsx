@@ -1,7 +1,7 @@
 import Icon from '../../components/Icon.tsx'
 
 import { trigger } from "../../hooks/useTrigger.ts"
-import {signal} from '@preact/signals-core'
+import { signal } from '@preact/signals-core'
 
 
 
@@ -28,28 +28,29 @@ const PlayButton = () => {
     )
 }
 //TODO: speedSignal does not render on change.
-function SpeedControl() {
+function SpeedControl () {
     return (
-    <li class="dropdown dropdown-top">
-        <label class="tooltip" data-tip="Play speed" tabIndex={0}>
-            <Icon iconName="gauge" prefix="fas" />
-        </label>
-        <div tabIndex={0} class="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-52">
-            <input
-                id="default-range"
-                type="range"
-                min={.25}
-                max={1.75}
-                step={0.05}
+        <li class="dropdown dropdown-top">
+            <label class="tooltip" data-tip="Play speed" tabIndex={0}>
+                <Icon iconName="gauge" prefix="fas" />
+            </label>
+            <div tabIndex={0} class="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-52">
+                <input
+                    id="default-range"
+                    type="range"
+                    min={.25}
+                    max={1.75}
+                    step={0.05}
 
-                value={speedSignal.value}
-                onInput={(e) => (speedSignal.value = Number(e.currentTarget.value))}
-                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-            />
-            <span class="badge">{speedSignal.value}x</span>
-        </div>
-    </li>
-)}
+                    value={speedSignal.value}
+                    onInput={(e) => (speedSignal.value = Number(e.currentTarget.value))}
+                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                />
+                <span class="badge">{speedSignal.value}x</span>
+            </div>
+        </li>
+    )
+}
 
 const DownloadOptions = () => (
     <li class="dropdown dropdown-top dropdown-end">
@@ -107,17 +108,44 @@ const ShareButton = () => {
 }
 
 
+function EffectMenu () {
+    return (
+        <li class="dropdown dropdown-top">
+            <label class="tooltip" data-tip="Effects" tabIndex={0}>
+                <Icon iconName="sliders" prefix="fas" />
+            </label>
+            <div tabIndex={0} class="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-52">
+                <input
+                    id="default-range"
+                    type="range"
+                    min={.25}
+                    max={1.75}
+                    step={0.05}
+
+                    value={speedSignal.value}
+                    onInput={(e) => (speedSignal.value = Number(e.currentTarget.value))}
+                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                />
+                <span class="badge">{speedSignal.value}x</span>
+            </div>
+        </li>
+    )
+}
+
 
 
 export const PhotopaperBottomMenu = () => {
     return (
-        <div class="grid grid-flow-col gap-4">
-            <ul class="menu menu-horizontal menu-lg bg-base-200 rounded-box text-2xl">
+        <div class="grid grid-flow-col place-content-between w-full">
+            <ul class="menu menu-horizontal menu-md bg-base-200 rounded-full">
                 <PlayButton />
+            </ul>
+            <ul class="menu menu-horizontal menu-md bg-base-200 rounded-full">
                 <SpeedControl />
+                <EffectMenu />
             </ul>
 
-            <ul class="menu menu-horizontal menu-lg bg-base-200 rounded-box text-2xl">
+            <ul class="menu menu-horizontal menu-md bg-base-200 rounded-full">
                 <DownloadOptions />
                 <ShareButton />
             </ul>

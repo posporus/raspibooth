@@ -9,20 +9,19 @@ interface TestPhotopaperProps {
 
 export default function TestPhotopaperCanvas (props: TestPhotopaperProps) {
     const { count, gap, width, height } = props
-    const aspectRatioPadding = (height / width) * 100;
-    
+    const aspectRatioPadding = (height / width) * 100
+
     useEffect(() => {
         createCollage(count, gap, width, height)
     }, [count, gap, width, height])
 
     return (
-        <>  
-            
+        <>
             <canvas
                 id={"picture_canvas"}
                 width={width}
                 height={height}
-                class="max-w-full max-h-full h-auto"
+                class="max-w-full max-h-full h-auto rounded"
             />
         </>
     )
