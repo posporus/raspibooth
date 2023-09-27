@@ -19,11 +19,13 @@ import * as $$1 from "./islands/LeaveMail.tsx";
 import * as $$2 from "./islands/Loader.tsx";
 import * as $$3 from "./islands/MultiInput.tsx";
 import * as $$4 from "./islands/PasswordForm.tsx";
-import * as $$5 from "./islands/Photopaper/PhotopaperBottomMenu.tsx";
-import * as $$6 from "./islands/Photopaper/PhotopaperCanvas.tsx";
-import * as $$7 from "./islands/Photopaper/PhotopaperTopMenu.tsx";
-import * as $$8 from "./islands/Photopaper/index.tsx";
-import * as $$9 from "./islands/test_helpers/TestPhotopaperCanvas.tsx";
+import * as $$5 from "./islands/Photopaper/EffectSliders.tsx";
+import * as $$6 from "./islands/Photopaper/PhotopaperBottomMenu.tsx";
+import * as $$7 from "./islands/Photopaper/PhotopaperCanvas.tsx";
+import * as $$8 from "./islands/Photopaper/PhotopaperTopMenu.tsx";
+import * as $$9 from "./islands/Photopaper/PresetSelector.tsx";
+import * as $$10 from "./islands/Photopaper/index.tsx";
+import * as $$11 from "./islands/test_helpers/TestPhotopaperCanvas.tsx";
 
 const manifest = {
   routes: {
@@ -46,11 +48,13 @@ const manifest = {
     "./islands/Loader.tsx": $$2,
     "./islands/MultiInput.tsx": $$3,
     "./islands/PasswordForm.tsx": $$4,
-    "./islands/Photopaper/PhotopaperBottomMenu.tsx": $$5,
-    "./islands/Photopaper/PhotopaperCanvas.tsx": $$6,
-    "./islands/Photopaper/PhotopaperTopMenu.tsx": $$7,
-    "./islands/Photopaper/index.tsx": $$8,
-    "./islands/test_helpers/TestPhotopaperCanvas.tsx": $$9,
+    "./islands/Photopaper/EffectSliders.tsx": $$5,
+    "./islands/Photopaper/PhotopaperBottomMenu.tsx": $$6,
+    "./islands/Photopaper/PhotopaperCanvas.tsx": $$7,
+    "./islands/Photopaper/PhotopaperTopMenu.tsx": $$8,
+    "./islands/Photopaper/PresetSelector.tsx": $$9,
+    "./islands/Photopaper/index.tsx": $$10,
+    "./islands/test_helpers/TestPhotopaperCanvas.tsx": $$11,
   },
   baseUrl: import.meta.url,
 };

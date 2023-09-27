@@ -13,9 +13,6 @@ import PhotopaperCanvas from "./PhotopaperCanvas.tsx"
 
 import { trigger } from "../../hooks/useTrigger.ts"
 import { download } from '../../utils/download.ts'
-// import {uint8ArrayToBase64} from '../../browser/convertions.ts'
-
-
 
 interface PhotopaperProps {
     fileId: string

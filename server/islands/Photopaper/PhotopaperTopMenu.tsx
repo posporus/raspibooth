@@ -11,15 +11,18 @@ const AddFavourite = () => (
 )
 
 const TreePointMenu = () => (
-    <li class="dropdown dropdown-top dropdown-end">
-        <label class="tooltip" tabIndex={0}>
+    <li class="dropdown dropdown-bottom dropdown-end">
+        <label tabIndex={0}>
             <Icon iconName="ellipsis" prefix="fas" />
         </label>
         <ul tabIndex={0} class="dropdown-content z-[1] menu shadow bg-base-100 rounded-box">
-            <li><a onClick={() => console.log('not yet implemented')}><Icon iconName="file-zipper" prefix="fas" />Download Raw</a></li>
-        </ul>
-        <ul tabIndex={0} class="dropdown-content z-[1] menu shadow bg-base-100 rounded-box">
-            <li><a onClick={() => console.log('not yet implemented')}><Icon iconName="trash-can" prefix="fas" />Delete from Server</a></li>
+            <li>
+                <a onClick={() => console.log('not yet implemented')}><Icon iconName="file-zipper" prefix="fas" />Download Raw</a>
+            </li>
+
+            <li>
+                <a onClick={() => console.log('not yet implemented')}><Icon iconName="trash-can" prefix="fas" />Delete from Server</a>
+            </li>
         </ul>
     </li>
 )

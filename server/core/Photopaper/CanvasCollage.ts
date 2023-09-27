@@ -17,8 +17,8 @@ interface CollageData {
 }
 
 type ReadyCallback = () => void
-type Effect = { contrast?: number, grayscale?: number, hueRotate?: number, saturate?: number, sepia?: number }
-type Presets = { [key: string]: Effect }
+export type Effect = { contrast?: number, grayscale?: number, hueRotate?: number, saturate?: number, sepia?: number }
+export type Presets = Record<string,Effect>
 
 export class CanvasCollage {
     private iContainerWidth = 1080;
@@ -37,6 +37,7 @@ export class CanvasCollage {
 
 
     private _presets: Presets = {};
+    private _effect: Effect = {}
 
     metadata: Metadata
     fileId: string
@@ -52,8 +53,6 @@ export class CanvasCollage {
 
         this.canvas = document.getElementById(this.fileId) as HTMLCanvasElement
         this.ctx = this.canvas.getContext("2d", { willReadFrequently: true }) as CanvasRenderingContext2D
-
-        this.resetPresets()
 
             ; (async () => {
                 this.createVideoElements(videos)
@@ -100,39 +99,6 @@ export class CanvasCollage {
 
     }
 
-    savePreset (presetName: string, effects: Effect) {
-        // Save the preset with the specified name
-        this.presets[presetName] = effects
-    }
-
-    loadPreset (presetName: string) {
-        // Load the preset with the specified name
-        const preset = this.presets[presetName]
-        if (preset) {
-            this.applyEffects(preset)
-        } else {
-            console.error(`Preset "${presetName}" does not exist.`)
-        }
-    }
-
-    get presets () {
-        return this._presets
-    }
-
-    set presets (v: Presets) {
-        this._presets = {
-            ...this._presets,
-            ...v
-        }
-    }
-
-    resetPresets () {
-        this.presets = {
-            'Grayscale': { grayscale: 100 },
-            'Contrasty': { contrast: 100 },
-            'Sepia': { sepia: 100 }
-        }
-    }
 
     snapshot = () => {
         const fileUrl = this.canvas.toDataURL()

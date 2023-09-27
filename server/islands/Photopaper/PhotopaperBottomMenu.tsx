@@ -3,6 +3,7 @@ import Icon from '../../components/Icon.tsx'
 import { trigger } from "../../hooks/useTrigger.ts"
 import { signal } from '@preact/signals-core'
 
+import EffectsComponent from "./EffectSliders.tsx"
 
 
 export const speedSignal = signal(1)
@@ -11,12 +12,6 @@ export const [triggerDownloadGif, callTriggerDownloadGif] = trigger()
 export const [triggerDownloadSnapshot, callTriggerDownloadSnapshot] = trigger()
 
 export type DownloadOptionsType = 'archive' | 'snapshot' | 'gif'
-// interface MenuProps {
-//     speed: Signal<number>
-//     playing: Signal<boolean>
-//     onDownloadOptionClick: (option: DownloadOptionsType) => void
-//     onShareClick: () => void
-// }
 
 const PlayButton = () => {
     return (
@@ -115,18 +110,7 @@ function EffectMenu () {
                 <Icon iconName="sliders" prefix="fas" />
             </label>
             <div tabIndex={0} class="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-52">
-                <input
-                    id="default-range"
-                    type="range"
-                    min={.25}
-                    max={1.75}
-                    step={0.05}
-
-                    value={speedSignal.value}
-                    onInput={(e) => (speedSignal.value = Number(e.currentTarget.value))}
-                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                />
-                <span class="badge">{speedSignal.value}x</span>
+                <EffectsComponent />
             </div>
         </li>
     )
