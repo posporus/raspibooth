@@ -21,6 +21,9 @@ import os
 
 duration = config["video"]["duration"]
 fps = config["video"]["fps"]
+location = config["metadata"]["location"]
+event_name = config["metadata"]["event_name"]
+play_speed = config["metadata"]["play_speed"]
 
 action_run_files = collect_action_runs()
 
@@ -72,7 +75,9 @@ def postPrint(fileId: str, password: str):
 
 def postprocessing(input_dir: str, output_dir: str):
     metadata_filepath = os.path.join(input_dir, "metadata.json")
-    write_metadata_json(duration, fps, str(metadata_filepath))
+    write_metadata_json(
+        duration, fps, play_speed, location, event_name, str(metadata_filepath)
+    )
 
     # collect all files from temp folder and zip it.
     archive_files = collect_files(input_dir)

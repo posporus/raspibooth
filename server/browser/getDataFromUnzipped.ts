@@ -1,14 +1,7 @@
+import { Metadata } from "../types/Metadata.ts"
+
 export type FileObject = {
     [key: string]: Uint8Array
-}
-
-export type Metadata = {
-    duration: number
-    playSpeed: number
-    timestamp: number
-    fps:number
-    location?: string
-    eventName?: string
 }
 
 export interface UnpackedData {

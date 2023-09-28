@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "duration": {
+      "type": "number"
+    },
+    "playSpeed": {
+      "type": "number"
+    },
+    "timestamp": {
+      "type": "number"
+    },
+    "fps": {
+      "type": "number"
+    },
+    "location": {
+      "type": "string"
+    },
+    "eventName": {
+      "type": "string"
+    }
+  },
+  "required": ["duration", "timestamp", "fps"],
+  "additionalProperties": false
+}
