@@ -22,15 +22,13 @@ async def uploader(upload_dir: str):
         elif status_code == 400:
             print(f"Error uploading {file}. No fileId/checksum provided by the server.")
         elif status_code == 200:
-            response_dict = json.loads(response_text)
-            if "fileId" in response_dict:
-                try:
-                    os.remove(file)  # Delete the file
-                    print(f'Successfully uploaded and deleted {file}.')
-                except Exception as e:
-                    print(f"Error deleting file {file}. Reason: {e}")
-            else:
-                print(f'Error uploading {file}. Response: {response_text}')
+        
+            try:
+                os.remove(file)  # Delete the file
+                print(f'Successfully uploaded and deleted {file}.')
+            except Exception as e:
+                print(f"Error deleting file {file}. Reason: {e}")
+            
         else:
             print(f'Unexpected status code {status_code} for file {file}. Response: {response_text}')
 

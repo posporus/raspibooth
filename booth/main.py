@@ -18,6 +18,12 @@ from src.encryption.generate_key_from_password import generate_key_from_password
 from src.encryption.encrypt_file import encrypt_file
 from src.utility.generate_access_token import generate_access_token
 import os
+import atexit
+from src.uploader.main import uploader
+import asyncio
+
+
+
 
 duration = config["video"]["duration"]
 fps = config["video"]["fps"]
@@ -31,6 +37,10 @@ upload_dir = Path(config["UPLOAD_DIR"])
 
 SERVER_URL = config["SERVER_URL"]
 
+def cleanup_function():
+    statuslight.set_state('blackout')
+
+atexit.register(cleanup_function)
 
 def session():
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -56,20 +66,25 @@ def session():
 
             timeline.run()
 
+        statuslight.set_state('postprocessing')
         camera.completed()
 
         file_id, password = postprocessing(temp_dir, upload_dir)
         postPrint(file_id, password)
 
+        asyncio.run(uploader('booth/upload'))
+
 
 def postPrint(fileId: str, password: str):
-    url = f"{SERVER_URL}/{fileId}#{password}"
+    qrcode = f"{SERVER_URL}/{fileId}#{password}"
+    url = SERVER_URL
     access_token = generate_access_token(fileId, password)
     printer.printQr(
         "Your way to your images",
-        url,
+        qrcode,
         access_token,
         "If you have any questions, the answer is 42.",
+        url
     )
 
 
@@ -97,6 +112,7 @@ def postprocessing(input_dir: str, output_dir: str):
 def main():
     try:
         while True:
+            statuslight.set_state('idle')
             start_button.when_pressed(session)
             start_button.wait()
     except KeyboardInterrupt:

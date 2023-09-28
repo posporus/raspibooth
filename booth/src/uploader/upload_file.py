@@ -1,6 +1,6 @@
 import aiohttp
 import os
-import logging
+import hashlib
 
 async def upload_file(file_path, url, api_key):
     '''
@@ -20,10 +20,14 @@ async def upload_file(file_path, url, api_key):
     with open(file_path, 'rb') as file:
         data = file.read()
 
+    # Calculate the SHA-256 checksum of the file's content
+    checksum = hashlib.sha256(data).hexdigest()
+
     # Set up the headers
     headers = {
         'X-API-Key': api_key,
-        'X-File-Id': file_id
+        'X-File-Id': file_id,
+        'X-Checksum': checksum  # Add the checksum to the headers
     }
 
     async with aiohttp.ClientSession() as session:
