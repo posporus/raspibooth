@@ -1,8 +1,7 @@
 
 import { Signal } from "@preact/signals"
 import { VideoElement } from "./VideoElement.ts"
-import { Metadata } from "../../browser/getDataFromUnzipped.ts"
-
+import { Metadata } from "../../types/Metadata.ts"
 import { GIFEncoder, quantize, applyPalette } from "https://unpkg.com/gifenc@1.0.3/dist/gifenc.esm.js"
 
 import { download } from '../../utils/download.ts'
@@ -18,7 +17,7 @@ interface CollageData {
 
 type ReadyCallback = () => void
 export type Effect = { contrast?: number, grayscale?: number, hueRotate?: number, saturate?: number, sepia?: number }
-export type Presets = Record<string,Effect>
+export type Presets = Record<string, Effect>
 
 export class CanvasCollage {
     private iContainerWidth = 1080;
@@ -33,11 +32,8 @@ export class CanvasCollage {
     private isReady: boolean
     private readyCallbacks: ReadyCallback[]
     private capturing = false
+    private drawing = false
     private playSpeed = 1
-
-
-    private _presets: Presets = {};
-    private _effect: Effect = {}
 
     metadata: Metadata
     fileId: string
@@ -59,7 +55,6 @@ export class CanvasCollage {
                 await this.initializeVideoElements()
                 this.initializeCanvas()
                 this.addEventListeners()
-                this.initDrawVideoFrame()
                 this.setReady()
             })()
 
@@ -72,6 +67,13 @@ export class CanvasCollage {
         this.playing.subscribe(v => {
             v ? this.loopAllVideos() : this.stopAllVideos()
         })
+
+
+
+    }
+
+    get isAnyPlaying () {
+        return this.videoElements.some(v => v.playing)
     }
 
     applyEffects (effects: Effect) {
@@ -130,8 +132,6 @@ export class CanvasCollage {
 
         this.capturing = false
 
-        this.initDrawVideoFrame()
-
         console.log(`${this.fileId}_${this.playSpeed}x_${targetFps}fps.gif`)
 
         gif.finish()
@@ -141,15 +141,6 @@ export class CanvasCollage {
         const url = URL.createObjectURL(blob)
         download(`${this.fileId}_${this.playSpeed}x_${targetFps}fps.gif`, url)
 
-    }
-
-    async drawRandom () {
-        this.capturing = true
-        const frames = 30
-        const random = Math.floor(Math.random() * frames)
-        console.log('drawing frame', random)
-        await this.goToFrameOfAllVideos(random)
-        this.draw()
     }
 
     //loop and stop handled thru preact signal
@@ -171,7 +162,7 @@ export class CanvasCollage {
 
     async playOnce () {
         this.allPos1()
-        this.playAllVideos()
+        this.play()
         await this.reachingEndOfAnyVideo()
     }
 
@@ -199,8 +190,8 @@ export class CanvasCollage {
 
     async reachingEndOfAnyVideo () {
         const playOncePromises = this.videoElements.map(videoElement => videoElement.reachingEnd())
-        await Promise.all(playOncePromises)
-        console.log('reached end of all')
+        await Promise.any(playOncePromises)
+        console.log('reached end of any video')
     }
 
     allPos1 () {
@@ -209,14 +200,21 @@ export class CanvasCollage {
         }
     }
 
-    private initDrawVideoFrame () { //TODO: get rid of this.
+    private drawVideoFrame () {
+        this.draw()
+        if (!this.isAnyPlaying) this.stopDrawing()
+        if (!this.drawing) return
+        requestAnimationFrame(() => this.drawVideoFrame())
+    }
+
+    private startDrawing () {
+        if (this.drawing) return
+        this.drawing = true
         this.drawVideoFrame()
     }
 
-    private drawVideoFrame () {
-        if (this.capturing) return
-        this.draw()
-        requestAnimationFrame(() => this.drawVideoFrame())
+    private stopDrawing() {
+        this.drawing = false
     }
 
     private draw () {
@@ -288,8 +286,13 @@ export class CanvasCollage {
             const height = cellHeight - 2 * this.gap
 
             const videoElement = new VideoElement(videos[i], x, y, width, height)
+
+            videoElement.onPlay(() => {
+                this.startDrawing()
+            })
             videoElement.anchorPoint(width / 2, height / 2)
             this.videoElements.push(videoElement)
+
         }
     }
 
@@ -316,6 +319,7 @@ export class CanvasCollage {
             console.log('Mouse left video ' + (this.videoElements.indexOf(this.hoveredVideo) + 1))
             this.hoveredVideo.jumpToStopmark()
             this.hoveredVideo = null
+            this.draw()
         }
     }
 
@@ -347,6 +351,7 @@ export class CanvasCollage {
                 console.log('Touch ended for video ' + (this.videoElements.indexOf(this.hoveredVideo) + 1))
                 this.hoveredVideo.jumpToStopmark()
                 this.hoveredVideo = null
+                this.draw()
             }
         }, { passive: false })  // Set passive to false to allow preventDefault()
 
@@ -355,6 +360,7 @@ export class CanvasCollage {
                 console.log('Mouse left canvas ' + (this.videoElements.indexOf(this.hoveredVideo) + 1))
                 this.hoveredVideo.jumpToStopmark()
                 this.hoveredVideo = null
+                this.draw()
             }
         })
 

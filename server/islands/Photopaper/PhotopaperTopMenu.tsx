@@ -1,14 +1,32 @@
+import { useEffect, useState } from "preact/hooks"
 import Icon from '../../components/Icon.tsx'
-
+import { mergeClasses } from "../../utils/mergeClasses.ts"
+import { favSignal } from "./index.tsx"
 export type DownloadOptionsType = 'archive' | 'snapshot' | 'gif'
 
-const AddFavourite = () => (
-    <li>
-        <a>
-            <Icon iconName="star" prefix="fas" />
-        </a>
-    </li>
-)
+
+function AddFavourite () {
+    const [className, setClassName] = useState('')
+
+    favSignal.subscribe(v => {
+        setClassName(mergeClasses([
+            "text-yellow-500",
+            "text-lg",
+            v ? 'opacity-100' : 'opacity-50'
+        ]))
+    })
+
+    return (
+
+        <li>
+            <a onClick={() => favSignal.value = !favSignal.value}>
+                <span className={className}>
+                    <Icon iconName="star" prefix="fas" />
+                </span>
+            </a>
+        </li>
+    )
+}
 
 const TreePointMenu = () => (
     <li class="dropdown dropdown-bottom dropdown-end">

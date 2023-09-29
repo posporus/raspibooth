@@ -2,15 +2,17 @@ import { useEffect } from "preact/hooks"
 import { IS_BROWSER } from '$fresh/runtime.ts'
 import { CanvasCollage, type Effect, type Presets } from "../../core/Photopaper/CanvasCollage.ts"
 import { loadingState } from "../Loader.tsx"
-import { Metadata } from "../../browser/getDataFromUnzipped.ts"
+import { Metadata } from "../../types/Metadata.ts"
 import { signal } from "@preact/signals-core"
 
 import { speedSignal, playingSignal, triggerDownloadGif, triggerDownloadSnapshot } from './PhotopaperBottomMenu.tsx'
-
-export interface PhotopaperCanvasProps {
+export interface CanvasData {
     fileId: string
     videos: Uint8Array[]
     metadata: Metadata
+}
+export interface PhotopaperCanvasProps {
+    data: CanvasData
 }
 export const effectSignal = signal<Effect>({})
 export const selectPresetSignal = signal<keyof Presets | null>(null)
@@ -23,11 +25,13 @@ export const presetsSignal = signal<Presets>({
 
 
 export default function PhotopaperCanvas (props: PhotopaperCanvasProps) {
-
+    const {data} = props
+    console.log('photopaper canvas')
     useEffect(() => {
+        console.log('props update', data)
         if (!IS_BROWSER) return
 
-        const canvasCollage = new CanvasCollage({ playSpeed: speedSignal, playing: playingSignal, ...props }) //any
+        const canvasCollage = new CanvasCollage({ playSpeed: speedSignal, playing: playingSignal, ...data }) //any
 
         canvasCollage.onReady(async () => {
             loadingState.value = 'done'
@@ -47,10 +51,14 @@ export default function PhotopaperCanvas (props: PhotopaperCanvasProps) {
             console.log('snapshot created.')
         })
 
-    })
+        effectSignal.subscribe((effects)=>{
+            canvasCollage.applyEffects(effects)
+        })
+
+    },[data])
 
     return (
-        <canvas id={props.fileId} className="max-w-full max-h-full h-auto" />
+        <canvas id={data.fileId} className="max-w-full max-h-full h-auto" />
     )
 }
 

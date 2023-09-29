@@ -13,6 +13,9 @@ export class VideoElement {
 
     initialized: Promise<void>
 
+    private playCallbacks: Array<() => void> = [];
+
+
     constructor(videoData: Uint8Array, x: number, y: number, width: number, height: number) {
 
         const blob = new Blob([videoData], { type: 'video/mp4' })
@@ -47,14 +50,27 @@ export class VideoElement {
                 resolve()
             }
         })
+
+        this.videoElement.addEventListener('play', () => {
+            this.playCallbacks.forEach(callback => callback());
+        });
     }
+
+    get playing () {
+        return (!this.videoElement.paused)
+    }
+
+    onPlay(callback: () => void) {
+        this.playCallbacks.push(callback);
+    }
+
 
     pos1 () {
         this.videoElement.currentTime = 0
     }
 
     setPlaybackRate (rate: number): void {
-        this.videoElement.playbackRate = rate;
+        this.videoElement.playbackRate = rate
     }
 
     reachingTime (time: number) {
@@ -74,15 +90,15 @@ export class VideoElement {
 
     reachingStopmark = () => this.reachingTime(this.stopmark)
     reachingEnd () {
-        console.log('called reachingEnd');
+        console.log('called reachingEnd')
         return new Promise<void>((resolve) => {
             const onEnded = () => {
-                console.log('reached end');
-                resolve();
-                this.videoElement.removeEventListener('ended', onEnded);
-            };
-            this.videoElement.addEventListener('ended', onEnded);
-        });
+                console.log('reached end')
+                resolve()
+                this.videoElement.removeEventListener('ended', onEnded)
+            }
+            this.videoElement.addEventListener('ended', onEnded)
+        })
     }
 
 
@@ -155,7 +171,7 @@ export class VideoElement {
     }
 
     goToFrame = (frameNumber: number, fps = 30) => new Promise<void>((resolve) => {
-        this.videoElement.currentTime = (frameNumber / fps);
+        this.videoElement.currentTime = (frameNumber / fps)
         console.log('')
         this.videoElement.onseeked = () => {
             resolve()

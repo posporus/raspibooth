@@ -4,7 +4,7 @@ import {signal} from '@preact/signals-core'
 
 export const loadingState = signal<LoadingState>('initializing')
 
-export type LoadingState = 'initializing' | 'fetching' | 'decrypting' | 'building' | 'done'
+export type LoadingState = 'initializing' | 'fetching' | 'decrypting' | 'unpacking' | 'building' | 'done'
 
 
 export default function Loader () {
@@ -15,6 +15,7 @@ export default function Loader () {
             'initializing': 'initializing web app',
             'fetching': 'fetching encrypted data',
             'decrypting': 'decrypting media',
+            'unpacking': 'unpacking decrypted media',
             'building': 'building canvas',
             'done': 'finished :)'
         }

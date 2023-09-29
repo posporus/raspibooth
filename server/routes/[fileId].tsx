@@ -16,7 +16,6 @@ export default async function VideoPage (_req: Request, ctx: RouteContext) {
   const hasFile = await file_store.has(fileId)
   return (
     <>
-      <main >
 
         {
           !verified ? <>
@@ -27,12 +26,11 @@ export default async function VideoPage (_req: Request, ctx: RouteContext) {
               <>
                 <Loader></Loader>
                 <PhotopaperWrapper>
-                  <Photopaper fileId={fileId}/>
+                  <Photopaper key={fileId} fileId={fileId}/>
                 </PhotopaperWrapper>
               </>
               : <LeaveMail fileId={fileId} />}
 
-      </main>
     </>
   )
 }

@@ -1,5 +1,7 @@
 import { useEffect, useState, useMemo } from "preact/hooks"
 import { IS_BROWSER } from '$fresh/runtime.ts'
+import { signal } from "@preact/signals-core"
+
 
 import * as fflate from 'https://cdn.skypack.dev/fflate@0.8.0?min'
 
@@ -14,11 +16,16 @@ import PhotopaperCanvas from "./PhotopaperCanvas.tsx"
 import { trigger } from "../../hooks/useTrigger.ts"
 import { download } from '../../utils/download.ts'
 
+import { uint8ArrayToBase64, base64ToUint8Array } from "../../browser/convertions.ts"
+
+
 interface PhotopaperProps {
     fileId: string
 }
 
 export const [triggerDownloadArchive, callTriggerDownloadArchive] = trigger()
+
+export const favSignal = signal<boolean | null>(null)
 
 export default function Photopaper (props: PhotopaperProps) {
 
@@ -27,33 +34,48 @@ export default function Photopaper (props: PhotopaperProps) {
     const [error, setError] = useState<string | null>(null)
     const [encryptedData, setEncryptedData] = useState<Uint8Array | null>(null)
     const [decryptedData, setDecryptedData] = useState<Uint8Array | null>(null)
-    const [unpackedData, setUnpackedData] = useState<UnpackedData | null>(null)
+    const [unpackedData, setUnpackedData] = useState<UnpackedData & { fileId: typeof fileId } | null>(null)
     // Use useMemo for the password state
     const password = useMemo(() => getPasswordFromUrl(), [])
 
     useEffect(() => {
-        if (!encryptedData) return
-        triggerDownloadArchive.subscribe((v) => {
-            if (v <= 0) return
-            const blobUrl = URL.createObjectURL(new Blob([encryptedData], {type: "application/zip"}));
-            download(`${fileId}.zip`,blobUrl)
+
+        favSignal.subscribe(v=>{
+            console.log('favSignal',v)
         })
     }, [])
 
     //fetching encrypted, zipped videos from server
     useEffect(() => {
-        loadingState.value = 'fetching'
         if (!IS_BROWSER || !fileId) return
 
-        (async () => {
-            try {
-                const data = await fetchFile(fileId)
-                setEncryptedData(data)
-            } catch (error) {
-                console.error(error)
-                setError(`Error fetching file ${fileId}: ${error.message}`)
-            }
-        })()
+        console.log('fileId Effect')
+
+        const cached = localStorage.getItem(fileId)
+
+        favSignal.value = !!cached
+
+        if (cached) {
+
+            const cachedDecryptedData = base64ToUint8Array(cached)
+            console.info(`Found cache for ${fileId}.`)
+            setDecryptedData(cachedDecryptedData)
+            setEncryptedData(null)
+
+            return
+        }
+
+        loadingState.value = 'fetching'
+
+            ; (async () => {
+                try {
+                    const data = await fetchFile(fileId)
+                    setEncryptedData(data)
+                } catch (error) {
+                    console.error(error)
+                    setError(`Error fetching file ${fileId}: ${error.message}`)
+                }
+            })()
 
 
     }, [fileId])
@@ -61,6 +83,7 @@ export default function Photopaper (props: PhotopaperProps) {
     //decrypting fetched data
     useEffect(() => {
         if (!encryptedData || !password) return
+        console.log('encryptedData Effect')
 
         loadingState.value = 'decrypting'
             ; (async () => {
@@ -80,25 +103,55 @@ export default function Photopaper (props: PhotopaperProps) {
     //unpacking decrypted, zipped data
     useEffect(() => {
         if (!decryptedData) return
+        console.log('decryptedData Effect')
+
+        favSignal.subscribe(v=>{
+            console.log('favSignal in unpacking',v)
+            if(favSignal.value) {
+                try {
+                    localStorage.setItem(fileId, uint8ArrayToBase64(decryptedData))
+                }
+                catch (err) {
+                    console.warn(`Not able to cache. Reason: ${err}`)
+                }
+            }
+            else {
+                localStorage.removeItem(fileId)
+            }
+        })
+
+
         //TODO: maybe 'unzipping' state?
-        loadingState.value = 'decrypting'
+        loadingState.value = 'unpacking'
 
         try {
             const unzipped = fflate.unzipSync(decryptedData)
             const zipData = getDataFromUnzipped(unzipped)
 
-            setUnpackedData(zipData)
+            setUnpackedData({ fileId, ...zipData })
         }
         catch (error) {
+            console.error(`Error unpacking file ${fileId}: ${error.message}`)
             setError(`Error unpacking file ${fileId}: ${error.message}`)
         }
+
+        triggerDownloadArchive.subscribe((v) => {
+            if (v <= 0) return
+            const blobUrl = URL.createObjectURL(new Blob([decryptedData], { type: "application/zip" }))
+            download(`${fileId}.zip`, blobUrl)
+        })
 
 
 
     }, [decryptedData])
 
+    useEffect(() => {
+        if (!unpackedData) return
+        console.log('unpacked Data', unpackedData)
+    }, [unpackedData])
+
     //on error
-    if (error || encryptedData === null) {
+    if (error !== null) {
         return (
             <>
                 Something went wrong fetching the data.
@@ -109,7 +162,7 @@ export default function Photopaper (props: PhotopaperProps) {
 
     return (
         <>
-            {unpackedData && <PhotopaperCanvas {...{ ...unpackedData, fileId }} />}
+            {unpackedData && <PhotopaperCanvas data={unpackedData} />}
         </>
     )
 }
