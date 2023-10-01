@@ -105,12 +105,12 @@ const ShareButton = () => {
 
 function EffectMenu () {
     return (
-        <li class="dropdown dropdown-top">
+        <li class="dropdown dropdown-top disabled">
             <label class="tooltip" data-tip="Effects" tabIndex={0}>
                 <Icon iconName="sliders" prefix="fas" />
             </label>
             <div tabIndex={0} class="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-52">
-                <EffectsComponent />
+                <EffectsComponent disabled />
             </div>
         </li>
     )

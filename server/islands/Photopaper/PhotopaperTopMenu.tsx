@@ -39,7 +39,7 @@ const TreePointMenu = () => (
                 <a onClick={() => console.log('not yet implemented')}><Icon iconName="file-zipper" prefix="fas" />Download Raw</a>
             </li>
 
-            <li>
+            <li className="disabled">
                 <a onClick={() => console.log('not yet implemented')}><Icon iconName="trash-can" prefix="fas" />Delete from Server</a>
             </li>
         </ul>
