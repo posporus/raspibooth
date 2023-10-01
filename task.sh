@@ -24,7 +24,7 @@ FILE=$2
 case $TASK in
     booth_run)
         echo "running booth"
-        sudo venv/bin/python3.9 booth/main.py
+        sudo venv/bin/python3 booth/main.py
         ;;
     server_test)
         # Navigate to 'server' and run tests

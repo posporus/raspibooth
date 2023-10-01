@@ -2,11 +2,12 @@ from .printer import Printer
 
 
 class MockPrinter(Printer):
-    def printQr(self, title, qrcode, token, message):
+    def printQr(self, title, qrcode, token, message, url):
         print(
             f"""
 \033[1m\033[94m{title}\033[0m
 \033[93m{qrcode}\033
+\033[93m{url}\033
 \033[92mAccess Token:\033[0m \033[91m{token}\033[0m
 {message}
 """

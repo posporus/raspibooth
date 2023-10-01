@@ -1,8 +1,8 @@
 from src.button.button import Button
-from collections import Callable
+# from collections import Callable
 
 class MockButton(Button):
-    callback: Callable = None
+    callback = None
 
     def __init__(self) -> None:
         # By default, use console input for wait behavior
