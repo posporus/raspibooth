@@ -36,6 +36,7 @@ export default function PhotopaperCanvas (props: PhotopaperCanvasProps) {
         canvasCollage.onReady(async () => {
             loadingState.value = 'done'
             await canvasCollage.playOnce()
+            console.log('played once')
             canvasCollage.reset()
         })
 

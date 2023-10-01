@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks"
+import { useState } from "preact/hooks"
 import Icon from '../../components/Icon.tsx'
 import { mergeClasses } from "../../utils/mergeClasses.ts"
 import { favSignal } from "./index.tsx"
@@ -10,16 +10,17 @@ function AddFavourite () {
 
     favSignal.subscribe(v => {
         setClassName(mergeClasses([
-            "text-yellow-500",
+            v && "text-yellow-500",
             "text-lg",
-            v ? 'opacity-100' : 'opacity-50'
+            v ? 'opacity-100' : 'opacity-50',
+            "hover:text-yellow-500"
         ]))
     })
 
     return (
 
         <li>
-            <a onClick={() => favSignal.value = !favSignal.value}>
+            <a className="tooltip" onClick={() => favSignal.value = !favSignal.value}>
                 <span className={className}>
                     <Icon iconName="star" prefix="fas" />
                 </span>

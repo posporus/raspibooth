@@ -38,13 +38,6 @@ export default function Photopaper (props: PhotopaperProps) {
     // Use useMemo for the password state
     const password = useMemo(() => getPasswordFromUrl(), [])
 
-    useEffect(() => {
-
-        favSignal.subscribe(v=>{
-            console.log('favSignal',v)
-        })
-    }, [])
-
     //fetching encrypted, zipped videos from server
     useEffect(() => {
         if (!IS_BROWSER || !fileId) return
@@ -106,7 +99,7 @@ export default function Photopaper (props: PhotopaperProps) {
         console.log('decryptedData Effect')
 
         favSignal.subscribe(v=>{
-            console.log('favSignal in unpacking',v)
+
             if(favSignal.value) {
                 try {
                     localStorage.setItem(fileId, uint8ArrayToBase64(decryptedData))
@@ -144,11 +137,6 @@ export default function Photopaper (props: PhotopaperProps) {
 
 
     }, [decryptedData])
-
-    useEffect(() => {
-        if (!unpackedData) return
-        console.log('unpacked Data', unpackedData)
-    }, [unpackedData])
 
     //on error
     if (error !== null) {

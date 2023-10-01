@@ -68,8 +68,6 @@ export class CanvasCollage {
             v ? this.loopAllVideos() : this.stopAllVideos()
         })
 
-
-
     }
 
     get isAnyPlaying () {
@@ -98,6 +96,7 @@ export class CanvasCollage {
 
         // Set the filter property on the canvas context
         this.ctx.filter = filterString.trim()
+        this.draw()
 
     }
 
@@ -213,7 +212,7 @@ export class CanvasCollage {
         this.drawVideoFrame()
     }
 
-    private stopDrawing() {
+    private stopDrawing () {
         this.drawing = false
     }
 
@@ -221,6 +220,9 @@ export class CanvasCollage {
         for (const videoElement of this.videoElements) {
             videoElement.draw(this.ctx)
         }
+
+        this.ctx.font = "48px serif"
+        this.ctx.fillText("Hello world", 10, this.iConstainerHeight + 10)
     }
 
     private playAllVideos (): void {
@@ -239,6 +241,8 @@ export class CanvasCollage {
         for (const videoElement of this.videoElements) {
             videoElement.jumpToStopmark()
         }
+        requestAnimationFrame(() => this.draw())
+
     }
 
     private pauseAllVideos (): void {
@@ -305,6 +309,9 @@ export class CanvasCollage {
                 if (this.hoveredVideo !== this.videoElements[i]) {
                     if (this.hoveredVideo !== null) {
                         console.log('Mouse left video ' + (this.videoElements.indexOf(this.hoveredVideo) + 1))
+                        this.hoveredVideo.jumpToStopmark()
+                        this.hoveredVideo = null
+                        requestAnimationFrame(() => this.draw())
                     }
                     this.hoveredVideo = this.videoElements[i]
                     console.log('Mouse entered video ' + (i + 1))
@@ -319,7 +326,7 @@ export class CanvasCollage {
             console.log('Mouse left video ' + (this.videoElements.indexOf(this.hoveredVideo) + 1))
             this.hoveredVideo.jumpToStopmark()
             this.hoveredVideo = null
-            this.draw()
+            requestAnimationFrame(() => this.draw())
         }
     }
 
@@ -351,7 +358,7 @@ export class CanvasCollage {
                 console.log('Touch ended for video ' + (this.videoElements.indexOf(this.hoveredVideo) + 1))
                 this.hoveredVideo.jumpToStopmark()
                 this.hoveredVideo = null
-                this.draw()
+                requestAnimationFrame(() => this.draw())
             }
         }, { passive: false })  // Set passive to false to allow preventDefault()
 
@@ -360,7 +367,7 @@ export class CanvasCollage {
                 console.log('Mouse left canvas ' + (this.videoElements.indexOf(this.hoveredVideo) + 1))
                 this.hoveredVideo.jumpToStopmark()
                 this.hoveredVideo = null
-                this.draw()
+                requestAnimationFrame(() => this.draw())
             }
         })
 
