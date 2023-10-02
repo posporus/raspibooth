@@ -115,7 +115,7 @@ export class CanvasCollage {
         console.log('tFps:', targetFps);
         
         
-        const frames = this.metadata.duration / this.playSpeed * targetFps
+        const frames = this.metadata.duration /1000 / this.playSpeed * targetFps
 
         console.log('frames:',frames)
 

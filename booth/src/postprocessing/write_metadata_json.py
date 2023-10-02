@@ -13,7 +13,7 @@ def write_metadata_json(
 ):
     metadata: Metadata = {
         "timestamp": time.time(),
-        "duration": duration / 1000,
+        "duration": duration,
         "fps": fps,
         "playSpeed": play_speed,
         "location": location,
