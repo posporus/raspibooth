@@ -2,6 +2,17 @@
 An innovative photobooth solution powered by Raspberry Pi, capturing moments as short videos with unexpected interactive elements. Comprises a Python-based booth controller and a Deno runtime server for API and web app access.
 >🚧 Note: This project is in its early stages and under active development. Contributions and feedback are welcome!
 
+This is the 1st prototype in action: https://youtube.com/shorts/143HInTq7Ms?si=GVIx9zc8s2PWma6G
+
+This is the current state of the Photopaper View with a test shoot of myself😅:
+https://raboo.uber.space/fTKxVJ1590#qPf9oScSUA
+
+Access Token input:
+https://raboo.uber.space
+(try `fTKxV-J1590-qPf9o-ScSUA`)
+
+If a file is not uploaded yet, we can enter an email to get notified:
+https://raboo.uber.space/73Xe9Ry555#qsFpZPagJh
 
 ## 🚀 Development Status
 
