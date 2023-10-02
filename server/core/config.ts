@@ -3,7 +3,7 @@ import { configSchema } from "./configSchema.ts";
 
 import { loadDotenv } from "./configUtils.ts"
 
-await loadDotenv()
+await loadDotenv('./.env')
 
 
 console.log(Deno.env.toObject())
