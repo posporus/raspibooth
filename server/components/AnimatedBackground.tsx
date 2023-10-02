@@ -44,7 +44,7 @@ export default function AnimatedBackground () {
     
     return (
         <>
-            <svg class="fixed top-0 left-0 h-full w-full opacity-40 blur-xl" preserveAspectRatio="xMidYMid slice" viewBox="10 10 80 80">
+            <svg class="fixed top-0 left-0 h-full w-full opacity-40 blur-xl -z-50" preserveAspectRatio="xMidYMid slice" viewBox="10 10 80 80">
                 <defs>
                     <style>{rotateKeyframes}</style>
                 </defs>

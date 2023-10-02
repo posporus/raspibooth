@@ -31,5 +31,11 @@
     ],
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true,
-    "pythonTestExplorer.testFramework": "unittest"
+    "pythonTestExplorer.testFramework": "unittest",
+    "conventionalCommits.scopes": [
+        "client: photopaper"
+    ],
+    "deno.enable": true,
+    "deno.lint": true,
+    "deno.unstable": false
 }

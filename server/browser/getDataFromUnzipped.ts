@@ -1,20 +1,15 @@
+import { Metadata } from "../types/Metadata.ts"
+
 export type FileObject = {
     [key: string]: Uint8Array
 }
 
-export type Metadata = {
-    duration: number
-    fps: number
-    timestamp: number
-    location?: string
-    eventName?: string
+export interface UnpackedData {
+    metadata: Metadata
+    videos:Uint8Array[]
 }
 
-export interface CanvasData extends Metadata {
-    videos: Uint8Array[]
-}
-
-export function getDataFromUnzipped (unzipped_obj: FileObject): CanvasData {
+export function getDataFromUnzipped (unzipped_obj: FileObject): UnpackedData {
     // Extract and parse metadata.json
     const metadataString = new TextDecoder().decode(unzipped_obj["metadata.json"])
     const metadata: Metadata = JSON.parse(metadataString)
@@ -26,7 +21,7 @@ export function getDataFromUnzipped (unzipped_obj: FileObject): CanvasData {
 
     // Combine everything into the final object
     const result = {
-        ...metadata,
+        metadata,
         videos: videos
     }
 

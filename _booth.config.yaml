@@ -1,0 +1,50 @@
+video:
+  # Duration in ms
+  duration: 1000
+  # Frames per seconds
+  fps: 30
+  resolution: [640,480]
+  rotation: 90
+
+# additional metadata
+metadata:
+  play_speed: 1
+  location: some location
+  event_name: a nice party
+
+SERVER_URL: http://localhost:8000
+UPLOAD_PATH: /api/file
+API_KEY: MySecr3tAPIKey
+UPLOAD_DIR: "booth/upload"
+
+# Hardware configuration
+# configured hardware will be installed when running setup.sh
+# also unused hardware will be uninstalled.
+hardware:
+#----new:
+  # camera: picamera
+  # camera:
+  #   libCamPro:
+  #     id: 20df
+  
+  #start_button:
+  #  gpio: 17
+  # Camera
+  # # Picamera
+  # picamera:
+  #   resolution: [640,480]
+  #   rotation: 90
+
+  # # Start Button connected to GPIO
+  # start-button:
+  #   pin: 17
+
+  # # ws2812b Ringlight
+  # ringlight:
+  #   pin: 18
+  #   count: 32
+  
+  # # Thermal Printen on serial GPIO
+  # thermalprinter_serial:
+  #   tx-pin: 2
+  #   rx-pin: 1

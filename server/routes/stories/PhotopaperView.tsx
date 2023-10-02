@@ -1,7 +1,6 @@
 import { PhotopaperWrapper } from "../../components/PhotopaperWrapper.tsx";
 import { Story } from "./_/Story.tsx";
-import Photopaper, {type PhotopaperProps} from "../../islands/Photopaper.tsx"
-
+import PhotopaperCanvas, {type PhotopaperCanvasProps} from "../../islands/Photopaper/PhotopaperCanvas.tsx";
 
 let sample_video = new Uint8Array()
 try {
@@ -11,15 +10,18 @@ try {
 } catch (err) {
   console.error(err)
 }
-const photopaperProps:PhotopaperProps = {
-  fps: 30,
-  duration: 2,
-  timestamp: 12345678,
+const props:PhotopaperCanvasProps = {
   videos: [
     sample_video, sample_video, sample_video, sample_video
   ],
-  location: 'fedde party',
-  fileId:'D048mdDfje'
+  fileId:'D048mdDfje',
+  metadata: {
+    duration:1,
+    playSpeed:1,
+    timestamp: 109345029,
+    fps:30
+  }
+  
 
 }
 
@@ -27,7 +29,7 @@ export default function PhotoPaperWrapperStory () {
   return (
     <Story>
       <PhotopaperWrapper>
-        <Photopaper {...photopaperProps} />
+        <PhotopaperCanvas {...props}/>
       </PhotopaperWrapper>
     </Story>
   );

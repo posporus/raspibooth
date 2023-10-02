@@ -7,8 +7,9 @@ interface TestPhotopaperProps {
     height: number // Canvas height
 }
 
-export default function TestPhotopaper (props: TestPhotopaperProps) {
+export default function TestPhotopaperCanvas (props: TestPhotopaperProps) {
     const { count, gap, width, height } = props
+    const aspectRatioPadding = (height / width) * 100
 
     useEffect(() => {
         createCollage(count, gap, width, height)
@@ -20,8 +21,8 @@ export default function TestPhotopaper (props: TestPhotopaperProps) {
                 id={"picture_canvas"}
                 width={width}
                 height={height}
-                class="max-v-full max-h-full h-auto"
-            ></canvas>
+                class="max-w-full max-h-full h-auto rounded"
+            />
         </>
     )
 }
@@ -47,4 +48,5 @@ function createCollage (count: number, gap: number, width: number, height: numbe
         ctx.fillStyle = "lightgrey"
         ctx.fillRect(x - rectWidth / 2, y - rectHeight / 2, rectWidth, rectHeight)
     }
+
 }

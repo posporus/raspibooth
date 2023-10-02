@@ -13,7 +13,11 @@ export class VideoElement {
 
     initialized: Promise<void>
 
+    private playCallbacks: Array<() => void> = [];
+
+
     constructor(videoData: Uint8Array, x: number, y: number, width: number, height: number) {
+
         const blob = new Blob([videoData], { type: 'video/mp4' })
         const url = URL.createObjectURL(blob)
 
@@ -26,10 +30,9 @@ export class VideoElement {
         this.videoElement.style.display = 'none'
         this.videoElement.autoplay = true
         this.videoElement.muted = true
-        this.videoElement.loop = true
-        document.body.appendChild(this.videoElement)
-        console.log(this.videoElement)
+        this.videoElement.loop = false
 
+        document.body.appendChild(this.videoElement)
 
         this._x = x
         this._y = y
@@ -44,37 +47,78 @@ export class VideoElement {
 
         this.initialized = new Promise<void>((resolve) => {
             this.videoElement.oncanplaythrough = () => {
-                console.log('video readey!')
                 resolve()
             }
         })
+
+        this.videoElement.addEventListener('play', () => {
+            this.playCallbacks.forEach(callback => callback());
+        });
     }
 
-    pauseAtStopmark () {
-        const onTimeUpdate = () => {
-            console.log('stopmark:', this.stopmark)
-            const currentTime = this.videoElement.currentTime
-            console.log('onTimeUpdate called')
-            if (currentTime >= this.stopmark) {
-                this.videoElement.pause()
-                this.videoElement.removeEventListener('timeupdate', onTimeUpdate)
-            }
-        }
-        this.videoElement.addEventListener('timeupdate', onTimeUpdate)
-        console.log('attach event!')
+    get playing () {
+        return (!this.videoElement.paused)
     }
+
+    onPlay(callback: () => void) {
+        this.playCallbacks.push(callback);
+    }
+
+
+    pos1 () {
+        this.videoElement.currentTime = 0
+    }
+
+    setPlaybackRate (rate: number): void {
+        this.videoElement.playbackRate = rate
+    }
+
+    reachingTime (time: number) {
+        console.log('called reachingTime')
+        return new Promise<void>((resolve) => {
+            const onTimeUpdate = () => {
+                console.log('this.videoElement.currentTime', this.videoElement.currentTime, 'time', time)
+                if (this.videoElement.currentTime >= time) {
+                    console.log('reached time')
+                    resolve()
+                    this.videoElement.removeEventListener('timeupdate', onTimeUpdate)
+                }
+            }
+            this.videoElement.addEventListener('timeupdate', onTimeUpdate)
+        })
+    }
+
+    reachingStopmark = () => this.reachingTime(this.stopmark)
+    reachingEnd () {
+        console.log('called reachingEnd')
+        return new Promise<void>((resolve) => {
+            const onEnded = () => {
+                console.log('reached end')
+                resolve()
+                this.videoElement.removeEventListener('ended', onEnded)
+            }
+            this.videoElement.addEventListener('ended', onEnded)
+        })
+    }
+
 
     jumpToStopmark () {
         this.videoElement.pause()
-        this.videoElement.currentTime = this.stopmark
+        this.videoElement.currentTime = this.stopmark || 0
     }
 
+    loop () {
+        this.videoElement.loop = true
+        this.videoElement.play()
+    }
 
-    play = () => this.videoElement.play()
+    play = () => {
+        this.videoElement.loop = false
+        this.videoElement.play()
+    }
 
-    border (width: number, color: string) {
-        this._borderWidth = width
-        this._borderColor = color
+    pause = () => {
+        this.videoElement.pause()
     }
 
     draw (ctx: CanvasRenderingContext2D) {
@@ -95,8 +139,6 @@ export class VideoElement {
         return x >= this._x + this._offsetX && x <= this._x + this._offsetX + this._width &&
             y >= this._y + this._offsetY && y <= this._y + this._offsetY + this._height
     }
-
-
 
     startScrubbing () {
         this._scrubbing = true
@@ -127,5 +169,13 @@ export class VideoElement {
         if (this._stopmark) return this._stopmark
         return this.videoElement.duration / 2
     }
+
+    goToFrame = (frameNumber: number, fps = 30) => new Promise<void>((resolve) => {
+        this.videoElement.currentTime = (frameNumber / fps)
+        console.log('')
+        this.videoElement.onseeked = () => {
+            resolve()
+        }
+    })
 
 }

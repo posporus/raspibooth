@@ -7,14 +7,22 @@ export default function App ({ Component }: AppProps) {
   return (
     <>
       <Head>
-        <link href="daisyui.css" rel="stylesheet" type="text/css" />
+        <title>Raspibooth DEMO</title>
+        <link href="/daisyui.css" rel="stylesheet" type="text/css" />
       </Head>
-        <AnimatedBackground/>
-      <div class="">
-        {/* <div class="navbar bg-base-100 fixed">
-          <a class="btn btn-ghost normal-case text-xl">raspibooth</a>
-        </div> */}
-        <Component />
+      {/* <AnimatedBackground /> */}
+
+      <div class="flex flex-col w-screen h-screen bg-gradient-to-b from-[#332F7D] via-[#93245E] to-[#00D4FF]">
+
+        <div class="sticky top-0 bg-base-100 navbar z-50 h-[4rem]">
+          <a class="btn btn-ghost normal-case text-xl">raspibooth DEMO</a>
+        </div>
+        <div class="flex-grow w-screen">
+          <Component />
+        </div>
+      </div>
+      <div class="footer">
+        footer
       </div>
     </>
   )

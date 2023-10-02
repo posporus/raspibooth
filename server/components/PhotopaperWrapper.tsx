@@ -1,18 +1,28 @@
 import { ComponentChildren } from "preact"
+import { PhotopaperTopMenu } from "../islands/Photopaper/PhotopaperTopMenu.tsx"
+import { PhotopaperBottomMenu } from "../islands/Photopaper/PhotopaperBottomMenu.tsx"
 
-interface StoryProps {
+interface MenuOverlayProps {
     children: ComponentChildren
 }
 
-export function PhotopaperWrapper (props: StoryProps) {
+export function PhotopaperWrapper (props: MenuOverlayProps) {
     const { children } = props
+
     return (
         <>
-            <div class="flex justify-center items-center w-screen h-screen bg-red-100" style="background: linear-gradient(360deg, rgba(51,47,125,1) 0%, rgba(147,36,86,1) 34%, rgba(0,212,255,1) 100%);">
-                <div class="h-4/5 drop-shadow-xl p-5">
-                    {children}
+            <div className="flex flex-col h-full w-full items-center justify-center p-5">
+                    <div className="flex flex-col items-center justify-center h-auto" style={{ maxHeight: 'calc(80vh - 4rem)' }}>
+                        <PhotopaperTopMenu />
+                        <div className="h-full pt-5 pb-5 drop-shadow-xl" >
+                            {children}
+                        </div>
+                        <PhotopaperBottomMenu />
+                    </div>
                 </div>
-            </div >
         </>
+
+
     )
 }
+
