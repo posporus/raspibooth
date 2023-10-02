@@ -34,5 +34,8 @@
     "pythonTestExplorer.testFramework": "unittest",
     "conventionalCommits.scopes": [
         "client: photopaper"
-    ]
+    ],
+    "deno.enable": true,
+    "deno.lint": true,
+    "deno.unstable": false
 }
