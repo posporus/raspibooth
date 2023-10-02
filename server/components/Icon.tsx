@@ -91,7 +91,7 @@ function SVG ({ data }: SVGProps) {
 
     return (
         <svg
-            className="w-[1em] h-[1em]"
+            className="w-[1em] h-[1em] inline"
             aria-hidden="true"
             data-prefix={prefix}
             data-icon={iconName}
