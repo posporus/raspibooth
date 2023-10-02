@@ -15,7 +15,7 @@ export default function App ({ Component }: AppProps) {
       <div class="flex flex-col w-screen h-screen bg-gradient-to-b from-[#332F7D] via-[#93245E] to-[#00D4FF]">
 
         <div class="sticky top-0 bg-base-100 navbar z-50 h-[4rem]">
-          <a class="btn btn-ghost normal-case text-xl">raspibooth v0.0.0</a>
+          <a class="btn btn-ghost normal-case text-xl">raspibooth DEMO</a>
         </div>
         <div class="flex-grow w-screen">
           <Component />
