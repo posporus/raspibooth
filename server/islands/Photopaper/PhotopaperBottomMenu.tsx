@@ -53,7 +53,6 @@ const DownloadOptions = () => (
             <Icon iconName="download" prefix="fas" />
         </label>
         <ul tabIndex={0} class="dropdown-content z-[1] menu shadow bg-base-100 rounded-box">
-            <li><a onClick={() => console.log('not yet implemented')}><Icon iconName="file-zipper" prefix="fas" /> Archive</a></li>
             <li><a onClick={callTriggerDownloadSnapshot}><Icon iconName="camera" prefix="fas" /> Snapshot</a></li>
             <li><a onClick={callTriggerDownloadGif}><Icon iconName="film" prefix="fas" /> Gif</a></li>
         </ul>

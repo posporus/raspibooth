@@ -2,7 +2,9 @@ import { useState } from "preact/hooks"
 import Icon from '../../components/Icon.tsx'
 import { mergeClasses } from "../../utils/mergeClasses.ts"
 import { favSignal } from "./index.tsx"
-export type DownloadOptionsType = 'archive' | 'snapshot' | 'gif'
+import { callTriggerDownloadArchive } from "./index.tsx"
+
+// export type DownloadOptionsType = 'archive' | 'snapshot' | 'gif'
 
 
 function AddFavourite () {
@@ -36,7 +38,7 @@ const TreePointMenu = () => (
         </label>
         <ul tabIndex={0} class="dropdown-content z-[1] menu shadow bg-base-100 rounded-box">
             <li>
-                <a onClick={() => console.log('not yet implemented')}><Icon iconName="file-zipper" prefix="fas" />Download Raw</a>
+                <a onClick={() => callTriggerDownloadArchive()}><Icon iconName="file-zipper" prefix="fas" />Download Raw</a>
             </li>
 
             <li className="disabled">
