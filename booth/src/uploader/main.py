@@ -4,6 +4,8 @@ from src.utility.collect_files import collect_files
 from src.uploader.upload_file import upload_file
 from src.config import config
 import asyncio
+import log_config
+import logging
 
 API_KEY = config["API_KEY"]
 SERVER_URL = config["SERVER_URL"]
@@ -17,21 +19,22 @@ async def uploader(upload_dir: str):
 
         # Check server response
         if status_code == 403:
-            print("Invalid API key. Aborting uploads.")
+            logging.error("Invalid API key. Aborting uploads.")
             break
         elif status_code == 400:
-            print(f"Error uploading {file}. No fileId/checksum provided by the server.")
+            error_msg = f"Error uploading {file}. No fileId/checksum provided by the server."
+            logging.error(error_msg)
         elif status_code == 200:
-        
             try:
                 os.remove(file)  # Delete the file
-                print(f'Successfully uploaded and deleted {file}.')
+                success_msg = f'Successfully uploaded and deleted {file}.'
+                logging.info(success_msg)
             except Exception as e:
-                print(f"Error deleting file {file}. Reason: {e}")
-            
+                error_msg = f"Error deleting file {file}. Reason: {e}"
+                logging.error(error_msg)
         else:
-            print(f'Unexpected status code {status_code} for file {file}. Response: {response_text}')
-
+            error_msg = f'Unexpected status code {status_code} for file {file}. Response: {response_text}'
+            logging.error(error_msg)
 
 if __name__ == '__main__':
     asyncio.run(uploader('booth/upload'))

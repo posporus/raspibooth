@@ -10,5 +10,8 @@ __pycache__
 notes.md
 venv/
 booth/upload/
+server/data/
 
 booth.config.yaml
+
+raspibooth.log
