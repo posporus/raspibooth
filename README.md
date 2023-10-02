@@ -37,8 +37,8 @@ https://raboo.uber.space/73Xe9Ry555#qsFpZPagJh
 - ✅ **Prototype:** Design and build a compact, wall-mounted prototype.
 - 🟡 **Setup:** Develop a script for configuring the Python project under various conditions.
 - 🟡 **Real-world Testing:** Test the booth at a party.
-- ✅ **local storage** enable the user to store decrypted photopaper in local storage 
-- ✅ ** Download and sharing** add functionality to download the photopaper as a moving .gif or still image and implement sharing option.
+- ✅ **LocalStorage:** enable the user to store decrypted photopaper in local storage 
+- ✅ **Download and sharing:** add functionality to download the photopaper as a moving .gif or still image and implement sharing option.
 
 
 ### 🎯 **Milestone 2 - Raspibooth 2**
