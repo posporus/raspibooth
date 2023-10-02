@@ -1,8 +1,10 @@
 import { logger } from "./logger.ts";
 import { load } from "https://deno.land/std@0.202.0/dotenv/mod.ts";
 
+
 export async function loadDotenv(envPath?:string) {
     const env = await load({envPath})
+    logger.info(`Imported env file ${envPath}`)
     for(const key in env) {
         Deno.env.set(key,env[key])
     }
