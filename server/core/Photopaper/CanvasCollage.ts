@@ -107,10 +107,17 @@ export class CanvasCollage {
     }
 
     async capture (targetFps = 30) {
+        console.info('start capturing')
 
         this.capturing = true
-
+        console.log('dur:', this.metadata.duration)
+        console.log('speed:',this.metadata.playSpeed);
+        console.log('tFps:', targetFps);
+        
+        
         const frames = this.metadata.duration / this.playSpeed * targetFps
+
+        console.log('frames:',frames)
 
         const width = this.iContainerWidth, height = this.iConstainerHeight
 
@@ -139,6 +146,8 @@ export class CanvasCollage {
         const blob = buffer instanceof Blob ? buffer : new Blob([buffer], { type: 'image/gif' })
         const url = URL.createObjectURL(blob)
         download(`${this.fileId}_${this.playSpeed}x_${targetFps}fps.gif`, url)
+
+        this.reset()
 
     }
 
