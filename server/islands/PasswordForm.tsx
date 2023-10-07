@@ -30,7 +30,7 @@ export default function PasswordForm () {
 
     return (
         <>
-            <div class="hero min-h-screen bg-base-200 flex items-center justify-center">
+            <div class="absolute top-0 hero min-h-screen bg-base-200 flex items-center justify-center">
                 <div class="hero-content text-center">
                     <div class="max-w-md flex flex-col items-center">
                         <h1 class="text-5xl font-bold py-10">Welcome to Actionbooth!</h1>

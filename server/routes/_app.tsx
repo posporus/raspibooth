@@ -12,7 +12,7 @@ export default function App({ Component }: AppProps) {
       </Head>
       {/* <AnimatedBackground /> */}
 
-      <div class="flex flex-col max-w-screen h-[100dvh] bg-gradient-to-b from-[#332F7D] via-[#93245E] to-[#00D4FF] overflow-hidden">
+      <div class="flex flex-col max-w-screen h-[100vh] h-[100dvh] bg-gradient-to-b from-[#332F7D] via-[#93245E] to-[#00D4FF] overflow-hidden">
         <div class="sticky top-0 bg-base-100 navbar z-50 h-[4rem] w-full">
           <a class="btn btn-ghost normal-case text-xl">raspibooth DEMO</a>
         </div>
