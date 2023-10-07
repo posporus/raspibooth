@@ -53,6 +53,9 @@ https://raboo.uber.space/73Xe9Ry555#qsFpZPagJh
 - 🟡 **Party Time:** Showcase the booth at another party!
 
 
+## Raspibooth 1:
+![Raspibooth 1](https://github.com/posporus/raspibooth/assets/2838229/6693c6c6-5013-41cd-b868-99f69ad3c309)
+
 ## 🛠 Installation Instructions
 
 RaspiBooth is structured into two core components, each tailored with a distinct role and technology stack.
